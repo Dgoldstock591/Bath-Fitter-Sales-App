@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00796B">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered:', reg.scope))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bath Fitter Sales Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f9;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    h1 {
+      font-size: 2rem;
+      color: #00796B;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.3rem;
+      color: #004d40;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.25rem;
+      margin-top: 2rem;
+    }
+    label, .result-line {
+      display: block;
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+    }
+    input, button {
+      padding: 0.75rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
+      width: 100%;
+      border-radius: 0.5rem;
+    }
+    button {
+      background: #00796B;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+    .results {
+      margin-top: 1.5rem;
+    }
+    .result-line {
+      margin-bottom: 0.5rem;
+      padding: 0.25rem 0;
+      border-bottom: 1px dotted #ddd;
+    }
+    .result-line strong {
+      font-weight: 600;
+    }
+    .result-line:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .result-line .savings {
+      color: #2e7d32;
+      font-weight: bold;
+    }
+    .result-line .deposit {
+      color: #1565c0;
+    }
+    .result-line .finance {
+      color: #424242;
+    }
+    .result-line .emergency {
+      color: #b71c1c;
+      font-weight: bold;
+    }
+    .credit {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #999;
+    }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bath Fitter Sales Calculator</h1>
+    <label for="baseInput">Enter Job Total Cost (Per Bathroom)</label>
+    <input type="number" id="baseInput" placeholder="e.g. 9875" />
+    <button onclick="calculate()">Calculate</button>
+    <div class="results" id="output"></div>
+    <div class="credit">Created by David Goldstock</div>
+  </div>
+
+
+<script>
+function roundDepositUp(n) {
+  return Math.ceil(n / 25) * 25;
+}
+function calcFinance(p, rate, months) {
+  const r = rate / 100 / 12;
+  const monthly = (p * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  const total = monthly * months;
+  const interest = total - p;
+  return { monthly, total, interest };
+}
+function findCleanDiscount(base, percent) {
+  let discount = Math.floor(base * percent / 100);
+  while ((base - discount) % 25 !== 0 && discount > 0) discount--;
+  return { discount, finalPrice: base - discount };
+}
+function calculate() {
+  const base = parseFloat(document.getElementById("baseInput").value);
+  const output = document.getElementById("output");
+  if (isNaN(base) || base <= 0) {
+    output.innerHTML = "<div class='result-line'>Please enter a valid number.</div>";
+    return;
+  }
+
+  let html = "";
+  function sectionTitle(title) {
+    html += `<hr><h3>${title}</h3>`;
+    html += `<div class='result-line'><strong>Total Job Cost: $${base.toFixed(2)}</strong></div>`;
+  }
+
+  // Coupon Discount
+  const couponFinal = base - 900;
+  const couponDeposit = roundDepositUp(couponFinal * 0.25);
+  sectionTitle("Coupon Discount (-$900)");
+  html += `<div class='result-line'>Final Price: $${couponFinal.toFixed(2)}</div>`;
+  html += `<div class='result-line'>Deposit: $${couponDeposit.toFixed(2)}</div>`;
+  html += `<div class='result-line'>Due at Completion: $${(couponFinal - couponDeposit).toFixed(2)}</div>`;
+
+  // Cash / Check / Charge Discounts
+  sectionTitle("Cash / Check / Charge Discounts");
+  const discounts = [23, 20, 19, 18, 15, 12, 10];
+  for (let pct of discounts) {
+    const d = findCleanDiscount(base, pct);
+    const deposit = roundDepositUp(d.finalPrice * 0.25);
+    html += `<div class='result-line'><strong>${pct}% Discount</strong></div>`;
+    html += `<div class='result-line'>Discount: -$${d.discount}</div>`;
+    html += `<div class='result-line'>Final Price: $${d.finalPrice}</div>`;
+    html += `<div class='result-line'>You Save: $${d.discount}</div>`;
+    html += `<div class='result-line'>Deposit: $${deposit}</div>`;
+    html += `<div class='result-line'>Due at Completion: $${d.finalPrice - deposit}</div><br>`;
+  }
+
+  // First Responder / Multi-Bathroom
+  sectionTitle("Veterans First Responders and Multi Bathroom Discount");
+  html += `<div class='result-line'><em>* 25% discount only available with Cash / Check / Charge transactions</em></div>`;const d25 = findCleanDiscount(base, 25);
+  const deposit25 = roundDepositUp(d25.finalPrice * 0.25);
+  html += `<div class='result-line'>25% Discount: -$${d25.discount}</div>`;
+  html += `<div class='result-line'>Final Price: $${d25.finalPrice}</div>`;
+  html += `<div class='result-line'>You Save: $${d25.discount}</div>`;
+  html += `<div class='result-line'>Deposit: $${deposit25}</div>`;
+  html += `<div class='result-line'>Due at Completion: $${d25.finalPrice - deposit25}</div>`;
+
+  // Standard Financing 13%
+  const d13 = findCleanDiscount(base, 13);
+  const deposit13 = roundDepositUp(d13.finalPrice * 0.25);
+  const finance13 = d13.finalPrice - deposit13;
+  sectionTitle("Standard Financing (13% Discount)");
+  html += `<div class='result-line'>Discount: -$${d13.discount}</div>`;
+  html += `<div class='result-line'>Final Price: $${d13.finalPrice}</div>`;
+  html += `<div class='result-line'>You Save: $${d13.discount}</div>`;
+  html += `<div class='result-line'>Deposit: $${deposit13}</div>`;
+  html += `<div class='result-line'>Finance Amount: $${finance13}</div>`;
+  html += `<div class='result-line'>18 Months @ 0%: $${Math.ceil(finance13 / 18)} / month</div>`;
+  html += `<div class='result-line'>24 Months @ 0%: $${Math.ceil(finance13 / 24)} / month</div>`;
+  const plan28 = calcFinance(finance13, 7.99, 28);
+  html += `<div class='result-line'>28 Months @ 7.99%: $${Math.ceil(plan28.monthly)} / month</div>`;
+  html += `<div class='result-line'>Total Cost: $${plan28.total.toFixed(2)} | Interest: $${plan28.interest.toFixed(2)}</div>`;
+  const plan86 = calcFinance(finance13, 11.99, 86);
+  html += `<div class='result-line'>86 Months @ 11.99%: $${Math.ceil(plan86.monthly)} / month</div>`;
+  html += `<div class='result-line'>Total Cost: $${plan86.total.toFixed(2)} | Interest: $${plan86.interest.toFixed(2)}</div>`;
+
+  // Lower Deposit Option
+  const lowDeposit = 1000;
+  const altFinance = d13.finalPrice - lowDeposit;
+  sectionTitle("Lower Deposit / Higher Finance");
+  html += `<div class='result-line'>Deposit: $${lowDeposit}</div>`;
+  html += `<div class='result-line'>Finance Amount: $${altFinance}</div>`;
+  const alt28 = calcFinance(altFinance, 7.99, 28);
+  const alt86 = calcFinance(altFinance, 11.99, 86);
+  const alt18 = { monthly: altFinance / 18, total: altFinance, interest: 0 };
+  const alt24 = { monthly: altFinance / 24, total: altFinance, interest: 0 };
+  html += `<div class='result-line'>18 Months @ 0%: $${Math.ceil(alt18.monthly)} / month</div>`;
+  html += `<div class='result-line'>24 Months @ 0%: $${Math.ceil(alt24.monthly)} / month</div>`;
+  html += `<div class='result-line'>28 Months @ 7.99%: $${Math.ceil(alt28.monthly)} / month</div>`;
+  html += `<div class='result-line'>Total Cost: $${alt28.total.toFixed(2)} | Interest: $${alt28.interest.toFixed(2)}</div>`;
+  html += `<div class='result-line'>86 Months @ 11.99%: $${Math.ceil(alt86.monthly)} / month</div>`;
+  html += `<div class='result-line'>Total Cost: $${alt86.total.toFixed(2)} | Interest: $${alt86.interest.toFixed(2)}</div>`;
+
+  // Emergency 18% Discount, 86 Months
+  const d18 = findCleanDiscount(base, 18);
+  const deposit18 = roundDepositUp(d18.finalPrice * 0.25);
+  const finance18 = d18.finalPrice - deposit18;
+  const emg86 = calcFinance(finance18, 11.99, 86);
+  sectionTitle("Emergency 86-Month Financing (18% Discount)");
+  html += `<div class='result-line'>Discount: -$${d18.discount}</div>`;
+  html += `<div class='result-line'>Final Price: $${d18.finalPrice}</div>`;
+  html += `<div class='result-line'>You Save: $${d18.discount}</div>`;
+  html += `<div class='result-line'>Deposit: $${deposit18}</div>`;
+  html += `<div class='result-line'>Finance Amount: $${finance18}</div>`;
+  html += `<div class='result-line'>Monthly Payment: $${Math.ceil(emg86.monthly)}</div>`;
+  html += `<div class='result-line'>Total Interest: $${emg86.interest.toFixed(2)}</div>`;
+  html += `<div class='result-line'>Total Cost: $${emg86.total.toFixed(2)}</div>`;
+
+  output.innerHTML = html;
+  output.style.display = "block";
+}
+</script>
+
+</body>
+</html>
