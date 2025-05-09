@@ -2,228 +2,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bath Fitter Sales App V2.4</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f3faff; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    h1 { color: #00796B; text-align: center; margin-bottom: 1.5rem; }
+    label { display: block; margin: 1rem 0 0.25rem; font-weight: bold; }
+    input[type="number"] { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #ccc; margin-bottom: 1rem; }
+    button { width: 100%; padding: 1rem; font-size: 1rem; background-color: #00796B; color: white; border: none; border-radius: 0.5rem; cursor: pointer; }
+    button:hover { background-color: #005f56; }
+    .tabs { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .tab-button { flex: 1; padding: 0.75rem; text-align: center; background: #e0f2f1; border: 1px solid #00796B; cursor: pointer; }
+    .tab-button.active { background: #00796B; color: white; font-weight: bold; }
+    .tab-content { display: none; margin-top: 1.5rem; padding: 1rem; background: #f9f9f9; border-radius: 0.75rem; }
+    .tab-content.active { display: block; }
+    .result-line { margin: 0.5rem 0; }
+    hr { margin: 2rem 0; border: none; border-top: 1px solid #ccc; }
+    .math-line { font-style: italic; color: #444; margin: 0.25rem 0 0.75rem; }
+  </style>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#00796B">
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(reg => console.log('Service Worker registered:', reg.scope))
-          .catch(err => console.error('Service Worker registration failed:', err));
+        navigator.serviceWorker.register('service-worker.js');
       });
     }
   </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bath Fitter Sales Calculator</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f4f9;
-      padding: 2rem;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.15);
-    }
-    h1 {
-      font-size: 2rem;
-      color: #00796B;
-      margin-bottom: 1rem;
-    }
-    h3 {
-      font-size: 1.3rem;
-      color: #004d40;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 0.25rem;
-      margin-top: 2rem;
-    }
-    label, .result-line {
-      display: block;
-      margin: 0.5rem 0;
-      font-size: 1.1rem;
-    }
-    input, button {
-      padding: 0.75rem;
-      margin-bottom: 1.2rem;
-      font-size: 1.1rem;
-      width: 100%;
-      border-radius: 0.5rem;
-    }
-    button {
-      background: #00796B;
-      color: white;
-      border: none;
-      font-weight: bold;
-    }
-    .results {
-      margin-top: 1.5rem;
-    }
-    .result-line {
-      margin-bottom: 0.5rem;
-      padding: 0.25rem 0;
-      border-bottom: 1px dotted #ddd;
-    }
-    .result-line strong {
-      font-weight: 600;
-    }
-    .result-line:nth-child(even) {
-      background: #f9f9f9;
-    }
-    .result-line .savings {
-      color: #2e7d32;
-      font-weight: bold;
-    }
-    .result-line .deposit {
-      color: #1565c0;
-    }
-    .result-line .finance {
-      color: #424242;
-    }
-    .result-line .emergency {
-      color: #b71c1c;
-      font-weight: bold;
-    }
-    .credit {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #999;
-    }
-</style>
 </head>
 <body>
   <div class="container">
-    <h1>Bath Fitter Sales Calculator</h1>
-    <label for="baseInput">Enter Job Total Cost (Per Bathroom)</label>
-    <input type="number" id="baseInput" placeholder="e.g. 9875" />
+    <h1>Bath Fitter Sales Calculator V2.4</h1>
+    <label for="bf">Bath Fitter EOI Total</label>
+    <input type="number" id="bf" placeholder="e.g. 8815" />
+    <label for="doors">Door EOI Total</label>
+    <input type="number" id="doors" placeholder="e.g. 1900" />
+    <label for="labor">Labor EOI Total</label>
+    <input type="number" id="labor" placeholder="e.g. 2315" />
+    <label for="permits">Permit EOI Total</label>
+    <input type="number" id="permits" placeholder="e.g. 450" />
     <button onclick="calculate()">Calculate</button>
-    <div class="results" id="output"></div>
-    <div class="credit">Created by David Goldstock</div>
+
+    <div class="tabs">
+      <div class="tab-button active" onclick="switchTab('bfTab')">Bath Fitter Contract</div>
+      <div class="tab-button" onclick="switchTab('cumTab')">Cumulative Job</div>
+      <div class="tab-button" onclick="switchTab('otherTab')">Other Contracts</div>
+    </div>
+    <div id="bfTab" class="tab-content active"></div>
+    <div id="cumTab" class="tab-content"></div>
+    <div id="otherTab" class="tab-content"></div>
   </div>
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      const idx = id === 'bfTab' ? 0 : id === 'cumTab' ? 1 : 2;
+      document.querySelectorAll('.tab-button')[idx].classList.add('active');
+    }
 
+    function roundDepositUp(n) {
+      return Math.ceil(n / 25) * 25;
+    }
+    function findCleanDiscount(amount, percent) {
+      let discount = Math.floor(amount * percent / 100);
+      while ((amount - discount) % 25 !== 0 && discount > 0) discount--;
+      return { discount, finalPrice: amount - discount };
+    }
+    function calcFinance(p, rate, months) {
+      const r = rate / 100 / 12;
+      const monthly = (p * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+      const total = monthly * months;
+      const interest = total - p;
+      return { monthly, total, interest };
+    }
+    function formatCurrency(n) {
+      return "$" + parseFloat(n).toFixed(2);
+    }
+    function renderStack(title, subtotal, discount, total, deposit) {
+      return `
+        <div class='result-line'><strong>${title}</strong></div>
+        <div class='result-line'>Subtotal: ${formatCurrency(subtotal)}</div>
+        <div class='result-line'>Discount: -${formatCurrency(discount)}</div>
+        <div class='result-line'>Total: ${formatCurrency(total)}</div>
+        <div class='result-line'>Deposit: ${formatCurrency(deposit)}</div>
+        <div class='result-line'>Balance Due: ${formatCurrency(total - deposit)}</div>
+      `;
+    }
+    function calculate() {
+      const bf = parseFloat(document.getElementById("bf").value) || 0;
+      const doors = parseFloat(document.getElementById("doors").value) || 0;
+      const labor = parseFloat(document.getElementById("labor").value) || 0;
+      const permits = parseFloat(document.getElementById("permits").value) || 0;
+      const bfTab = document.getElementById("bfTab");
+      const cumTab = document.getElementById("cumTab");
+      const otherTab = document.getElementById("otherTab");
 
-<script>
-function roundDepositUp(n) {
-  return Math.ceil(n / 25) * 25;
-}
-function calcFinance(p, rate, months) {
-  const r = rate / 100 / 12;
-  const monthly = (p * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-  const total = monthly * months;
-  const interest = total - p;
-  return { monthly, total, interest };
-}
-function findCleanDiscount(base, percent) {
-  let discount = Math.floor(base * percent / 100);
-  while ((base - discount) % 25 !== 0 && discount > 0) discount--;
-  return { discount, finalPrice: base - discount };
-}
-function calculate() {
-  const base = parseFloat(document.getElementById("baseInput").value);
-  const output = document.getElementById("output");
-  if (isNaN(base) || base <= 0) {
-    output.innerHTML = "<div class='result-line'>Please enter a valid number.</div>";
-    return;
-  }
+      bfTab.innerHTML = ""; cumTab.innerHTML = ""; otherTab.innerHTML = "";
 
-  let html = "";
-  function sectionTitle(title) {
-    html += `<hr><h3>${title}</h3>`;
-    html += `<div class='result-line'><strong>Total Job Cost: $${base.toFixed(2)}</strong></div>`;
-  }
+      if (bf > 0) {
+        bfTab.innerHTML += "<h3>Coupon Discount</h3>";
+        bfTab.innerHTML += renderStack("Coupon (-$900)", bf, 900, bf - 900, roundDepositUp((bf - 900) * 0.25));
+        bfTab.innerHTML += "<hr><h3>Cash / Check / Charge Discounts</h3>";
+        [23, 20, 18, 15, 10].forEach(p => {
+          const { discount, finalPrice } = findCleanDiscount(bf, p);
+          bfTab.innerHTML += renderStack(`${p}% Discount`, bf, discount, finalPrice, roundDepositUp(finalPrice * 0.25));
+        });
+        bfTab.innerHTML += "<hr><h3>Veterans / First Responders / Multi-Bathroom</h3>";
+        const vet = findCleanDiscount(bf, 25);
+        bfTab.innerHTML += renderStack("25% Discount", bf, vet.discount, vet.finalPrice, roundDepositUp(vet.finalPrice * 0.25));
+        const fin = findCleanDiscount(bf, 13);
+        const finDep = roundDepositUp(fin.finalPrice * 0.25);
+        const finBal = fin.finalPrice - finDep;
+        bfTab.innerHTML += "<hr><h3>Standard Financing (13% Discount)</h3>";
+        bfTab.innerHTML += renderStack("13% Standard Finance", bf, fin.discount, fin.finalPrice, finDep);
+        [18, 24].forEach(m => bfTab.innerHTML += `<div class='result-line'>${m} Mo @ 0%: ${formatCurrency(Math.ceil(finBal / m))}</div>`);
+        const f28 = calcFinance(finBal, 7.99, 28), f86 = calcFinance(finBal, 11.99, 86);
+        bfTab.innerHTML += `<div class='result-line'>28 Mo @ 7.99%: ${formatCurrency(Math.ceil(f28.monthly))}</div>`;
+        bfTab.innerHTML += `<div class='result-line'>86 Mo @ 11.99%: ${formatCurrency(Math.ceil(f86.monthly))}</div>`;
+        bfTab.innerHTML += "<hr><h3>Lower Deposit Option</h3>";
+        const altDep = 1000, altBal = fin.finalPrice - altDep;
+        bfTab.innerHTML += `<div class='result-line'>Deposit: ${formatCurrency(altDep)}</div>`;
+        bfTab.innerHTML += `<div class='result-line'>Finance: ${formatCurrency(altBal)}</div>`;
+        [18, 24].forEach(m => bfTab.innerHTML += `<div class='result-line'>${m} Mo @ 0%: ${formatCurrency(Math.ceil(altBal / m))}</div>`);
+        const alt28 = calcFinance(altBal, 7.99, 28), alt86 = calcFinance(altBal, 11.99, 86);
+        bfTab.innerHTML += `<div class='result-line'>28 Mo @ 7.99%: ${formatCurrency(Math.ceil(alt28.monthly))}</div>`;
+        bfTab.innerHTML += `<div class='result-line'>86 Mo @ 11.99%: ${formatCurrency(Math.ceil(alt86.monthly))}</div>`;
+        const emg = findCleanDiscount(bf, 18);
+        const emgDep = roundDepositUp(emg.finalPrice * 0.25);
+        const emgPlan = calcFinance(emg.finalPrice - emgDep, 11.99, 86);
+        bfTab.innerHTML += "<hr><h3>Emergency 86-Month Financing (18% Discount)</h3>";
+        bfTab.innerHTML += renderStack("Emergency Plan", bf, emg.discount, emg.finalPrice, emgDep);
+        bfTab.innerHTML += `<div class='result-line'>Monthly: ${formatCurrency(Math.ceil(emgPlan.monthly))}</div>`;
+        bfTab.innerHTML += `<div class='result-line'>Total: ${formatCurrency(emgPlan.total)}</div>`;
+        bfTab.innerHTML += `<div class='result-line'>Interest: ${formatCurrency(emgPlan.interest)}</div>`;
+      }
 
-  // Coupon Discount
-  const couponFinal = base - 900;
-  const couponDeposit = roundDepositUp(couponFinal * 0.25);
-  sectionTitle("Coupon Discount (-$900)");
-  html += `<div class='result-line'>Final Price: $${couponFinal.toFixed(2)}</div>`;
-  html += `<div class='result-line'>Deposit: $${couponDeposit.toFixed(2)}</div>`;
-  html += `<div class='result-line'>Due at Completion: $${(couponFinal - couponDeposit).toFixed(2)}</div>`;
+      if (bf > 0 && (doors + labor + permits > 0)) {
+        cumTab.innerHTML += "<h3>Cumulative Job Breakdown</h3>";
+        let skipFirst = true;
+        [23, 20, 18, 15, 10].forEach(p => {
+          const bfDisc = findCleanDiscount(bf, p);
+          const bfSub = bfDisc.finalPrice;
+          const total = bfSub + doors + labor + permits;
+          const deposit = roundDepositUp(bfSub * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
+          if (!skipFirst) cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(bfSub)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
+          skipFirst = false;
+          cumTab.innerHTML += renderStack(`${p}% Discount on BF`, total, bf - bfDisc.finalPrice, total, deposit);
+        });
+        const e = findCleanDiscount(bf, 18);
+        const bfSub = e.finalPrice;
+        const total = bfSub + doors + labor + permits;
+        const deposit = roundDepositUp(bfSub * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
+        const plan = calcFinance(total - deposit, 11.99, 86);
+        
+        // --- 25% Veterans / First Responders / Multi-Bathroom Cumulative ---
+        const vetDisc = findCleanDiscount(bf, 25);
+        const vetBF = vetDisc.finalPrice;
+        const vetTotal = vetBF + doors + labor + permits;
+        const vetDeposit = roundDepositUp(vetBF * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
+        const vetBalance = vetTotal - vetDeposit;
+        cumTab.innerHTML += "<hr><h3>25% Veterans / First Responders / Multi-Bathroom</h3>";
+        cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(vetBF)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
+        cumTab.innerHTML += renderStack("25% Special Discount", vetTotal, bf - vetBF, vetTotal, vetDeposit);
 
-  // Cash / Check / Charge Discounts
-  sectionTitle("Cash / Check / Charge Discounts");
-  const discounts = [23, 20, 19, 18, 15, 12, 10];
-  for (let pct of discounts) {
-    const d = findCleanDiscount(base, pct);
-    const deposit = roundDepositUp(d.finalPrice * 0.25);
-    html += `<div class='result-line'><strong>${pct}% Discount</strong></div>`;
-    html += `<div class='result-line'>Discount: -$${d.discount}</div>`;
-    html += `<div class='result-line'>Final Price: $${d.finalPrice}</div>`;
-    html += `<div class='result-line'>You Save: $${d.discount}</div>`;
-    html += `<div class='result-line'>Deposit: $${deposit}</div>`;
-    html += `<div class='result-line'>Due at Completion: $${d.finalPrice - deposit}</div><br>`;
-  }
+        // --- 13% Standard Financing Cumulative ---
+        const stdDisc = findCleanDiscount(bf, 13);
+        const stdBF = stdDisc.finalPrice;
+        const stdTotal = stdBF + doors + labor + permits;
+        const stdDeposit = roundDepositUp(stdBF * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
+        const stdBalance = stdTotal - stdDeposit;
+        const stdPlan28 = calcFinance(stdBalance, 7.99, 28);
+        const stdPlan86 = calcFinance(stdBalance, 11.99, 86);
+        cumTab.innerHTML += "<hr><h3>13% Standard Financing Plan</h3>";
+        cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(stdBF)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
+        cumTab.innerHTML += renderStack("13% Discount on BF", stdTotal, bf - stdBF, stdTotal, stdDeposit);
+        cumTab.innerHTML += `<div class='result-line'>Balance to Finance: ${formatCurrency(stdBalance)}</div>`;
+        cumTab.innerHTML += `<div class='result-line'>28 Mo @ 7.99%: ${formatCurrency(Math.ceil(stdPlan28.monthly))}</div>`;
+        cumTab.innerHTML += `<div class='result-line'>86 Mo @ 11.99%: ${formatCurrency(Math.ceil(stdPlan86.monthly))}</div>`;
 
-  // First Responder / Multi-Bathroom
-  sectionTitle("Veterans First Responders and Multi Bathroom Discount");
-  html += `<div class='result-line'><em>* 25% discount only available with Cash / Check / Charge transactions</em></div>`;const d25 = findCleanDiscount(base, 25);
-  const deposit25 = roundDepositUp(d25.finalPrice * 0.25);
-  html += `<div class='result-line'>25% Discount: -$${d25.discount}</div>`;
-  html += `<div class='result-line'>Final Price: $${d25.finalPrice}</div>`;
-  html += `<div class='result-line'>You Save: $${d25.discount}</div>`;
-  html += `<div class='result-line'>Deposit: $${deposit25}</div>`;
-  html += `<div class='result-line'>Due at Completion: $${d25.finalPrice - deposit25}</div>`;
+cumTab.innerHTML += "<hr><h3>Emergency 86-Month Cumulative Financing</h3>";
+        cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(bfSub)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
+        cumTab.innerHTML += renderStack("18% Discount on BF", total, bf - e.finalPrice, total, deposit);
+        cumTab.innerHTML += `<div class='result-line'>Monthly: ${formatCurrency(Math.ceil(plan.monthly))}</div>`;
+        cumTab.innerHTML += `<div class='result-line'>Total: ${formatCurrency(plan.total)}</div>`;
+        cumTab.innerHTML += `<div class='result-line'>Interest: ${formatCurrency(plan.interest)}</div>`;
+      }
 
-  // Standard Financing 13%
-  const d13 = findCleanDiscount(base, 13);
-  const deposit13 = roundDepositUp(d13.finalPrice * 0.25);
-  const finance13 = d13.finalPrice - deposit13;
-  sectionTitle("Standard Financing (13% Discount)");
-  html += `<div class='result-line'>Discount: -$${d13.discount}</div>`;
-  html += `<div class='result-line'>Final Price: $${d13.finalPrice}</div>`;
-  html += `<div class='result-line'>You Save: $${d13.discount}</div>`;
-  html += `<div class='result-line'>Deposit: $${deposit13}</div>`;
-  html += `<div class='result-line'>Finance Amount: $${finance13}</div>`;
-  html += `<div class='result-line'>18 Months @ 0%: $${Math.ceil(finance13 / 18)} / month</div>`;
-  html += `<div class='result-line'>24 Months @ 0%: $${Math.ceil(finance13 / 24)} / month</div>`;
-  const plan28 = calcFinance(finance13, 7.99, 28);
-  html += `<div class='result-line'>28 Months @ 7.99%: $${Math.ceil(plan28.monthly)} / month</div>`;
-  html += `<div class='result-line'>Total Cost: $${plan28.total.toFixed(2)} | Interest: $${plan28.interest.toFixed(2)}</div>`;
-  const plan86 = calcFinance(finance13, 11.99, 86);
-  html += `<div class='result-line'>86 Months @ 11.99%: $${Math.ceil(plan86.monthly)} / month</div>`;
-  html += `<div class='result-line'>Total Cost: $${plan86.total.toFixed(2)} | Interest: $${plan86.interest.toFixed(2)}</div>`;
-
-  // Lower Deposit Option
-  const lowDeposit = 1000;
-  const altFinance = d13.finalPrice - lowDeposit;
-  sectionTitle("Lower Deposit / Higher Finance");
-  html += `<div class='result-line'>Deposit: $${lowDeposit}</div>`;
-  html += `<div class='result-line'>Finance Amount: $${altFinance}</div>`;
-  const alt28 = calcFinance(altFinance, 7.99, 28);
-  const alt86 = calcFinance(altFinance, 11.99, 86);
-  const alt18 = { monthly: altFinance / 18, total: altFinance, interest: 0 };
-  const alt24 = { monthly: altFinance / 24, total: altFinance, interest: 0 };
-  html += `<div class='result-line'>18 Months @ 0%: $${Math.ceil(alt18.monthly)} / month</div>`;
-  html += `<div class='result-line'>24 Months @ 0%: $${Math.ceil(alt24.monthly)} / month</div>`;
-  html += `<div class='result-line'>28 Months @ 7.99%: $${Math.ceil(alt28.monthly)} / month</div>`;
-  html += `<div class='result-line'>Total Cost: $${alt28.total.toFixed(2)} | Interest: $${alt28.interest.toFixed(2)}</div>`;
-  html += `<div class='result-line'>86 Months @ 11.99%: $${Math.ceil(alt86.monthly)} / month</div>`;
-  html += `<div class='result-line'>Total Cost: $${alt86.total.toFixed(2)} | Interest: $${alt86.interest.toFixed(2)}</div>`;
-
-  // Emergency 18% Discount, 86 Months
-  const d18 = findCleanDiscount(base, 18);
-  const deposit18 = roundDepositUp(d18.finalPrice * 0.25);
-  const finance18 = d18.finalPrice - deposit18;
-  const emg86 = calcFinance(finance18, 11.99, 86);
-  sectionTitle("Emergency 86-Month Financing (18% Discount)");
-  html += `<div class='result-line'>Discount: -$${d18.discount}</div>`;
-  html += `<div class='result-line'>Final Price: $${d18.finalPrice}</div>`;
-  html += `<div class='result-line'>You Save: $${d18.discount}</div>`;
-  html += `<div class='result-line'>Deposit: $${deposit18}</div>`;
-  html += `<div class='result-line'>Finance Amount: $${finance18}</div>`;
-  html += `<div class='result-line'>Monthly Payment: $${Math.ceil(emg86.monthly)}</div>`;
-  html += `<div class='result-line'>Total Interest: $${emg86.interest.toFixed(2)}</div>`;
-  html += `<div class='result-line'>Total Cost: $${emg86.total.toFixed(2)}</div>`;
-
-  output.innerHTML = html;
-  output.style.display = "block";
-}
-</script>
-
+      otherTab.innerHTML += "<h3>Individual Contract Breakdown</h3>";
+      if (doors > 0) otherTab.innerHTML += renderStack("Doors (0% Discount)", doors, 0, doors, roundDepositUp(doors * 0.25));
+      if (labor > 0) otherTab.innerHTML += renderStack("Labor (0% Discount)", labor, 0, labor, roundDepositUp(labor * 0.25));
+      if (permits > 0) otherTab.innerHTML += renderStack("Permits (Paid in Full)", permits, 0, permits, permits);
+    }
+  </script>
 </body>
 </html>
