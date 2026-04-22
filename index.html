@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Calculator V2.8</title>
+  <title>Bath Fitter Sales Calculator V2.9</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -622,7 +622,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter pricing helper | V2.8</p>
+      <p class="eyebrow">Bath Fitter pricing helper | V2.9</p>
       <h1>Bath Fitter Sales Calculator</h1>
       <p class="hero-copy">
         Cleaner math, easier quoting, and a layout that works better on the sales floor.
@@ -684,13 +684,13 @@
           </div>
 
           <div class="tab-list" role="tablist" aria-label="Pricing views">
-            <button class="tab-button active" id="tabContract" type="button" role="tab" aria-controls="panelContract" aria-selected="true" data-tab="panelContract">Bath Fitter Contract</button>
-            <button class="tab-button" id="tabCumulative" type="button" role="tab" aria-controls="panelCumulative" aria-selected="false" data-tab="panelCumulative">Cumulative Job</button>
+            <button class="tab-button active" id="tabCumulative" type="button" role="tab" aria-controls="panelCumulative" aria-selected="true" data-tab="panelCumulative">Cumulative Job</button>
+            <button class="tab-button" id="tabContract" type="button" role="tab" aria-controls="panelContract" aria-selected="false" data-tab="panelContract">Bath Fitter Contract</button>
             <button class="tab-button" id="tabOther" type="button" role="tab" aria-controls="panelOther" aria-selected="false" data-tab="panelOther">Other Contracts</button>
           </div>
 
-          <section class="tab-panel active" id="panelContract" role="tabpanel" aria-labelledby="tabContract"></section>
-          <section class="tab-panel" id="panelCumulative" role="tabpanel" aria-labelledby="tabCumulative"></section>
+          <section class="tab-panel active" id="panelCumulative" role="tabpanel" aria-labelledby="tabCumulative"></section>
+          <section class="tab-panel" id="panelContract" role="tabpanel" aria-labelledby="tabContract"></section>
           <section class="tab-panel" id="panelOther" role="tabpanel" aria-labelledby="tabOther"></section>
 
           <p class="status-line" id="statusLine"></p>
@@ -1637,7 +1637,7 @@
           scenarioCardMarkup({
             title: percent + "% Discount",
             badge: "Cash / Check / Charge | 50% Deposit",
-            note: "Discount is adjusted downward by cents if needed so the final Bath Fitter price lands on a clean $25 increment.",
+            note: "Bath Fitter contract only. Cash, check, and charge deals use a 50% deposit.",
             subtotalCents: inputs.bf,
             discountCents: plan.discountCents,
             totalCents: plan.finalCents,
@@ -2245,15 +2245,21 @@
     }
 
     function chooseDefaultTab(inputs) {
+      const hasAddOns = Boolean(inputs.doors || inputs.labor || inputs.permits);
+
+      if (inputs.bf && hasAddOns) {
+        return "panelCumulative";
+      }
+
       if (inputs.bf) {
         return "panelContract";
       }
 
-      if (inputs.doors || inputs.labor || inputs.permits) {
+      if (hasAddOns) {
         return "panelOther";
       }
 
-      return "panelContract";
+      return "panelCumulative";
     }
 
     function ensureHelpfulActiveTab(inputs) {
@@ -2270,8 +2276,8 @@
         return;
       }
 
-      if ((!inputs.bf || !hasAddOns) && activePanel.id === "panelCumulative") {
-        setActiveTab(inputs.bf ? "panelContract" : chooseDefaultTab(inputs));
+      if (!inputs.bf && activePanel.id === "panelCumulative") {
+        setActiveTab(chooseDefaultTab(inputs));
       }
     }
 
@@ -2302,7 +2308,7 @@
         document.getElementById(id).value = "";
       });
 
-      setActiveTab("panelContract");
+      setActiveTab("panelCumulative");
       render();
       document.getElementById("bf").focus();
     }
