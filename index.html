@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Calculator V2.9</title>
+  <title>Bath Fitter Sales Calculator V2.10</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -622,7 +622,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter pricing helper | V2.9</p>
+      <p class="eyebrow">Bath Fitter pricing helper | V2.10</p>
       <h1>Bath Fitter Sales Calculator</h1>
       <p class="hero-copy">
         Cleaner math, easier quoting, and a layout that works better on the sales floor.
@@ -1759,16 +1759,22 @@
 
       const grossTotal = inputs.bf + addOns;
 
-      function cumulativeMathLine(discountedBathFitterCents) {
+      function cumulativeMathLine(discountCents, discountedBathFitterCents, cumulativeTotalCents) {
         return (
-          "Cumulative total = Bath Fitter " +
+          "Bath Fitter subtotal " +
+          formatCurrencyFromCents(inputs.bf) +
+          " - discount " +
+          formatCurrencyFromCents(discountCents) +
+          " = Bath Fitter total " +
           formatCurrencyFromCents(discountedBathFitterCents) +
           " + Doors " +
           formatCurrencyFromCents(inputs.doors) +
           " + Labor " +
           formatCurrencyFromCents(inputs.labor) +
-          " + Permits " +
-          formatCurrencyFromCents(inputs.permits)
+          " + Permit " +
+          formatCurrencyFromCents(inputs.permits) +
+          " = Cumulative total " +
+          formatCurrencyFromCents(cumulativeTotalCents)
         );
       }
 
@@ -1789,12 +1795,12 @@
         return scenarioCardMarkup({
           title: percent + "% Discount on Bath Fitter",
           badge: "Cash / Check / Charge | 50% Deposit",
-          note: "Only the Bath Fitter amount is discounted. Doors, labor, and permits remain at full price.",
+          note: "Cumulative cash, check, and charge total with the 50% deposit rule.",
           subtotalCents: grossTotal,
           discountCents: discount.discountCents,
           totalCents: total,
           depositCents: cumulativeDeposit(discount.finalCents, "cash"),
-          mathLine: cumulativeMathLine(discount.finalCents)
+          mathLine: cumulativeMathLine(discount.discountCents, discount.finalCents, total)
         });
       });
 
@@ -1824,7 +1830,7 @@
           discountCents: special.discountCents,
           totalCents: specialTotal,
           depositCents: specialDeposit,
-          mathLine: cumulativeMathLine(special.finalCents)
+          mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialTotal)
         }),
         scenarioCardMarkup({
           title: "13% Standard Financing",
@@ -1834,7 +1840,7 @@
           discountCents: standard.discountCents,
           totalCents: standardTotal,
           depositCents: standardDeposit,
-          mathLine: cumulativeMathLine(standard.finalCents),
+          mathLine: cumulativeMathLine(standard.discountCents, standard.finalCents, standardTotal),
           financeItems: [
             {
               label: "28 Months at 7.99%",
@@ -1866,7 +1872,7 @@
           discountCents: emergency.discountCents,
           totalCents: emergencyTotal,
           depositCents: emergencyDeposit,
-          mathLine: cumulativeMathLine(emergency.finalCents),
+          mathLine: cumulativeMathLine(emergency.discountCents, emergency.finalCents, emergencyTotal),
           financeItems: [
             {
               label: "86 Months at 11.99%",
