@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Calculator V2.7</title>
+  <title>Bath Fitter Sales Calculator V2.8</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -612,8 +612,9 @@
   <script src="price-list-data.js"></script>
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js");
+      window.addEventListener("load", async () => {
+        const registration = await navigator.serviceWorker.register("service-worker.js");
+        registration.update();
       });
     }
   </script>
@@ -621,7 +622,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter pricing helper</p>
+      <p class="eyebrow">Bath Fitter pricing helper | V2.8</p>
       <h1>Bath Fitter Sales Calculator</h1>
       <p class="hero-copy">
         Cleaner math, easier quoting, and a layout that works better on the sales floor.
