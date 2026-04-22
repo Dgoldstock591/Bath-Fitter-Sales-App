@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Calculator V2.13</title>
+  <title>Bath Fitter Sales Tool V2.15</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -210,16 +210,6 @@
       background: #eef6f4;
       color: var(--text);
       border: 1px solid var(--border);
-    }
-
-    .rule-note {
-      margin: 1rem 0 0;
-      padding: 0.9rem 1rem;
-      background: rgba(216, 142, 56, 0.12);
-      border: 1px solid rgba(216, 142, 56, 0.2);
-      border-radius: var(--radius-md);
-      color: #6e4f21;
-      line-height: 1.5;
     }
 
     .results-shell {
@@ -540,6 +530,16 @@
       line-height: 1.5;
     }
 
+    .panel-heading p:empty,
+    .section-block > p:empty,
+    .scenario-top p:empty,
+    .builder-card > p:empty,
+    .estimate-card > p:empty,
+    .estimator-detail:empty,
+    .status-line:empty {
+      display: none;
+    }
+
     .mini-button {
       border: 1px solid var(--border);
       border-radius: 999px;
@@ -622,12 +622,10 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter pricing helper | V2.13</p>
-      <h1>Bath Fitter Sales Calculator</h1>
+      <p class="eyebrow">Bath Fitter sales tool | V2.15</p>
+      <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
-        Cleaner math, easier quoting, and a layout that works better on the sales floor.
-        Results refresh as you type, with deposits rounded up to the next $25 and permits
-        collected in full.
+        Quote BF, cumulative totals, deposits, financing, and commission from one screen.
       </p>
     </header>
 
@@ -636,28 +634,24 @@
         <div class="panel-inner">
           <div class="panel-heading">
             <h2>Job Inputs</h2>
-            <p>Enter the Bath Fitter contract plus any side contracts. Leave fields blank if they do not apply.</p>
+            <p></p>
           </div>
 
           <div class="input-grid">
             <div class="input-card">
               <label for="bf">Bath Fitter EOI Total</label>
-              <p>This is the base contract amount where discounts and financing rules are applied.</p>
               <input type="number" id="bf" min="0" step="0.01" inputmode="decimal" placeholder="8815" />
             </div>
             <div class="input-card">
               <label for="doors">Door EOI Total</label>
-              <p>Doors are shown separately and use either the 50% cash deposit or the 30% financing deposit, depending on the deal type.</p>
               <input type="number" id="doors" min="0" step="0.01" inputmode="decimal" placeholder="1900" />
             </div>
             <div class="input-card">
               <label for="labor">Labor EOI Total</label>
-              <p>Labor follows the same deposit rules as doors: 50% on cash/check/charge deals or 30% on financing.</p>
               <input type="number" id="labor" min="0" step="0.01" inputmode="decimal" placeholder="2315" />
             </div>
             <div class="input-card">
               <label for="permits">Permit EOI Total</label>
-              <p>Permits stay at full price and are treated as due in full.</p>
               <input type="number" id="permits" min="0" step="0.01" inputmode="decimal" placeholder="450" />
             </div>
           </div>
@@ -665,22 +659,17 @@
           <div class="summary-strip" id="summaryStrip"></div>
 
           <div class="actions">
-            <button class="button primary" id="refreshButton" type="button">Refresh Results</button>
-            <button class="button secondary" id="clearButton" type="button">Clear Inputs</button>
+            <button class="button primary" id="refreshButton" type="button">Recalculate</button>
+            <button class="button secondary" id="clearButton" type="button">Clear Job</button>
           </div>
-
-          <p class="rule-note">
-            Discounts only apply to the Bath Fitter contract. Cash, check, and charge deals now use a
-            50% deposit. Financing scenarios now use a 30% deposit. Permits stay due in full.
-          </p>
         </div>
       </section>
 
       <section class="panel">
         <div class="results-shell">
           <div class="panel-heading">
-            <h2>Pricing Scenarios</h2>
-            <p>Each card shows subtotal, discount, final total, deposit, and balance due in a cleaner format.</p>
+            <h2>Pricing</h2>
+            <p></p>
           </div>
 
           <div class="tab-list" role="tablist" aria-label="Pricing views">
@@ -692,8 +681,6 @@
           <section class="tab-panel active" id="panelCumulative" role="tabpanel" aria-labelledby="tabCumulative"></section>
           <section class="tab-panel" id="panelContract" role="tabpanel" aria-labelledby="tabContract"></section>
           <section class="tab-panel" id="panelOther" role="tabpanel" aria-labelledby="tabOther"></section>
-
-          <p class="status-line" id="statusLine"></p>
         </div>
       </section>
     </main>
@@ -701,15 +688,15 @@
     <section class="panel estimator-panel">
       <div class="panel-inner">
         <div class="panel-heading">
-          <h2>Digital Estimator</h2>
-          <p>Build a quote from the 2/11/2026 price list, then load the rolled-up totals straight into the calculator.</p>
+          <h2>Quote Builder</h2>
+          <p>Build the job, then drop the totals into pricing.</p>
         </div>
 
         <div class="estimator-layout">
           <div class="builder-stack">
             <div class="builder-card">
               <h3>Price List Item</h3>
-              <p>Use the encoded catalog for common items from the current price list.</p>
+              <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="catalogCategory">Category</label>
@@ -717,7 +704,7 @@
                 </div>
                 <div class="form-field">
                   <label for="catalogSearch">Search</label>
-                  <input type="text" id="catalogSearch" placeholder="Search tub, wall, door, labor..." />
+                  <input type="text" id="catalogSearch" placeholder="Search item..." />
                 </div>
                 <div class="form-field">
                   <label for="catalogItem">Item</label>
@@ -740,14 +727,14 @@
 
             <div class="builder-card">
               <h3>Custom Line Item</h3>
-              <p>Use this for permit pricing, size matrices, or anything from the sheet that is not encoded yet.</p>
+              <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="customLabel">Line Item Name</label>
-                  <input type="text" id="customLabel" placeholder="Permit fee, custom threshold, extra labor..." />
+                  <input type="text" id="customLabel" placeholder="Permit, threshold, labor..." />
                 </div>
                 <div class="form-field">
-                  <label for="customBucket">Calculator Bucket</label>
+                  <label for="customBucket">Pricing Bucket</label>
                   <select id="customBucket">
                     <option value="bf">Bath Fitter</option>
                     <option value="doors">Doors</option>
@@ -771,11 +758,11 @@
           </div>
 
           <div class="estimate-card">
-            <h3>Estimate Builder</h3>
-            <p>Your quote lines stay grouped by Bath Fitter, doors, labor, and permits so you can move them into the calculator without rewriting anything.</p>
+            <h3>Quote Lines</h3>
+            <p></p>
             <div class="estimate-summary-strip" id="estimateSummaryStrip"></div>
             <div class="actions">
-              <button class="button primary" id="applyEstimateButton" type="button">Use Estimate Totals in Calculator</button>
+              <button class="button primary" id="applyEstimateButton" type="button">Load Into Pricing</button>
               <button class="button secondary" id="clearEstimateButton" type="button">Clear Estimate</button>
             </div>
             <div class="estimate-line-list" id="estimateList"></div>
@@ -788,15 +775,15 @@
     <section class="panel estimator-panel">
       <div class="panel-inner">
         <div class="panel-heading">
-          <h2>Commission Estimator</h2>
-          <p>Estimate the sales rep commission based on transaction cost tier, payment type, and the 85% commissionable base.</p>
+          <h2>Commission</h2>
+          <p></p>
         </div>
 
         <div class="estimator-layout">
           <div class="builder-stack">
             <div class="builder-card">
               <h3>Deal Setup</h3>
-              <p>Commission is based on transaction cost percentage, then applied to the net EOI after the 15% Bath Fitter admin reduction.</p>
+              <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="commissionSalesType">Sale Type</label>
@@ -812,7 +799,7 @@
 
             <div class="builder-card" id="commissionCashFields">
               <h3>Cash / Check / Charge Setup</h3>
-              <p>Use this when the job is not financed.</p>
+              <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="commissionPaymentMethod">Final Payment Method</label>
@@ -823,7 +810,7 @@
 
             <div class="builder-card" id="commissionFinanceFields" hidden>
               <h3>Financing Setup</h3>
-              <p>Commission transaction cost includes the discount, any credit-card cost on the deposit, and the processor cost on the financed balance.</p>
+              <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="commissionDepositMethod">Deposit Method</label>
@@ -839,7 +826,7 @@
 
           <div class="estimate-card">
             <h3>Commission Preview</h3>
-            <p>This preview uses the current calculator totals as gross EOI and shows the tier, cost percentage, commission base, and estimated payout.</p>
+            <p></p>
             <div class="estimate-summary-strip" id="commissionSummaryStrip"></div>
             <div class="estimate-line-list" id="commissionBreakdown"></div>
             <p class="estimator-detail" id="commissionStatus"></p>
@@ -879,14 +866,14 @@
         id: "no-discount",
         label: "No Discount",
         mode: "cash",
-        note: "No pricing discount is applied to the Bath Fitter portion of the job."
+        note: "No discount on BF."
       },
       {
         id: "coupon-900",
         label: "Coupon Discount (-$900 on BF)",
         mode: "cash",
         type: "coupon",
-        note: "Uses the flat $900 coupon discount on the Bath Fitter amount."
+        note: "Flat $900 off BF."
       },
       {
         id: "cash-23",
@@ -894,7 +881,7 @@
         mode: "cash",
         type: "percent",
         percent: 23,
-        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+        note: "Cash / check / charge."
       },
       {
         id: "cash-20",
@@ -902,7 +889,7 @@
         mode: "cash",
         type: "percent",
         percent: 20,
-        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+        note: "Cash / check / charge."
       },
       {
         id: "cash-18",
@@ -910,7 +897,7 @@
         mode: "cash",
         type: "percent",
         percent: 18,
-        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+        note: "Cash / check / charge."
       },
       {
         id: "cash-15",
@@ -918,7 +905,7 @@
         mode: "cash",
         type: "percent",
         percent: 15,
-        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+        note: "Cash / check / charge."
       },
       {
         id: "cash-10",
@@ -926,7 +913,7 @@
         mode: "cash",
         type: "percent",
         percent: 10,
-        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+        note: "Cash / check / charge."
       },
       {
         id: "special-25",
@@ -934,7 +921,7 @@
         mode: "cash",
         type: "percent",
         percent: 25,
-        note: "Veterans deals or managers specials."
+        note: "Veterans or manager special."
       },
       {
         id: "finance-13",
@@ -942,7 +929,7 @@
         mode: "finance",
         type: "percent",
         percent: 13,
-        note: "Standard financing scenario with a 30% deposit and selected processor plan."
+        note: "Standard financing."
       },
       {
         id: "finance-18",
@@ -950,7 +937,7 @@
         mode: "finance",
         type: "percent",
         percent: 18,
-        note: "Emergency financing scenario with a 30% deposit and selected processor plan."
+        note: "Emergency financing."
       }
     ];
     const COMMISSION_FINANCE_PLANS = [
@@ -1331,8 +1318,7 @@
       const scenario = getCommissionScenario();
       document.getElementById("commissionCashFields").hidden = scenario.mode !== "cash";
       document.getElementById("commissionFinanceFields").hidden = scenario.mode !== "finance";
-      document.getElementById("commissionScenarioDetail").textContent =
-        `${scenario.note} Gross EOI is taken from the current calculator inputs, and commission is paid on 85% of the net EOI.`;
+      document.getElementById("commissionScenarioDetail").textContent = scenario.note;
     }
 
     function renderCommission(inputs) {
@@ -1343,19 +1329,18 @@
 
       if (!estimate) {
         summaryEl.innerHTML = "";
-        breakdownEl.innerHTML = emptyState("Enter calculator totals or load an estimate first to preview commission on the job.");
-        statusEl.textContent =
-          "This tool uses the 2026 outside-sales transaction-cost table. Virtual tiers are included. Self-generated lead bonuses are not included yet.";
+        breakdownEl.innerHTML = emptyState("Enter pricing totals to see commission.");
+        statusEl.textContent = "";
         return;
       }
 
       summaryEl.innerHTML = [
         { label: "Gross EOI", value: estimate.grossEoiCents },
         { label: "Net EOI", value: estimate.netEoiCents },
-        { label: "Commission Base (85%)", value: estimate.commissionBaseCents },
-        { label: "Transaction Cost %", value: `${estimate.transactionCostPercent.toFixed(2)}%` },
-        { label: "Commission Rate", value: `${estimate.tier.rate.toFixed(2)}%` },
-        { label: "Estimated Commission", value: formatCurrencyFromCents(estimate.commissionCents) }
+        { label: "85% Base", value: estimate.commissionBaseCents },
+        { label: "Cost %", value: `${estimate.transactionCostPercent.toFixed(2)}%` },
+        { label: "Rate", value: `${estimate.tier.rate.toFixed(2)}%` },
+        { label: "Commission", value: formatCurrencyFromCents(estimate.commissionCents) }
       ]
         .map((item) => {
           const valueMarkup = typeof item.value === "number" ? formatCurrencyFromCents(item.value) : item.value;
@@ -1371,21 +1356,21 @@
       breakdownEl.innerHTML = [
         {
           title: "Commission Tier",
-          detail: `${estimate.saleType.label} falls in the ${estimate.tier.label} transaction-cost range at a ${estimate.tier.rate.toFixed(2)}% commission rate.`
+          detail: `${estimate.saleType.label} | ${estimate.tier.label} | ${estimate.tier.rate.toFixed(2)}%`
         },
         {
           title: "Transaction Cost Breakdown",
           detail:
-            `Discount cost ${formatCurrencyFromCents(estimate.discountCents)}` +
-            ` | Card cost ${formatCurrencyFromCents(estimate.cardCostCents)}` +
-            ` | Finance cost ${formatCurrencyFromCents(estimate.financeCostCents)}` +
-            ` | Total transaction cost ${formatCurrencyFromCents(estimate.transactionCostsCents)}`
+            `Discount ${formatCurrencyFromCents(estimate.discountCents)}` +
+            ` | Card ${formatCurrencyFromCents(estimate.cardCostCents)}` +
+            ` | Finance ${formatCurrencyFromCents(estimate.financeCostCents)}` +
+            ` | Total ${formatCurrencyFromCents(estimate.transactionCostsCents)}`
         },
         {
           title: "Payment Structure",
           detail:
             `${estimate.paymentLabel}` +
-            ` | Expected deposit ${formatCurrencyFromCents(estimate.depositCents)}` +
+            ` | Deposit ${formatCurrencyFromCents(estimate.depositCents)}` +
             (estimate.scenario.mode === "finance"
               ? ` | Financed balance ${formatCurrencyFromCents(estimate.financedBalanceCents)}`
               : "")
@@ -1411,8 +1396,7 @@
         )
         .join("");
 
-      statusEl.textContent =
-        "Commission math follows the commission agreement: transaction cost percent is based on discount plus card and/or finance costs divided by gross EOI, then commission is calculated on net EOI after the 15% admin reduction.";
+      statusEl.textContent = "";
     }
 
     function escapeHtml(value) {
@@ -1515,9 +1499,9 @@
       const total = inputs.bf + addOns;
 
       document.getElementById("summaryStrip").innerHTML = [
-        { label: "Bath Fitter", value: inputs.bf },
-        { label: "Add-On Contracts", value: addOns },
-        { label: "Full Job Total", value: total }
+        { label: "BF", value: inputs.bf },
+        { label: "Add-Ons", value: addOns },
+        { label: "Job Total", value: total }
       ]
         .map(
           (item) => `
@@ -1562,7 +1546,7 @@
           <div class="scenario-top">
             <div>
               <h4>${escapeHtml(config.title)}</h4>
-              <p>${escapeHtml(config.note)}</p>
+              ${config.note ? `<p>${escapeHtml(config.note)}</p>` : ""}
             </div>
             ${config.badge ? `<div class="badge">${escapeHtml(config.badge)}</div>` : ""}
           </div>
@@ -1598,7 +1582,7 @@
       return `
         <section class="section-block">
           <h3>${escapeHtml(title)}</h3>
-          <p>${escapeHtml(description)}</p>
+          ${description ? `<p>${escapeHtml(description)}</p>` : ""}
           <div class="card-grid ${twoUp ? "two-up" : ""}">
             ${cards.join("")}
           </div>
@@ -1612,7 +1596,7 @@
 
     function buildContractTab(inputs) {
       if (!inputs.bf) {
-        return emptyState("Enter a Bath Fitter EOI total to see contract discounts and financing options.");
+        return emptyState("Enter BF total.");
       }
 
       const cashCards = [];
@@ -1623,7 +1607,7 @@
         scenarioCardMarkup({
           title: "Coupon Discount",
           badge: "Flat $900 | 50% Deposit",
-          note: "Flat coupon discount on the Bath Fitter contract. Cash, check, and charge deals now use a 50% deposit.",
+          note: "",
           subtotalCents: inputs.bf,
           discountCents: coupon.discountCents,
           totalCents: coupon.finalCents,
@@ -1637,7 +1621,7 @@
           scenarioCardMarkup({
             title: percent + "% Discount",
             badge: "Cash / Check / Charge | 50% Deposit",
-            note: "Bath Fitter contract only. Cash, check, and charge deals use a 50% deposit.",
+            note: "",
             subtotalCents: inputs.bf,
             discountCents: plan.discountCents,
             totalCents: plan.finalCents,
@@ -1651,7 +1635,7 @@
         scenarioCardMarkup({
           title: "25% Special Discount",
           badge: "Veterans Deals / Managers Specials | 50% Deposit",
-          note: "Veterans deals or managers specials.",
+          note: "",
           subtotalCents: inputs.bf,
           discountCents: special.discountCents,
           totalCents: special.finalCents,
@@ -1674,7 +1658,7 @@
         scenarioCardMarkup({
           title: "13% Standard Financing",
           badge: "Finance | 30% Deposit",
-          note: "Standard financing now uses a 30% deposit before payment estimates are calculated.",
+          note: "",
           subtotalCents: inputs.bf,
           discountCents: standard.discountCents,
           totalCents: standard.finalCents,
@@ -1713,7 +1697,7 @@
         scenarioCardMarkup({
           title: "Emergency 86-Month Financing",
           badge: "18% Discount | 30% Deposit",
-          note: "Emergency financing uses the 18% discount and the new 30% financing deposit.",
+          note: "",
           subtotalCents: inputs.bf,
           discountCents: emergency.discountCents,
           totalCents: emergency.finalCents,
@@ -1735,19 +1719,19 @@
 
       return (
         sectionMarkup(
-          "Discount Options",
-          "These cards focus only on the Bath Fitter contract. All non-financed deals shown here use a 50% deposit.",
+          "Cash / Check / Charge",
+          "",
           cashCards
         ) +
         sectionMarkup(
-          "Veterans Deals / Managers Specials",
-          "Dedicated 25% special pricing.",
+          "Veterans / Manager Special",
+          "",
           specialCards,
           false
         ) +
         sectionMarkup(
-          "Financing Options",
-          "These cards show financing math after the new 30% deposit is collected.",
+          "Financing",
+          "",
           financingCards
         )
       );
@@ -1755,12 +1739,12 @@
 
     function buildCumulativeTab(inputs) {
       if (!inputs.bf) {
-        return emptyState("Enter a Bath Fitter EOI total first. Cumulative pricing combines the discounted Bath Fitter amount with the other contracts.");
+        return emptyState("Enter BF total.");
       }
 
       const addOns = inputs.doors + inputs.labor + inputs.permits;
       if (!addOns) {
-        return emptyState("Add a door, labor, or permit amount to compare full-job cumulative totals.");
+        return emptyState("Add doors, labor, or permit.");
       }
 
       const grossTotal = inputs.bf + addOns;
@@ -1805,7 +1789,7 @@
         return scenarioCardMarkup({
           title: percent + "% Discount on Bath Fitter",
           badge: "Cash / Check / Charge | 50% Deposit",
-          note: "Cumulative cash, check, and charge total with the 50% deposit rule.",
+          note: "",
           subtotalCents: grossTotal,
           discountCents: discount.discountCents,
           totalCents: total,
@@ -1835,7 +1819,7 @@
         scenarioCardMarkup({
           title: "25% Special Discount",
           badge: "Veterans Deals / Managers Specials | 50% Deposit",
-          note: "Veterans deals or managers specials.",
+          note: "",
           subtotalCents: grossTotal,
           discountCents: special.discountCents,
           totalCents: specialTotal,
@@ -1848,7 +1832,7 @@
         scenarioCardMarkup({
           title: "13% Standard Financing",
           badge: "Cumulative Finance | 30% Deposit",
-          note: "Financing is based on the full cumulative balance after the Bath Fitter discount and the new 30% deposit rule are applied.",
+          note: "",
           subtotalCents: grossTotal,
           discountCents: standard.discountCents,
           totalCents: standardTotal,
@@ -1880,7 +1864,7 @@
         scenarioCardMarkup({
           title: "Emergency 86-Month Financing",
           badge: "18% Discount | 30% Deposit",
-          note: "Emergency cumulative plan uses the Bath Fitter emergency discount and the new financing deposit rule.",
+          note: "",
           subtotalCents: grossTotal,
           discountCents: emergency.discountCents,
           totalCents: emergencyTotal,
@@ -1903,19 +1887,19 @@
 
       return (
         sectionMarkup(
-          "Cumulative Discount Views",
-          "This section compares non-financed discount outcomes for the full job while only discounting the Bath Fitter portion.",
+          "Cash / Check / Charge Cumulative",
+          "",
           cumulativeCards
         ) +
         sectionMarkup(
-          "Veterans Deals / Managers Specials",
-          "Dedicated 25% special pricing for the full cumulative job.",
+          "Veterans / Manager Special Cumulative",
+          "",
           specialCards,
           false
         ) +
         sectionMarkup(
-          "Cumulative Financing Views",
-          "These cards show the finance options for the full job balance after the new 30% financing deposit is collected.",
+          "Financing Cumulative",
+          "",
           financingCards
         )
       );
@@ -1929,7 +1913,7 @@
           scenarioCardMarkup({
             title: "Doors Contract",
             badge: "Cash / Check / Charge | 50% Deposit",
-            note: "Standalone doors stay at full price and use the new 50% cash-style deposit.",
+            note: "",
             subtotalCents: inputs.doors,
             discountCents: 0,
             totalCents: inputs.doors,
@@ -1943,7 +1927,7 @@
           scenarioCardMarkup({
             title: "Labor Contract",
             badge: "Cash / Check / Charge | 50% Deposit",
-            note: "Standalone labor stays at full price and uses the new 50% cash-style deposit.",
+            note: "",
             subtotalCents: inputs.labor,
             discountCents: 0,
             totalCents: inputs.labor,
@@ -1957,7 +1941,7 @@
           scenarioCardMarkup({
             title: "Permit Contract",
             badge: "Paid in Full",
-            note: "Permits are still treated as due in full.",
+            note: "",
             subtotalCents: inputs.permits,
             discountCents: 0,
             totalCents: inputs.permits,
@@ -1967,12 +1951,12 @@
       }
 
       if (!cards.length) {
-        return emptyState("Enter door, labor, or permit totals to see the standalone contract breakdown.");
+        return emptyState("Enter doors, labor, or permit totals.");
       }
 
       return sectionMarkup(
-        "Standalone Contract Views",
-        "Use these cards when you need to quote the side contracts separately from the Bath Fitter agreement.",
+        "Standalone Contracts",
+        "",
         cards
       );
     }
@@ -1993,11 +1977,11 @@
       const totals = getEstimateTotals();
 
       document.getElementById("estimateSummaryStrip").innerHTML = [
-        { label: "Bath Fitter", value: totals.bf },
+        { label: "BF", value: totals.bf },
         { label: "Doors", value: totals.doors },
         { label: "Labor", value: totals.labor },
         { label: "Permits", value: totals.permits },
-        { label: "Estimate Total", value: totals.grand }
+        { label: "Quote Total", value: totals.grand }
       ]
         .map(
           (item) => `
@@ -2014,7 +1998,7 @@
       const container = document.getElementById("estimateList");
 
       if (!state.estimateItems.length) {
-        container.innerHTML = emptyState("No estimate lines yet. Add a price-list item or a custom line item to start building a quote.");
+        container.innerHTML = emptyState("No quote lines yet.");
       } else {
         container.innerHTML = state.estimateItems
           .map(
@@ -2041,8 +2025,7 @@
       }
 
       document.getElementById("estimateStatus").textContent =
-        state.estimateMessage ||
-        "Catalog items come from a curated slice of the 2/11/2026 price list. Use custom lines for permit-sheet values or anything that still depends on a matrix.";
+        state.estimateMessage || "";
     }
 
     function getCatalogCategories() {
@@ -2154,7 +2137,7 @@
       const quantityInput = document.getElementById("catalogQuantity");
 
       if (!item || !variant) {
-        document.getElementById("catalogItemDetail").textContent = "Pick a category and item to preview the current price-list detail.";
+        document.getElementById("catalogItemDetail").textContent = "Select an item.";
         return;
       }
 
@@ -2163,9 +2146,7 @@
       const quantitySuffix = item.quantityLabel ? ` per ${item.quantityLabel}` : "";
 
       document.getElementById("catalogItemDetail").textContent =
-        `${item.description} Bucket: ${BUCKET_LABELS[item.bucket]}. ` +
-        `Selected: ${variant.label} at ${formatCurrency(variant.price)}${quantitySuffix}. ` +
-        `Extended total: ${formatCurrencyFromCents(lineTotal)}.`;
+        `${BUCKET_LABELS[item.bucket]} | ${variant.label} | Qty ${quantity} x ${formatCurrency(variant.price)}${quantitySuffix} = ${formatCurrencyFromCents(lineTotal)}`;
     }
 
     function addCatalogItem() {
@@ -2174,7 +2155,7 @@
       const quantity = Math.max(1, Number(document.getElementById("catalogQuantity").value) || 1);
 
       if (!item || !variant) {
-        state.estimateMessage = "Pick a valid price-list item before adding it to the estimate.";
+        state.estimateMessage = "Select a valid item.";
         renderEstimateList();
         return;
       }
@@ -2195,7 +2176,7 @@
         totalCents
       });
 
-      state.estimateMessage = `${item.label} added to the estimate.`;
+      state.estimateMessage = `${item.label} added.`;
       render();
     }
 
@@ -2206,7 +2187,7 @@
       const quantity = Math.max(1, Number(document.getElementById("customQuantity").value) || 1);
 
       if (!label || !amount) {
-        state.estimateMessage = "Add a custom name and price before creating a custom line item.";
+        state.estimateMessage = "Enter a name and price.";
         renderEstimateList();
         return;
       }
@@ -2228,13 +2209,13 @@
       document.getElementById("customLabel").value = "";
       document.getElementById("customAmount").value = "";
       document.getElementById("customQuantity").value = "1";
-      state.estimateMessage = `${label} added to the estimate.`;
+      state.estimateMessage = `${label} added.`;
       render();
     }
 
     function removeEstimateItem(id) {
       state.estimateItems = state.estimateItems.filter((item) => item.id !== id);
-      state.estimateMessage = "Estimate line removed.";
+      state.estimateMessage = "Line removed.";
       render();
     }
 
@@ -2246,14 +2227,14 @@
       document.getElementById("labor").value = totals.labor ? formatInputAmount(totals.labor) : "";
       document.getElementById("permits").value = totals.permits ? formatInputAmount(totals.permits) : "";
 
-      state.estimateMessage = "Estimate totals loaded into the calculator inputs.";
+      state.estimateMessage = "Totals loaded into pricing.";
       render();
       document.getElementById("bf").focus();
     }
 
     function clearEstimate() {
       state.estimateItems = [];
-      state.estimateMessage = "Estimate cleared.";
+      state.estimateMessage = "Quote cleared.";
       render();
     }
 
@@ -2308,8 +2289,6 @@
 
     function render() {
       const inputs = readInputs();
-      const anyInput = inputIds.some((id) => clampCents(amountToCents(document.getElementById(id).value)) > 0);
-
       refreshCommissionControls();
       renderSummary(inputs);
       renderEstimateSummary();
@@ -2319,10 +2298,6 @@
       document.getElementById("panelContract").innerHTML = buildContractTab(inputs);
       document.getElementById("panelCumulative").innerHTML = buildCumulativeTab(inputs);
       document.getElementById("panelOther").innerHTML = buildOtherContractsTab(inputs);
-
-      document.getElementById("statusLine").textContent = anyInput
-        ? "Math is now using the new deal rules: 50% deposit on cash, check, and charge deals, 30% deposit on financing, true cumulative subtotals, and no negative edge-case balances."
-        : "Start with a Bath Fitter amount, build an estimate from the price list, or enter side-contract totals. Results update automatically as you type.";
 
       ensureHelpfulActiveTab(inputs);
       saveState();
