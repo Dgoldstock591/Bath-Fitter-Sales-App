@@ -1,200 +1,2355 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bath Fitter Sales App V2.4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bath Fitter Sales Calculator V2.7</title>
+  <link rel="manifest" href="manifest.json" />
   <style>
-    body { font-family: Arial, sans-serif; background: #f3faff; margin: 0; padding: 0; }
-    .container { max-width: 800px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    h1 { color: #00796B; text-align: center; margin-bottom: 1.5rem; }
-    label { display: block; margin: 1rem 0 0.25rem; font-weight: bold; }
-    input[type="number"] { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #ccc; margin-bottom: 1rem; }
-    button { width: 100%; padding: 1rem; font-size: 1rem; background-color: #00796B; color: white; border: none; border-radius: 0.5rem; cursor: pointer; }
-    button:hover { background-color: #005f56; }
-    .tabs { display: flex; justify-content: space-between; margin-top: 2rem; }
-    .tab-button { flex: 1; padding: 0.75rem; text-align: center; background: #e0f2f1; border: 1px solid #00796B; cursor: pointer; }
-    .tab-button.active { background: #00796B; color: white; font-weight: bold; }
-    .tab-content { display: none; margin-top: 1.5rem; padding: 1rem; background: #f9f9f9; border-radius: 0.75rem; }
-    .tab-content.active { display: block; }
-    .result-line { margin: 0.5rem 0; }
-    hr { margin: 2rem 0; border: none; border-top: 1px solid #ccc; }
-    .math-line { font-style: italic; color: #444; margin: 0.25rem 0 0.75rem; }
+    :root {
+      --bg-top: #dff4f0;
+      --bg-bottom: #f7f1e8;
+      --surface: #ffffff;
+      --surface-alt: #f6fbfa;
+      --border: #c9dfd8;
+      --border-strong: #8eb7ad;
+      --text: #153632;
+      --muted: #53706a;
+      --accent: #0d7a68;
+      --accent-dark: #08584d;
+      --accent-soft: #d3efe8;
+      --highlight: #d88e38;
+      --shadow: 0 18px 45px rgba(14, 76, 64, 0.12);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 36%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page-shell {
+      width: min(1220px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.5rem 0 3rem;
+    }
+
+    .hero {
+      padding: 1.5rem 1.5rem 0.5rem;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--accent-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0.35rem 0 0.6rem;
+      font-size: clamp(2rem, 5vw, 3.35rem);
+      line-height: 1.02;
+    }
+
+    .hero-copy {
+      max-width: 700px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.6;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-inner {
+      padding: 1.35rem;
+    }
+
+    .panel-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .panel-heading h2 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .panel-heading p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .input-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .input-card {
+      padding: 1rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .input-card label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .input-card p {
+      margin: 0 0 0.7rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .input-card input {
+      width: 100%;
+      padding: 0.85rem 0.95rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .input-card input:focus {
+      outline: 3px solid rgba(13, 122, 104, 0.18);
+      border-color: var(--accent);
+    }
+
+    .summary-strip {
+      display: grid;
+      gap: 0.9rem;
+      margin: 1rem 0 1.15rem;
+    }
+
+    .summary-chip {
+      padding: 0.95rem 1rem;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #eff9f7 100%);
+      border: 1px solid var(--border);
+    }
+
+    .summary-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .summary-chip strong {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 1.3rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.9rem 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #13927d 100%);
+      color: #fff;
+      box-shadow: 0 14px 24px rgba(13, 122, 104, 0.2);
+    }
+
+    .button.secondary {
+      background: #eef6f4;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .rule-note {
+      margin: 1rem 0 0;
+      padding: 0.9rem 1rem;
+      background: rgba(216, 142, 56, 0.12);
+      border: 1px solid rgba(216, 142, 56, 0.2);
+      border-radius: var(--radius-md);
+      color: #6e4f21;
+      line-height: 1.5;
+    }
+
+    .results-shell {
+      padding: 1.35rem;
+    }
+
+    .tab-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab-button {
+      padding: 0.85rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .tab-button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 12px 22px rgba(13, 122, 104, 0.18);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .section-block + .section-block {
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-block h3 {
+      margin: 0 0 0.25rem;
+      font-size: 1.08rem;
+    }
+
+    .section-block p {
+      margin: 0 0 0.95rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .scenario-card {
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 22px rgba(14, 76, 64, 0.06);
+    }
+
+    .scenario-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .scenario-top h4 {
+      margin: 0 0 0.25rem;
+      font-size: 1.06rem;
+    }
+
+    .scenario-top p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .badge {
+      flex-shrink: 0;
+      padding: 0.42rem 0.72rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .math-line {
+      margin: 0 0 0.9rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: var(--radius-sm);
+      background: #f2faf8;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .metrics {
+      display: grid;
+      gap: 0.7rem;
+      margin-bottom: 0.95rem;
+    }
+
+    .metric {
+      padding: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbfb 100%);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 1.12rem;
+    }
+
+    .metric.highlight {
+      background: linear-gradient(180deg, #0d7a68 0%, #0a6556 100%);
+      border-color: #0a6556;
+      color: #fff;
+    }
+
+    .metric.highlight span {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .finance-block {
+      margin-top: 0.95rem;
+      padding-top: 0.95rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .finance-block h5 {
+      margin: 0 0 0.7rem;
+      font-size: 0.96rem;
+    }
+
+    .finance-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .finance-item {
+      padding: 0.85rem 0.9rem;
+      background: #f4faf9;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .finance-item strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 1rem;
+    }
+
+    .finance-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .empty-state {
+      padding: 1rem;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      background: #fbfdfc;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .status-line {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .estimator-panel {
+      margin-top: 1.25rem;
+    }
+
+    .estimator-layout,
+    .builder-stack,
+    .estimate-summary-strip,
+    .estimate-line-list,
+    .estimator-form-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .builder-card,
+    .estimate-card {
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 22px rgba(14, 76, 64, 0.05);
+    }
+
+    .builder-card h3,
+    .estimate-card h3 {
+      margin: 0 0 0.3rem;
+      font-size: 1.08rem;
+    }
+
+    .builder-card p,
+    .estimate-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 0.82rem 0.9rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .form-field input:focus,
+    .form-field select:focus {
+      outline: 3px solid rgba(13, 122, 104, 0.18);
+      border-color: var(--accent);
+    }
+
+    .estimator-detail {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.9rem;
+      border-radius: var(--radius-sm);
+      background: #f4faf9;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .estimate-summary-chip {
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #eff9f7 100%);
+      border: 1px solid var(--border);
+    }
+
+    .estimate-summary-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .estimate-summary-chip strong {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 1.15rem;
+    }
+
+    .estimate-line {
+      padding: 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fbfdfc;
+    }
+
+    .estimate-line-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .estimate-line-top h4 {
+      margin: 0 0 0.2rem;
+      font-size: 1rem;
+    }
+
+    .estimate-line-top p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .estimate-line-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .mini-button {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.45rem 0.75rem;
+      background: #fff;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mini-button.danger {
+      color: #8b3d2f;
+      border-color: #e5c1b8;
+      background: #fff7f4;
+    }
+
+    @media (min-width: 700px) {
+      .input-grid,
+      .summary-strip,
+      .metrics,
+      .estimate-summary-strip,
+      .estimator-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .workspace {
+        grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .panel.form-panel {
+        position: sticky;
+        top: 1rem;
+      }
+
+      .card-grid.two-up {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .estimator-layout {
+        grid-template-columns: minmax(360px, 420px) minmax(0, 1fr);
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 699px) {
+      .page-shell {
+        width: min(100% - 1rem, 100%);
+        padding-top: 0.75rem;
+      }
+
+      .hero,
+      .panel-inner,
+      .results-shell {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .tab-list {
+        grid-template-columns: 1fr;
+      }
+
+      .actions .button {
+        width: 100%;
+      }
+    }
   </style>
-  <link rel="manifest" href="manifest.json">
+  <script src="price-list-data.js"></script>
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js');
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js");
       });
     }
   </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Bath Fitter Sales Calculator V2.4</h1>
-    <label for="bf">Bath Fitter EOI Total</label>
-    <input type="number" id="bf" placeholder="e.g. 8815" />
-    <label for="doors">Door EOI Total</label>
-    <input type="number" id="doors" placeholder="e.g. 1900" />
-    <label for="labor">Labor EOI Total</label>
-    <input type="number" id="labor" placeholder="e.g. 2315" />
-    <label for="permits">Permit EOI Total</label>
-    <input type="number" id="permits" placeholder="e.g. 450" />
-    <button onclick="calculate()">Calculate</button>
+  <div class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">Bath Fitter pricing helper</p>
+      <h1>Bath Fitter Sales Calculator</h1>
+      <p class="hero-copy">
+        Cleaner math, easier quoting, and a layout that works better on the sales floor.
+        Results refresh as you type, with deposits rounded up to the next $25 and permits
+        collected in full.
+      </p>
+    </header>
 
-    <div class="tabs">
-      <div class="tab-button active" onclick="switchTab('bfTab')">Bath Fitter Contract</div>
-      <div class="tab-button" onclick="switchTab('cumTab')">Cumulative Job</div>
-      <div class="tab-button" onclick="switchTab('otherTab')">Other Contracts</div>
-    </div>
-    <div id="bfTab" class="tab-content active"></div>
-    <div id="cumTab" class="tab-content"></div>
-    <div id="otherTab" class="tab-content"></div>
+    <main class="workspace">
+      <section class="panel form-panel">
+        <div class="panel-inner">
+          <div class="panel-heading">
+            <h2>Job Inputs</h2>
+            <p>Enter the Bath Fitter contract plus any side contracts. Leave fields blank if they do not apply.</p>
+          </div>
+
+          <div class="input-grid">
+            <div class="input-card">
+              <label for="bf">Bath Fitter EOI Total</label>
+              <p>This is the base contract amount where discounts and financing rules are applied.</p>
+              <input type="number" id="bf" min="0" step="0.01" inputmode="decimal" placeholder="8815" />
+            </div>
+            <div class="input-card">
+              <label for="doors">Door EOI Total</label>
+              <p>Doors are shown separately and use either the 50% cash deposit or the 30% financing deposit, depending on the deal type.</p>
+              <input type="number" id="doors" min="0" step="0.01" inputmode="decimal" placeholder="1900" />
+            </div>
+            <div class="input-card">
+              <label for="labor">Labor EOI Total</label>
+              <p>Labor follows the same deposit rules as doors: 50% on cash/check/charge deals or 30% on financing.</p>
+              <input type="number" id="labor" min="0" step="0.01" inputmode="decimal" placeholder="2315" />
+            </div>
+            <div class="input-card">
+              <label for="permits">Permit EOI Total</label>
+              <p>Permits stay at full price and are treated as due in full.</p>
+              <input type="number" id="permits" min="0" step="0.01" inputmode="decimal" placeholder="450" />
+            </div>
+          </div>
+
+          <div class="summary-strip" id="summaryStrip"></div>
+
+          <div class="actions">
+            <button class="button primary" id="refreshButton" type="button">Refresh Results</button>
+            <button class="button secondary" id="clearButton" type="button">Clear Inputs</button>
+          </div>
+
+          <p class="rule-note">
+            Discounts only apply to the Bath Fitter contract. Cash, check, and charge deals now use a
+            50% deposit. Financing scenarios now use a 30% deposit. Permits stay due in full.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="results-shell">
+          <div class="panel-heading">
+            <h2>Pricing Scenarios</h2>
+            <p>Each card shows subtotal, discount, final total, deposit, and balance due in a cleaner format.</p>
+          </div>
+
+          <div class="tab-list" role="tablist" aria-label="Pricing views">
+            <button class="tab-button active" id="tabContract" type="button" role="tab" aria-controls="panelContract" aria-selected="true" data-tab="panelContract">Bath Fitter Contract</button>
+            <button class="tab-button" id="tabCumulative" type="button" role="tab" aria-controls="panelCumulative" aria-selected="false" data-tab="panelCumulative">Cumulative Job</button>
+            <button class="tab-button" id="tabOther" type="button" role="tab" aria-controls="panelOther" aria-selected="false" data-tab="panelOther">Other Contracts</button>
+          </div>
+
+          <section class="tab-panel active" id="panelContract" role="tabpanel" aria-labelledby="tabContract"></section>
+          <section class="tab-panel" id="panelCumulative" role="tabpanel" aria-labelledby="tabCumulative"></section>
+          <section class="tab-panel" id="panelOther" role="tabpanel" aria-labelledby="tabOther"></section>
+
+          <p class="status-line" id="statusLine"></p>
+        </div>
+      </section>
+    </main>
+
+    <section class="panel estimator-panel">
+      <div class="panel-inner">
+        <div class="panel-heading">
+          <h2>Digital Estimator</h2>
+          <p>Build a quote from the 2/11/2026 price list, then load the rolled-up totals straight into the calculator.</p>
+        </div>
+
+        <div class="estimator-layout">
+          <div class="builder-stack">
+            <div class="builder-card">
+              <h3>Price List Item</h3>
+              <p>Use the encoded catalog for common items from the current price list.</p>
+              <div class="estimator-form-grid">
+                <div class="form-field">
+                  <label for="catalogCategory">Category</label>
+                  <select id="catalogCategory"></select>
+                </div>
+                <div class="form-field">
+                  <label for="catalogSearch">Search</label>
+                  <input type="text" id="catalogSearch" placeholder="Search tub, wall, door, labor..." />
+                </div>
+                <div class="form-field">
+                  <label for="catalogItem">Item</label>
+                  <select id="catalogItem"></select>
+                </div>
+                <div class="form-field">
+                  <label for="catalogVariant">Variant / Finish</label>
+                  <select id="catalogVariant"></select>
+                </div>
+                <div class="form-field">
+                  <label for="catalogQuantity">Quantity</label>
+                  <input type="number" id="catalogQuantity" min="1" step="1" value="1" />
+                </div>
+              </div>
+              <div class="actions">
+                <button class="button primary" id="addCatalogItemButton" type="button">Add Price List Item</button>
+              </div>
+              <p class="estimator-detail" id="catalogItemDetail"></p>
+            </div>
+
+            <div class="builder-card">
+              <h3>Custom Line Item</h3>
+              <p>Use this for permit pricing, size matrices, or anything from the sheet that is not encoded yet.</p>
+              <div class="estimator-form-grid">
+                <div class="form-field">
+                  <label for="customLabel">Line Item Name</label>
+                  <input type="text" id="customLabel" placeholder="Permit fee, custom threshold, extra labor..." />
+                </div>
+                <div class="form-field">
+                  <label for="customBucket">Calculator Bucket</label>
+                  <select id="customBucket">
+                    <option value="bf">Bath Fitter</option>
+                    <option value="doors">Doors</option>
+                    <option value="labor">Labor</option>
+                    <option value="permits">Permits</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="customAmount">Unit Price</label>
+                  <input type="number" id="customAmount" min="0" step="0.01" placeholder="0.00" />
+                </div>
+                <div class="form-field">
+                  <label for="customQuantity">Quantity</label>
+                  <input type="number" id="customQuantity" min="1" step="1" value="1" />
+                </div>
+              </div>
+              <div class="actions">
+                <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Item</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="estimate-card">
+            <h3>Estimate Builder</h3>
+            <p>Your quote lines stay grouped by Bath Fitter, doors, labor, and permits so you can move them into the calculator without rewriting anything.</p>
+            <div class="estimate-summary-strip" id="estimateSummaryStrip"></div>
+            <div class="actions">
+              <button class="button primary" id="applyEstimateButton" type="button">Use Estimate Totals in Calculator</button>
+              <button class="button secondary" id="clearEstimateButton" type="button">Clear Estimate</button>
+            </div>
+            <div class="estimate-line-list" id="estimateList"></div>
+            <p class="estimator-detail" id="estimateStatus"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel estimator-panel">
+      <div class="panel-inner">
+        <div class="panel-heading">
+          <h2>Commission Estimator</h2>
+          <p>Estimate the sales rep commission based on transaction cost tier, payment type, and the 85% commissionable base.</p>
+        </div>
+
+        <div class="estimator-layout">
+          <div class="builder-stack">
+            <div class="builder-card">
+              <h3>Deal Setup</h3>
+              <p>Commission is based on transaction cost percentage, then applied to the net EOI after the 15% Bath Fitter admin reduction.</p>
+              <div class="estimator-form-grid">
+                <div class="form-field">
+                  <label for="commissionSalesType">Sale Type</label>
+                  <select id="commissionSalesType"></select>
+                </div>
+                <div class="form-field">
+                  <label for="commissionScenario">Pricing Scenario</label>
+                  <select id="commissionScenario"></select>
+                </div>
+              </div>
+              <p class="estimator-detail" id="commissionScenarioDetail"></p>
+            </div>
+
+            <div class="builder-card" id="commissionCashFields">
+              <h3>Cash / Check / Charge Setup</h3>
+              <p>Use this when the job is not financed.</p>
+              <div class="estimator-form-grid">
+                <div class="form-field">
+                  <label for="commissionPaymentMethod">Final Payment Method</label>
+                  <select id="commissionPaymentMethod"></select>
+                </div>
+              </div>
+            </div>
+
+            <div class="builder-card" id="commissionFinanceFields" hidden>
+              <h3>Financing Setup</h3>
+              <p>Commission transaction cost includes the discount, any credit-card cost on the deposit, and the processor cost on the financed balance.</p>
+              <div class="estimator-form-grid">
+                <div class="form-field">
+                  <label for="commissionDepositMethod">Deposit Method</label>
+                  <select id="commissionDepositMethod"></select>
+                </div>
+                <div class="form-field">
+                  <label for="commissionFinancePlan">Financing Plan</label>
+                  <select id="commissionFinancePlan"></select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="estimate-card">
+            <h3>Commission Preview</h3>
+            <p>This preview uses the current calculator totals as gross EOI and shows the tier, cost percentage, commission base, and estimated payout.</p>
+            <div class="estimate-summary-strip" id="commissionSummaryStrip"></div>
+            <div class="estimate-line-list" id="commissionBreakdown"></div>
+            <p class="estimator-detail" id="commissionStatus"></p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+
   <script>
-    function switchTab(id) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      const idx = id === 'bfTab' ? 0 : id === 'cumTab' ? 1 : 2;
-      document.querySelectorAll('.tab-button')[idx].classList.add('active');
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD"
+    });
+
+    const STORAGE_KEY = "bf-sales-app-state-v2-6";
+    const DEPOSIT_RULES = {
+      cash: 50,
+      finance: 30
+    };
+    const BUCKET_LABELS = {
+      bf: "Bath Fitter",
+      doors: "Doors",
+      labor: "Labor",
+      permits: "Permits"
+    };
+    const COMMISSION_SALE_TYPES = [
+      { id: "standard", label: "In-Home / Standard Outside Sale" },
+      { id: "virtual", label: "Virtual Sale" }
+    ];
+    const COMMISSION_PAYMENT_METHODS = [
+      { id: "cash-check", label: "Cash / Check", costPercent: 0 },
+      { id: "credit-card", label: "Credit Card", costPercent: 2 }
+    ];
+    const COMMISSION_SCENARIOS = [
+      {
+        id: "no-discount",
+        label: "No Discount",
+        mode: "cash",
+        note: "No pricing discount is applied to the Bath Fitter portion of the job."
+      },
+      {
+        id: "coupon-900",
+        label: "Coupon Discount (-$900 on BF)",
+        mode: "cash",
+        type: "coupon",
+        note: "Uses the flat $900 coupon discount on the Bath Fitter amount."
+      },
+      {
+        id: "cash-23",
+        label: "23% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 23,
+        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+      },
+      {
+        id: "cash-20",
+        label: "20% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 20,
+        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+      },
+      {
+        id: "cash-18",
+        label: "18% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 18,
+        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+      },
+      {
+        id: "cash-15",
+        label: "15% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 15,
+        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+      },
+      {
+        id: "cash-10",
+        label: "10% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 10,
+        note: "Cash/check/charge deal using the clean-price Bath Fitter discount logic."
+      },
+      {
+        id: "special-25",
+        label: "25% Special Discount",
+        mode: "cash",
+        type: "percent",
+        percent: 25,
+        note: "Veterans / first responders / multi-bathroom style special discount."
+      },
+      {
+        id: "finance-13",
+        label: "13% Standard Financing",
+        mode: "finance",
+        type: "percent",
+        percent: 13,
+        note: "Standard financing scenario with a 30% deposit and selected processor plan."
+      },
+      {
+        id: "finance-18",
+        label: "18% Emergency Financing",
+        mode: "finance",
+        type: "percent",
+        percent: 18,
+        note: "Emergency financing scenario with a 30% deposit and selected processor plan."
+      }
+    ];
+    const COMMISSION_FINANCE_PLANS = [
+      { id: "920", label: "920 | 0% for 6 months", costPercent: 4.35 },
+      { id: "921", label: "921 | 0% for 9 months", costPercent: 6.2 },
+      { id: "922", label: "922 | 0% for 12 months", costPercent: 6.95 },
+      { id: "923", label: "923 | 0% for 15 months", costPercent: 7.4 },
+      { id: "924", label: "924 | 0% for 18 months", costPercent: 7.7 },
+      { id: "925", label: "925 | 0% for 24 months", costPercent: 10.85 },
+      { id: "930", label: "930 | 0% for 25 months", costPercent: 11.6 },
+      { id: "931", label: "931 | 0% for 36 months", costPercent: 16.45 },
+      { id: "932", label: "932 | 0% for 48 months", costPercent: 18.2 },
+      { id: "933", label: "933 | 0% for 60 months", costPercent: 20.7 },
+      { id: "934", label: "934 | 0% for 72 months", costPercent: 24.2 },
+      { id: "940", label: "940 | 3.99% for 94 months", costPercent: 22.85 },
+      { id: "941", label: "941 | 5.99% for 102 months", costPercent: 16.7 },
+      { id: "942", label: "942 | 7.99% for 115 months", costPercent: 11.85 },
+      { id: "943", label: "943 | 9.99% for 132 months", costPercent: 8.7 },
+      { id: "950", label: "950 | 5.99% for 82 months", costPercent: 15.35 },
+      { id: "951", label: "951 | 7.99% for 88 months", costPercent: 10.95 },
+      { id: "952", label: "952 | 9.99% for 98 months", costPercent: 8.35 },
+      { id: "960", label: "960 | 3.99% for 64 months", costPercent: 16.35 },
+      { id: "961", label: "961 | 5.99% for 68 months", costPercent: 13.6 },
+      { id: "962", label: "962 | 7.99% for 73 months", costPercent: 9.85 },
+      { id: "963", label: "963 | 9.99% for 78 months", costPercent: 7.95 },
+      { id: "964", label: "964 | 10.99% for 82 months", costPercent: 4.85 },
+      { id: "965", label: "965 | 11.99% for 86 months", costPercent: 3.85 },
+      { id: "970", label: "970 | 5.99% for 58 months", costPercent: 11.85 },
+      { id: "971", label: "971 | 7.99% for 61 months", costPercent: 8.7 },
+      { id: "972", label: "972 | 9.99% for 65 months", costPercent: 7.75 },
+      { id: "980", label: "980 | 5.99% for 37 months", costPercent: 8.7 },
+      { id: "981", label: "981 | 7.99% for 38 months", costPercent: 7.95 },
+      { id: "982", label: "982 | 9.99% for 40 months", costPercent: 7.1 },
+      { id: "990", label: "990 | 5.99% for 27 months", costPercent: 7.95 },
+      { id: "991", label: "991 | 7.99% for 28 months", costPercent: 7.7 },
+      { id: "992", label: "992 | 9.99% for 28 months", costPercent: 6.2 }
+    ];
+
+    const inputIds = ["bf", "doors", "labor", "permits"];
+    const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
+    const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+    const catalogItems = Array.isArray(PRICE_LIST_DATA) ? PRICE_LIST_DATA : [];
+
+    const state = {
+      estimateItems: [],
+      estimateMessage: ""
+    };
+
+    function roundToCents(value) {
+      return Math.round((value + Number.EPSILON) * 100) / 100;
     }
 
-    function roundDepositUp(n) {
-      return Math.ceil(n / 25) * 25;
+    function clampCents(value) {
+      return Math.max(0, Math.round(value || 0));
     }
-    function findCleanDiscount(amount, percent) {
-      let discount = Math.floor(amount * percent / 100);
-      while ((amount - discount) % 25 !== 0 && discount > 0) discount--;
-      return { discount, finalPrice: amount - discount };
+
+    function amountToCents(value) {
+      const parsed = parseFloat(value);
+      return Number.isFinite(parsed) ? clampCents(parsed * 100) : 0;
     }
-    function calcFinance(p, rate, months) {
-      const r = rate / 100 / 12;
-      const monthly = (p * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-      const total = monthly * months;
-      const interest = total - p;
+
+    function dollarsToCents(value) {
+      return amountToCents(value);
+    }
+
+    function centsToAmount(cents) {
+      return clampCents(cents) / 100;
+    }
+
+    function formatCurrencyFromCents(cents) {
+      return formatter.format(centsToAmount(cents));
+    }
+
+    function formatCurrency(amount) {
+      return formatter.format(roundToCents(Math.max(0, amount || 0)));
+    }
+
+    function formatInputAmount(cents) {
+      const amount = roundToCents(centsToAmount(cents));
+      return Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
+    }
+
+    function roundUpToIncrement(cents, incrementDollars = 25) {
+      const safeCents = clampCents(cents);
+      if (!safeCents) {
+        return 0;
+      }
+
+      const increment = incrementDollars * 100;
+      return Math.ceil(safeCents / increment) * increment;
+    }
+
+    function calculatePercentDeposit(cents, percent) {
+      return roundUpToIncrement(Math.ceil(clampCents(cents) * (percent / 100)));
+    }
+
+    function calculateCashDeposit(cents) {
+      return calculatePercentDeposit(cents, DEPOSIT_RULES.cash);
+    }
+
+    function calculateFinanceDeposit(cents) {
+      return calculatePercentDeposit(cents, DEPOSIT_RULES.finance);
+    }
+
+    function createFlatDiscount(amountCents, discountDollars) {
+      const safeAmount = clampCents(amountCents);
+      const discountCents = Math.min(safeAmount, discountDollars * 100);
+      return {
+        discountCents,
+        finalCents: safeAmount - discountCents
+      };
+    }
+
+    function findCleanDiscount(amountCents, percent) {
+      const safeAmount = clampCents(amountCents);
+      let discountCents = Math.floor((safeAmount * percent) / 100);
+
+      while ((safeAmount - discountCents) % 2500 !== 0 && discountCents > 0) {
+        discountCents -= 1;
+      }
+
+      return {
+        discountCents,
+        finalCents: Math.max(0, safeAmount - discountCents)
+      };
+    }
+
+    function calcFinance(balanceCents, apr, months) {
+      const principal = centsToAmount(balanceCents);
+      if (!principal || !months) {
+        return { monthly: 0, total: 0, interest: 0 };
+      }
+
+      let monthlyPayment;
+
+      if (!apr) {
+        monthlyPayment = principal / months;
+      } else {
+        const monthlyRate = apr / 100 / 12;
+        monthlyPayment =
+          (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+          (Math.pow(1 + monthlyRate, months) - 1);
+      }
+
+      const monthly = roundToCents(monthlyPayment);
+      const total = roundToCents(monthly * months);
+      const interest = roundToCents(total - principal);
+
       return { monthly, total, interest };
     }
-    function formatCurrency(n) {
-      return "$" + parseFloat(n).toFixed(2);
+
+    function getGrossEoi(inputs) {
+      return inputs.bf + inputs.doors + inputs.labor + inputs.permits;
     }
-    function renderStack(title, subtotal, discount, total, deposit) {
+
+    function getCommissionScenario() {
+      const id = document.getElementById("commissionScenario").value;
+      return COMMISSION_SCENARIOS.find((scenario) => scenario.id === id) || COMMISSION_SCENARIOS[0];
+    }
+
+    function getCommissionSaleType() {
+      const id = document.getElementById("commissionSalesType").value;
+      return COMMISSION_SALE_TYPES.find((saleType) => saleType.id === id) || COMMISSION_SALE_TYPES[0];
+    }
+
+    function getCommissionPaymentMethod() {
+      const id = document.getElementById("commissionPaymentMethod").value;
+      return COMMISSION_PAYMENT_METHODS.find((method) => method.id === id) || COMMISSION_PAYMENT_METHODS[0];
+    }
+
+    function getCommissionDepositMethod() {
+      const id = document.getElementById("commissionDepositMethod").value;
+      return COMMISSION_PAYMENT_METHODS.find((method) => method.id === id) || COMMISSION_PAYMENT_METHODS[0];
+    }
+
+    function getCommissionFinancePlan() {
+      const id = document.getElementById("commissionFinancePlan").value;
+      return COMMISSION_FINANCE_PLANS.find((plan) => plan.id === id) || COMMISSION_FINANCE_PLANS[0];
+    }
+
+    function getCommissionDiscount(inputs, scenario) {
+      if (!inputs.bf) {
+        return { discountCents: 0, discountedBfCents: 0 };
+      }
+
+      if (scenario.type === "coupon") {
+        const result = createFlatDiscount(inputs.bf, 900);
+        return {
+          discountCents: result.discountCents,
+          discountedBfCents: result.finalCents
+        };
+      }
+
+      if (scenario.type === "percent") {
+        const result = findCleanDiscount(inputs.bf, scenario.percent);
+        return {
+          discountCents: result.discountCents,
+          discountedBfCents: result.finalCents
+        };
+      }
+
+      return {
+        discountCents: 0,
+        discountedBfCents: inputs.bf
+      };
+    }
+
+    function getCommissionTier(transactionCostPercent, saleTypeId) {
+      const roundedPercent = roundToCents(transactionCostPercent);
+
+      if (saleTypeId === "virtual") {
+        if (roundedPercent <= 12) {
+          return { label: "0.00% - 12.00%", rate: 7 };
+        }
+        if (roundedPercent <= 20) {
+          return { label: "12.01% - 20.00%", rate: 6 };
+        }
+        if (roundedPercent <= 25) {
+          return { label: "20.01% - 25.00%", rate: 5 };
+        }
+        return { label: "> 25.00%", rate: 0 };
+      }
+
+      if (roundedPercent <= 12) {
+        return { label: "0.00% - 12.00%", rate: 9 };
+      }
+      if (roundedPercent <= 15) {
+        return { label: "12.01% - 15.00%", rate: 8 };
+      }
+      if (roundedPercent <= 20) {
+        return { label: "15.01% - 20.00%", rate: 7 };
+      }
+      if (roundedPercent <= 25) {
+        return { label: "20.01% - 25.00%", rate: 5 };
+      }
+      return { label: "> 25.00%", rate: 0 };
+    }
+
+    function calculateCommissionEstimate(inputs) {
+      const grossEoiCents = getGrossEoi(inputs);
+      if (!grossEoiCents) {
+        return null;
+      }
+
+      const saleType = getCommissionSaleType();
+      const scenario = getCommissionScenario();
+      const discount = getCommissionDiscount(inputs, scenario);
+      const netEoiCents = discount.discountedBfCents + inputs.doors + inputs.labor + inputs.permits;
+
+      let depositCents;
+      let cardCostCents = 0;
+      let financeCostCents = 0;
+      let paymentLabel;
+
+      if (scenario.mode === "finance") {
+        const depositMethod = getCommissionDepositMethod();
+        const financePlan = getCommissionFinancePlan();
+        depositCents =
+          calculateFinanceDeposit(discount.discountedBfCents) +
+          calculateFinanceDeposit(inputs.doors) +
+          calculateFinanceDeposit(inputs.labor) +
+          inputs.permits;
+
+        if (depositMethod.costPercent > 0) {
+          cardCostCents = clampCents(depositCents * (depositMethod.costPercent / 100));
+        }
+
+        const financedBalanceCents = Math.max(0, netEoiCents - depositCents);
+        financeCostCents = clampCents(financedBalanceCents * (financePlan.costPercent / 100));
+        paymentLabel = `${depositMethod.label} deposit + ${financePlan.label}`;
+
+        const transactionCostsCents = discount.discountCents + cardCostCents + financeCostCents;
+        const transactionCostPercent = grossEoiCents
+          ? roundToCents((transactionCostsCents / grossEoiCents) * 100)
+          : 0;
+        const tier = getCommissionTier(transactionCostPercent, saleType.id);
+        const commissionBaseCents = clampCents(netEoiCents * 0.85);
+        const commissionCents = clampCents(commissionBaseCents * (tier.rate / 100));
+
+        return {
+          saleType,
+          scenario,
+          grossEoiCents,
+          netEoiCents,
+          discountCents: discount.discountCents,
+          discountedBfCents: discount.discountedBfCents,
+          depositCents,
+          financedBalanceCents,
+          cardCostCents,
+          financeCostCents,
+          paymentLabel,
+          transactionCostsCents,
+          transactionCostPercent,
+          tier,
+          commissionBaseCents,
+          commissionCents
+        };
+      }
+
+      const paymentMethod = getCommissionPaymentMethod();
+      depositCents =
+        calculateCashDeposit(discount.discountedBfCents) +
+        calculateCashDeposit(inputs.doors) +
+        calculateCashDeposit(inputs.labor) +
+        inputs.permits;
+
+      if (paymentMethod.costPercent > 0) {
+        cardCostCents = clampCents(netEoiCents * (paymentMethod.costPercent / 100));
+      }
+
+      paymentLabel = paymentMethod.label;
+
+      const transactionCostsCents = discount.discountCents + cardCostCents;
+      const transactionCostPercent = grossEoiCents
+        ? roundToCents((transactionCostsCents / grossEoiCents) * 100)
+        : 0;
+      const tier = getCommissionTier(transactionCostPercent, saleType.id);
+      const commissionBaseCents = clampCents(netEoiCents * 0.85);
+      const commissionCents = clampCents(commissionBaseCents * (tier.rate / 100));
+
+      return {
+        saleType,
+        scenario,
+        grossEoiCents,
+        netEoiCents,
+        discountCents: discount.discountCents,
+        discountedBfCents: discount.discountedBfCents,
+        depositCents,
+        financedBalanceCents: 0,
+        cardCostCents,
+        financeCostCents,
+        paymentLabel,
+        transactionCostsCents,
+        transactionCostPercent,
+        tier,
+        commissionBaseCents,
+        commissionCents
+      };
+    }
+
+    function getCommissionInputSnapshot() {
+      return {
+        salesType: document.getElementById("commissionSalesType").value,
+        scenario: document.getElementById("commissionScenario").value,
+        paymentMethod: document.getElementById("commissionPaymentMethod").value,
+        depositMethod: document.getElementById("commissionDepositMethod").value,
+        financePlan: document.getElementById("commissionFinancePlan").value
+      };
+    }
+
+    function setSelectOptions(selectId, options, selectedId, renderLabel) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = options
+        .map((option) => {
+          const label = renderLabel ? renderLabel(option) : option.label;
+          return `<option value="${escapeHtml(option.id)}">${escapeHtml(label)}</option>`;
+        })
+        .join("");
+
+      const safeSelected = options.some((option) => option.id === selectedId) ? selectedId : options[0]?.id || "";
+      select.value = safeSelected;
+    }
+
+    function initializeCommissionControls() {
+      setSelectOptions("commissionSalesType", COMMISSION_SALE_TYPES, "standard");
+      setSelectOptions("commissionScenario", COMMISSION_SCENARIOS, "finance-13");
+      setSelectOptions("commissionPaymentMethod", COMMISSION_PAYMENT_METHODS, "cash-check");
+      setSelectOptions("commissionDepositMethod", COMMISSION_PAYMENT_METHODS, "cash-check");
+      setSelectOptions(
+        "commissionFinancePlan",
+        COMMISSION_FINANCE_PLANS,
+        "965",
+        (plan) => `${plan.label} | ${plan.costPercent.toFixed(2)}% processor cost`
+      );
+    }
+
+    function refreshCommissionControls() {
+      const scenario = getCommissionScenario();
+      document.getElementById("commissionCashFields").hidden = scenario.mode !== "cash";
+      document.getElementById("commissionFinanceFields").hidden = scenario.mode !== "finance";
+      document.getElementById("commissionScenarioDetail").textContent =
+        `${scenario.note} Gross EOI is taken from the current calculator inputs, and commission is paid on 85% of the net EOI.`;
+    }
+
+    function renderCommission(inputs) {
+      const summaryEl = document.getElementById("commissionSummaryStrip");
+      const breakdownEl = document.getElementById("commissionBreakdown");
+      const statusEl = document.getElementById("commissionStatus");
+      const estimate = calculateCommissionEstimate(inputs);
+
+      if (!estimate) {
+        summaryEl.innerHTML = "";
+        breakdownEl.innerHTML = emptyState("Enter calculator totals or load an estimate first to preview commission on the job.");
+        statusEl.textContent =
+          "This tool uses the 2026 outside-sales transaction-cost table. Virtual tiers are included. Self-generated lead bonuses are not included yet.";
+        return;
+      }
+
+      summaryEl.innerHTML = [
+        { label: "Gross EOI", value: estimate.grossEoiCents },
+        { label: "Net EOI", value: estimate.netEoiCents },
+        { label: "Commission Base (85%)", value: estimate.commissionBaseCents },
+        { label: "Transaction Cost %", value: `${estimate.transactionCostPercent.toFixed(2)}%` },
+        { label: "Commission Rate", value: `${estimate.tier.rate.toFixed(2)}%` },
+        { label: "Estimated Commission", value: formatCurrencyFromCents(estimate.commissionCents) }
+      ]
+        .map((item) => {
+          const valueMarkup = typeof item.value === "number" ? formatCurrencyFromCents(item.value) : item.value;
+          return `
+            <div class="estimate-summary-chip">
+              <span>${escapeHtml(item.label)}</span>
+              <strong>${escapeHtml(valueMarkup)}</strong>
+            </div>
+          `;
+        })
+        .join("");
+
+      breakdownEl.innerHTML = [
+        {
+          title: "Commission Tier",
+          detail: `${estimate.saleType.label} falls in the ${estimate.tier.label} transaction-cost range at a ${estimate.tier.rate.toFixed(2)}% commission rate.`
+        },
+        {
+          title: "Transaction Cost Breakdown",
+          detail:
+            `Discount cost ${formatCurrencyFromCents(estimate.discountCents)}` +
+            ` | Card cost ${formatCurrencyFromCents(estimate.cardCostCents)}` +
+            ` | Finance cost ${formatCurrencyFromCents(estimate.financeCostCents)}` +
+            ` | Total transaction cost ${formatCurrencyFromCents(estimate.transactionCostsCents)}`
+        },
+        {
+          title: "Payment Structure",
+          detail:
+            `${estimate.paymentLabel}` +
+            ` | Expected deposit ${formatCurrencyFromCents(estimate.depositCents)}` +
+            (estimate.scenario.mode === "finance"
+              ? ` | Financed balance ${formatCurrencyFromCents(estimate.financedBalanceCents)}`
+              : "")
+        },
+        {
+          title: "Commission Formula",
+          detail:
+            `${formatCurrencyFromCents(estimate.netEoiCents)} x 85% = ${formatCurrencyFromCents(estimate.commissionBaseCents)}` +
+            `, then x ${estimate.tier.rate.toFixed(2)}% = ${formatCurrencyFromCents(estimate.commissionCents)}`
+        }
+      ]
+        .map(
+          (item) => `
+            <article class="estimate-line">
+              <div class="estimate-line-top">
+                <div>
+                  <h4>${escapeHtml(item.title)}</h4>
+                  <p>${escapeHtml(item.detail)}</p>
+                </div>
+              </div>
+            </article>
+          `
+        )
+        .join("");
+
+      statusEl.textContent =
+        "Commission math follows the commission agreement: transaction cost percent is based on discount plus card and/or finance costs divided by gross EOI, then commission is calculated on net EOI after the 15% admin reduction.";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function readInputs() {
+      return {
+        bf: amountToCents(document.getElementById("bf").value),
+        doors: amountToCents(document.getElementById("doors").value),
+        labor: amountToCents(document.getElementById("labor").value),
+        permits: amountToCents(document.getElementById("permits").value)
+      };
+    }
+
+    function getCurrentInputSnapshot() {
+      return {
+        bf: document.getElementById("bf").value,
+        doors: document.getElementById("doors").value,
+        labor: document.getElementById("labor").value,
+        permits: document.getElementById("permits").value
+      };
+    }
+
+    function applyStoredState() {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return;
+        }
+
+        const parsed = JSON.parse(raw);
+        if (parsed?.inputs) {
+          inputIds.forEach((id) => {
+            document.getElementById(id).value = parsed.inputs[id] ?? "";
+          });
+        }
+
+        if (parsed?.commission) {
+          if (parsed.commission.salesType) {
+            document.getElementById("commissionSalesType").value = parsed.commission.salesType;
+          }
+          if (parsed.commission.scenario) {
+            document.getElementById("commissionScenario").value = parsed.commission.scenario;
+          }
+          if (parsed.commission.paymentMethod) {
+            document.getElementById("commissionPaymentMethod").value = parsed.commission.paymentMethod;
+          }
+          if (parsed.commission.depositMethod) {
+            document.getElementById("commissionDepositMethod").value = parsed.commission.depositMethod;
+          }
+          if (parsed.commission.financePlan) {
+            document.getElementById("commissionFinancePlan").value = parsed.commission.financePlan;
+          }
+        }
+
+        if (Array.isArray(parsed?.estimateItems)) {
+          state.estimateItems = parsed.estimateItems
+            .map((item) => ({
+              id: String(item.id || ""),
+              source: item.source === "custom" ? "custom" : "catalog",
+              label: String(item.label || "Line Item"),
+              bucket: BUCKET_LABELS[item.bucket] ? item.bucket : "bf",
+              category: String(item.category || "Custom"),
+              variantLabel: String(item.variantLabel || ""),
+              description: String(item.description || ""),
+              quantity: Math.max(1, Number(item.quantity) || 1),
+              unitCents: clampCents(item.unitCents),
+              totalCents: clampCents(item.totalCents || clampCents(item.unitCents) * (Number(item.quantity) || 1))
+            }))
+            .filter((item) => item.id);
+        }
+      } catch (error) {
+        console.warn("Unable to restore saved state.", error);
+      }
+    }
+
+    function saveState() {
+      try {
+        window.localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            inputs: getCurrentInputSnapshot(),
+            commission: getCommissionInputSnapshot(),
+            estimateItems: state.estimateItems
+          })
+        );
+      } catch (error) {
+        console.warn("Unable to save state.", error);
+      }
+    }
+
+    function renderSummary(inputs) {
+      const addOns = inputs.doors + inputs.labor + inputs.permits;
+      const total = inputs.bf + addOns;
+
+      document.getElementById("summaryStrip").innerHTML = [
+        { label: "Bath Fitter", value: inputs.bf },
+        { label: "Add-On Contracts", value: addOns },
+        { label: "Full Job Total", value: total }
+      ]
+        .map(
+          (item) => `
+            <div class="summary-chip">
+              <span>${escapeHtml(item.label)}</span>
+              <strong>${formatCurrencyFromCents(item.value)}</strong>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    function financeItemsMarkup(items) {
+      if (!items.length) {
+        return "";
+      }
+
       return `
-        <div class='result-line'><strong>${title}</strong></div>
-        <div class='result-line'>Subtotal: ${formatCurrency(subtotal)}</div>
-        <div class='result-line'>Discount: -${formatCurrency(discount)}</div>
-        <div class='result-line'>Total: ${formatCurrency(total)}</div>
-        <div class='result-line'>Deposit: ${formatCurrency(deposit)}</div>
-        <div class='result-line'>Balance Due: ${formatCurrency(total - deposit)}</div>
+        <div class="finance-block">
+          <h5>Financing Snapshot</h5>
+          <div class="finance-list">
+            ${items
+              .map(
+                (item) => `
+                  <div class="finance-item">
+                    <strong>${escapeHtml(item.label)}</strong>
+                    <p>${escapeHtml(item.details)}</p>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
       `;
     }
-    function calculate() {
-      const bf = parseFloat(document.getElementById("bf").value) || 0;
-      const doors = parseFloat(document.getElementById("doors").value) || 0;
-      const labor = parseFloat(document.getElementById("labor").value) || 0;
-      const permits = parseFloat(document.getElementById("permits").value) || 0;
-      const bfTab = document.getElementById("bfTab");
-      const cumTab = document.getElementById("cumTab");
-      const otherTab = document.getElementById("otherTab");
 
-      bfTab.innerHTML = ""; cumTab.innerHTML = ""; otherTab.innerHTML = "";
+    function scenarioCardMarkup(config) {
+      const balanceCents = Math.max(0, config.totalCents - config.depositCents);
 
-      if (bf > 0) {
-        bfTab.innerHTML += "<h3>Coupon Discount</h3>";
-        bfTab.innerHTML += renderStack("Coupon (-$900)", bf, 900, bf - 900, roundDepositUp((bf - 900) * 0.25));
-        bfTab.innerHTML += "<hr><h3>Cash / Check / Charge Discounts</h3>";
-        [23, 20, 18, 15, 10].forEach(p => {
-          const { discount, finalPrice } = findCleanDiscount(bf, p);
-          bfTab.innerHTML += renderStack(`${p}% Discount`, bf, discount, finalPrice, roundDepositUp(finalPrice * 0.25));
-        });
-        bfTab.innerHTML += "<hr><h3>Veterans / First Responders / Multi-Bathroom</h3>";
-        const vet = findCleanDiscount(bf, 25);
-        bfTab.innerHTML += renderStack("25% Discount", bf, vet.discount, vet.finalPrice, roundDepositUp(vet.finalPrice * 0.25));
-        const fin = findCleanDiscount(bf, 13);
-        const finDep = roundDepositUp(fin.finalPrice * 0.25);
-        const finBal = fin.finalPrice - finDep;
-        bfTab.innerHTML += "<hr><h3>Standard Financing (13% Discount)</h3>";
-        bfTab.innerHTML += renderStack("13% Standard Finance", bf, fin.discount, fin.finalPrice, finDep);
-        [18, 24].forEach(m => bfTab.innerHTML += `<div class='result-line'>${m} Mo @ 0%: ${formatCurrency(Math.ceil(finBal / m))}</div>`);
-        const f28 = calcFinance(finBal, 7.99, 28), f86 = calcFinance(finBal, 11.99, 86);
-        bfTab.innerHTML += `<div class='result-line'>28 Mo @ 7.99%: ${formatCurrency(Math.ceil(f28.monthly))}</div>`;
-        bfTab.innerHTML += `<div class='result-line'>86 Mo @ 11.99%: ${formatCurrency(Math.ceil(f86.monthly))}</div>`;
-        bfTab.innerHTML += "<hr><h3>Lower Deposit Option</h3>";
-        const altDep = 1000, altBal = fin.finalPrice - altDep;
-        bfTab.innerHTML += `<div class='result-line'>Deposit: ${formatCurrency(altDep)}</div>`;
-        bfTab.innerHTML += `<div class='result-line'>Finance: ${formatCurrency(altBal)}</div>`;
-        [18, 24].forEach(m => bfTab.innerHTML += `<div class='result-line'>${m} Mo @ 0%: ${formatCurrency(Math.ceil(altBal / m))}</div>`);
-        const alt28 = calcFinance(altBal, 7.99, 28), alt86 = calcFinance(altBal, 11.99, 86);
-        bfTab.innerHTML += `<div class='result-line'>28 Mo @ 7.99%: ${formatCurrency(Math.ceil(alt28.monthly))}</div>`;
-        bfTab.innerHTML += `<div class='result-line'>86 Mo @ 11.99%: ${formatCurrency(Math.ceil(alt86.monthly))}</div>`;
-        const emg = findCleanDiscount(bf, 18);
-        const emgDep = roundDepositUp(emg.finalPrice * 0.25);
-        const emgPlan = calcFinance(emg.finalPrice - emgDep, 11.99, 86);
-        bfTab.innerHTML += "<hr><h3>Emergency 86-Month Financing (18% Discount)</h3>";
-        bfTab.innerHTML += renderStack("Emergency Plan", bf, emg.discount, emg.finalPrice, emgDep);
-        bfTab.innerHTML += `<div class='result-line'>Monthly: ${formatCurrency(Math.ceil(emgPlan.monthly))}</div>`;
-        bfTab.innerHTML += `<div class='result-line'>Total: ${formatCurrency(emgPlan.total)}</div>`;
-        bfTab.innerHTML += `<div class='result-line'>Interest: ${formatCurrency(emgPlan.interest)}</div>`;
-      }
-
-      if (bf > 0 && (doors + labor + permits > 0)) {
-        cumTab.innerHTML += "<h3>Cumulative Job Breakdown</h3>";
-        let skipFirst = true;
-        [23, 20, 18, 15, 10].forEach(p => {
-          const bfDisc = findCleanDiscount(bf, p);
-          const bfSub = bfDisc.finalPrice;
-          const total = bfSub + doors + labor + permits;
-          const deposit = roundDepositUp(bfSub * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
-          if (!skipFirst) cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(bfSub)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
-          skipFirst = false;
-          cumTab.innerHTML += renderStack(`${p}% Discount on BF`, total, bf - bfDisc.finalPrice, total, deposit);
-        });
-        const e = findCleanDiscount(bf, 18);
-        const bfSub = e.finalPrice;
-        const total = bfSub + doors + labor + permits;
-        const deposit = roundDepositUp(bfSub * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
-        const plan = calcFinance(total - deposit, 11.99, 86);
-        
-        // --- 25% Veterans / First Responders / Multi-Bathroom Cumulative ---
-        const vetDisc = findCleanDiscount(bf, 25);
-        const vetBF = vetDisc.finalPrice;
-        const vetTotal = vetBF + doors + labor + permits;
-        const vetDeposit = roundDepositUp(vetBF * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
-        const vetBalance = vetTotal - vetDeposit;
-        cumTab.innerHTML += "<hr><h3>25% Veterans / First Responders / Multi-Bathroom</h3>";
-        cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(vetBF)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
-        cumTab.innerHTML += renderStack("25% Special Discount", vetTotal, bf - vetBF, vetTotal, vetDeposit);
-
-        // --- 13% Standard Financing Cumulative ---
-        const stdDisc = findCleanDiscount(bf, 13);
-        const stdBF = stdDisc.finalPrice;
-        const stdTotal = stdBF + doors + labor + permits;
-        const stdDeposit = roundDepositUp(stdBF * 0.25) + roundDepositUp(doors * 0.25) + roundDepositUp(labor * 0.25) + permits;
-        const stdBalance = stdTotal - stdDeposit;
-        const stdPlan28 = calcFinance(stdBalance, 7.99, 28);
-        const stdPlan86 = calcFinance(stdBalance, 11.99, 86);
-        cumTab.innerHTML += "<hr><h3>13% Standard Financing Plan</h3>";
-        cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(stdBF)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
-        cumTab.innerHTML += renderStack("13% Discount on BF", stdTotal, bf - stdBF, stdTotal, stdDeposit);
-        cumTab.innerHTML += `<div class='result-line'>Balance to Finance: ${formatCurrency(stdBalance)}</div>`;
-        cumTab.innerHTML += `<div class='result-line'>28 Mo @ 7.99%: ${formatCurrency(Math.ceil(stdPlan28.monthly))}</div>`;
-        cumTab.innerHTML += `<div class='result-line'>86 Mo @ 11.99%: ${formatCurrency(Math.ceil(stdPlan86.monthly))}</div>`;
-
-cumTab.innerHTML += "<hr><h3>Emergency 86-Month Cumulative Financing</h3>";
-        cumTab.innerHTML += `<div class="result-line math-line">Subtotal = BF(${formatCurrency(bfSub)}) + Doors(${formatCurrency(doors)}) + Labor(${formatCurrency(labor)}) + Permits(${formatCurrency(permits)})</div>`;
-        cumTab.innerHTML += renderStack("18% Discount on BF", total, bf - e.finalPrice, total, deposit);
-        cumTab.innerHTML += `<div class='result-line'>Monthly: ${formatCurrency(Math.ceil(plan.monthly))}</div>`;
-        cumTab.innerHTML += `<div class='result-line'>Total: ${formatCurrency(plan.total)}</div>`;
-        cumTab.innerHTML += `<div class='result-line'>Interest: ${formatCurrency(plan.interest)}</div>`;
-      }
-
-      otherTab.innerHTML += "<h3>Individual Contract Breakdown</h3>";
-      if (doors > 0) otherTab.innerHTML += renderStack("Doors (0% Discount)", doors, 0, doors, roundDepositUp(doors * 0.25));
-      if (labor > 0) otherTab.innerHTML += renderStack("Labor (0% Discount)", labor, 0, labor, roundDepositUp(labor * 0.25));
-      if (permits > 0) otherTab.innerHTML += renderStack("Permits (Paid in Full)", permits, 0, permits, permits);
+      return `
+        <article class="scenario-card">
+          <div class="scenario-top">
+            <div>
+              <h4>${escapeHtml(config.title)}</h4>
+              <p>${escapeHtml(config.note)}</p>
+            </div>
+            ${config.badge ? `<div class="badge">${escapeHtml(config.badge)}</div>` : ""}
+          </div>
+          ${config.mathLine ? `<div class="math-line">${escapeHtml(config.mathLine)}</div>` : ""}
+          <div class="metrics">
+            <div class="metric">
+              <span>Subtotal</span>
+              <strong>${formatCurrencyFromCents(config.subtotalCents)}</strong>
+            </div>
+            <div class="metric">
+              <span>Discount</span>
+              <strong>${formatCurrencyFromCents(config.discountCents)}</strong>
+            </div>
+            <div class="metric highlight">
+              <span>Final Total</span>
+              <strong>${formatCurrencyFromCents(config.totalCents)}</strong>
+            </div>
+            <div class="metric">
+              <span>Deposit</span>
+              <strong>${formatCurrencyFromCents(config.depositCents)}</strong>
+            </div>
+            <div class="metric">
+              <span>Balance Due</span>
+              <strong>${formatCurrencyFromCents(balanceCents)}</strong>
+            </div>
+          </div>
+          ${financeItemsMarkup(config.financeItems || [])}
+        </article>
+      `;
     }
+
+    function sectionMarkup(title, description, cards, twoUp = true) {
+      return `
+        <section class="section-block">
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(description)}</p>
+          <div class="card-grid ${twoUp ? "two-up" : ""}">
+            ${cards.join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function emptyState(message) {
+      return `<div class="empty-state">${escapeHtml(message)}</div>`;
+    }
+
+    function buildContractTab(inputs) {
+      if (!inputs.bf) {
+        return emptyState("Enter a Bath Fitter EOI total to see contract discounts and financing options.");
+      }
+
+      const cashCards = [];
+      const cashDiscounts = [23, 20, 18, 15, 10];
+
+      const coupon = createFlatDiscount(inputs.bf, 900);
+      cashCards.push(
+        scenarioCardMarkup({
+          title: "Coupon Discount",
+          badge: "Flat $900 | 50% Deposit",
+          note: "Flat coupon discount on the Bath Fitter contract. Cash, check, and charge deals now use a 50% deposit.",
+          subtotalCents: inputs.bf,
+          discountCents: coupon.discountCents,
+          totalCents: coupon.finalCents,
+          depositCents: calculateCashDeposit(coupon.finalCents)
+        })
+      );
+
+      cashDiscounts.forEach((percent) => {
+        const plan = findCleanDiscount(inputs.bf, percent);
+        cashCards.push(
+          scenarioCardMarkup({
+            title: percent + "% Discount",
+            badge: "Cash / Check / Charge | 50% Deposit",
+            note: "Discount is adjusted downward by cents if needed so the final Bath Fitter price lands on a clean $25 increment.",
+            subtotalCents: inputs.bf,
+            discountCents: plan.discountCents,
+            totalCents: plan.finalCents,
+            depositCents: calculateCashDeposit(plan.finalCents)
+          })
+        );
+      });
+
+      const special = findCleanDiscount(inputs.bf, 25);
+      cashCards.push(
+        scenarioCardMarkup({
+          title: "25% Special Discount",
+          badge: "Veterans / First Responders / Multi-Bathroom | 50% Deposit",
+          note: "Special discount on the Bath Fitter contract only. This card assumes a non-financed sale.",
+          subtotalCents: inputs.bf,
+          discountCents: special.discountCents,
+          totalCents: special.finalCents,
+          depositCents: calculateCashDeposit(special.finalCents)
+        })
+      );
+
+      const standard = findCleanDiscount(inputs.bf, 13);
+      const standardDeposit = calculateFinanceDeposit(standard.finalCents);
+      const standardBalance = Math.max(0, standard.finalCents - standardDeposit);
+      const standard28 = calcFinance(standardBalance, 7.99, 28);
+      const standard86 = calcFinance(standardBalance, 11.99, 86);
+
+      const emergency = findCleanDiscount(inputs.bf, 18);
+      const emergencyDeposit = calculateFinanceDeposit(emergency.finalCents);
+      const emergencyBalance = Math.max(0, emergency.finalCents - emergencyDeposit);
+      const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
+
+      const financingCards = [
+        scenarioCardMarkup({
+          title: "13% Standard Financing",
+          badge: "Finance | 30% Deposit",
+          note: "Standard financing now uses a 30% deposit before payment estimates are calculated.",
+          subtotalCents: inputs.bf,
+          discountCents: standard.discountCents,
+          totalCents: standard.finalCents,
+          depositCents: standardDeposit,
+          financeItems: [
+            {
+              label: "18 Months at 0%",
+              details: "Estimated payment: " + formatCurrency(standardBalance / 18)
+            },
+            {
+              label: "24 Months at 0%",
+              details: "Estimated payment: " + formatCurrency(standardBalance / 24)
+            },
+            {
+              label: "28 Months at 7.99%",
+              details:
+                "Monthly: " +
+                formatCurrency(standard28.monthly) +
+                " | Total: " +
+                formatCurrency(standard28.total) +
+                " | Interest: " +
+                formatCurrency(standard28.interest)
+            },
+            {
+              label: "86 Months at 11.99%",
+              details:
+                "Monthly: " +
+                formatCurrency(standard86.monthly) +
+                " | Total: " +
+                formatCurrency(standard86.total) +
+                " | Interest: " +
+                formatCurrency(standard86.interest)
+            }
+          ]
+        }),
+        scenarioCardMarkup({
+          title: "Emergency 86-Month Financing",
+          badge: "18% Discount | 30% Deposit",
+          note: "Emergency financing uses the 18% discount and the new 30% financing deposit.",
+          subtotalCents: inputs.bf,
+          discountCents: emergency.discountCents,
+          totalCents: emergency.finalCents,
+          depositCents: emergencyDeposit,
+          financeItems: [
+            {
+              label: "86 Months at 11.99%",
+              details:
+                "Monthly: " +
+                formatCurrency(emergencyPlan.monthly) +
+                " | Total: " +
+                formatCurrency(emergencyPlan.total) +
+                " | Interest: " +
+                formatCurrency(emergencyPlan.interest)
+            }
+          ]
+        })
+      ];
+
+      return (
+        sectionMarkup(
+          "Discount Options",
+          "These cards focus only on the Bath Fitter contract. All non-financed deals shown here use a 50% deposit.",
+          cashCards
+        ) +
+        sectionMarkup(
+          "Financing Options",
+          "These cards show financing math after the new 30% deposit is collected.",
+          financingCards
+        )
+      );
+    }
+
+    function buildCumulativeTab(inputs) {
+      if (!inputs.bf) {
+        return emptyState("Enter a Bath Fitter EOI total first. Cumulative pricing combines the discounted Bath Fitter amount with the other contracts.");
+      }
+
+      const addOns = inputs.doors + inputs.labor + inputs.permits;
+      if (!addOns) {
+        return emptyState("Add a door, labor, or permit amount to compare full-job cumulative totals.");
+      }
+
+      const grossTotal = inputs.bf + addOns;
+
+      function cumulativeMathLine(discountedBathFitterCents) {
+        return (
+          "Cumulative total = Bath Fitter " +
+          formatCurrencyFromCents(discountedBathFitterCents) +
+          " + Doors " +
+          formatCurrencyFromCents(inputs.doors) +
+          " + Labor " +
+          formatCurrencyFromCents(inputs.labor) +
+          " + Permits " +
+          formatCurrencyFromCents(inputs.permits)
+        );
+      }
+
+      function cumulativeDeposit(discountedBathFitterCents, dealType) {
+        const depositCalculator = dealType === "cash" ? calculateCashDeposit : calculateFinanceDeposit;
+        return (
+          depositCalculator(discountedBathFitterCents) +
+          depositCalculator(inputs.doors) +
+          depositCalculator(inputs.labor) +
+          inputs.permits
+        );
+      }
+
+      const cumulativeCards = [23, 20, 18, 15, 10].map((percent) => {
+        const discount = findCleanDiscount(inputs.bf, percent);
+        const total = discount.finalCents + addOns;
+
+        return scenarioCardMarkup({
+          title: percent + "% Discount on Bath Fitter",
+          badge: "Cash / Check / Charge | 50% Deposit",
+          note: "Only the Bath Fitter amount is discounted. Doors, labor, and permits remain at full price.",
+          subtotalCents: grossTotal,
+          discountCents: discount.discountCents,
+          totalCents: total,
+          depositCents: cumulativeDeposit(discount.finalCents, "cash"),
+          mathLine: cumulativeMathLine(discount.finalCents)
+        });
+      });
+
+      const special = findCleanDiscount(inputs.bf, 25);
+      const specialTotal = special.finalCents + addOns;
+      const specialDeposit = cumulativeDeposit(special.finalCents, "cash");
+
+      const standard = findCleanDiscount(inputs.bf, 13);
+      const standardTotal = standard.finalCents + addOns;
+      const standardDeposit = cumulativeDeposit(standard.finalCents, "finance");
+      const standardBalance = Math.max(0, standardTotal - standardDeposit);
+      const standard28 = calcFinance(standardBalance, 7.99, 28);
+      const standard86 = calcFinance(standardBalance, 11.99, 86);
+
+      const emergency = findCleanDiscount(inputs.bf, 18);
+      const emergencyTotal = emergency.finalCents + addOns;
+      const emergencyDeposit = cumulativeDeposit(emergency.finalCents, "finance");
+      const emergencyBalance = Math.max(0, emergencyTotal - emergencyDeposit);
+      const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
+
+      const financingCards = [
+        scenarioCardMarkup({
+          title: "25% Special Discount",
+          badge: "Non-Financed | 50% Deposit",
+          note: "Special cumulative total using the discounted Bath Fitter price plus full-price doors, labor, and permits.",
+          subtotalCents: grossTotal,
+          discountCents: special.discountCents,
+          totalCents: specialTotal,
+          depositCents: specialDeposit,
+          mathLine: cumulativeMathLine(special.finalCents)
+        }),
+        scenarioCardMarkup({
+          title: "13% Standard Financing",
+          badge: "Cumulative Finance | 30% Deposit",
+          note: "Financing is based on the full cumulative balance after the Bath Fitter discount and the new 30% deposit rule are applied.",
+          subtotalCents: grossTotal,
+          discountCents: standard.discountCents,
+          totalCents: standardTotal,
+          depositCents: standardDeposit,
+          mathLine: cumulativeMathLine(standard.finalCents),
+          financeItems: [
+            {
+              label: "28 Months at 7.99%",
+              details:
+                "Monthly: " +
+                formatCurrency(standard28.monthly) +
+                " | Total: " +
+                formatCurrency(standard28.total) +
+                " | Interest: " +
+                formatCurrency(standard28.interest)
+            },
+            {
+              label: "86 Months at 11.99%",
+              details:
+                "Monthly: " +
+                formatCurrency(standard86.monthly) +
+                " | Total: " +
+                formatCurrency(standard86.total) +
+                " | Interest: " +
+                formatCurrency(standard86.interest)
+            }
+          ]
+        }),
+        scenarioCardMarkup({
+          title: "Emergency 86-Month Financing",
+          badge: "18% Discount | 30% Deposit",
+          note: "Emergency cumulative plan uses the Bath Fitter emergency discount and the new financing deposit rule.",
+          subtotalCents: grossTotal,
+          discountCents: emergency.discountCents,
+          totalCents: emergencyTotal,
+          depositCents: emergencyDeposit,
+          mathLine: cumulativeMathLine(emergency.finalCents),
+          financeItems: [
+            {
+              label: "86 Months at 11.99%",
+              details:
+                "Monthly: " +
+                formatCurrency(emergencyPlan.monthly) +
+                " | Total: " +
+                formatCurrency(emergencyPlan.total) +
+                " | Interest: " +
+                formatCurrency(emergencyPlan.interest)
+            }
+          ]
+        })
+      ];
+
+      return (
+        sectionMarkup(
+          "Cumulative Discount Views",
+          "This section compares non-financed discount outcomes for the full job while only discounting the Bath Fitter portion.",
+          cumulativeCards
+        ) +
+        sectionMarkup(
+          "Cumulative Financing Views",
+          "These cards show the finance options for the full job balance after the new 30% financing deposit is collected.",
+          financingCards
+        )
+      );
+    }
+
+    function buildOtherContractsTab(inputs) {
+      const cards = [];
+
+      if (inputs.doors) {
+        cards.push(
+          scenarioCardMarkup({
+            title: "Doors Contract",
+            badge: "Cash / Check / Charge | 50% Deposit",
+            note: "Standalone doors stay at full price and use the new 50% cash-style deposit.",
+            subtotalCents: inputs.doors,
+            discountCents: 0,
+            totalCents: inputs.doors,
+            depositCents: calculateCashDeposit(inputs.doors)
+          })
+        );
+      }
+
+      if (inputs.labor) {
+        cards.push(
+          scenarioCardMarkup({
+            title: "Labor Contract",
+            badge: "Cash / Check / Charge | 50% Deposit",
+            note: "Standalone labor stays at full price and uses the new 50% cash-style deposit.",
+            subtotalCents: inputs.labor,
+            discountCents: 0,
+            totalCents: inputs.labor,
+            depositCents: calculateCashDeposit(inputs.labor)
+          })
+        );
+      }
+
+      if (inputs.permits) {
+        cards.push(
+          scenarioCardMarkup({
+            title: "Permit Contract",
+            badge: "Paid in Full",
+            note: "Permits are still treated as due in full.",
+            subtotalCents: inputs.permits,
+            discountCents: 0,
+            totalCents: inputs.permits,
+            depositCents: inputs.permits
+          })
+        );
+      }
+
+      if (!cards.length) {
+        return emptyState("Enter door, labor, or permit totals to see the standalone contract breakdown.");
+      }
+
+      return sectionMarkup(
+        "Standalone Contract Views",
+        "Use these cards when you need to quote the side contracts separately from the Bath Fitter agreement.",
+        cards
+      );
+    }
+
+    function getEstimateTotals() {
+      return state.estimateItems.reduce(
+        (totals, item) => {
+          const totalCents = clampCents(item.totalCents);
+          totals[item.bucket] += totalCents;
+          totals.grand += totalCents;
+          return totals;
+        },
+        { bf: 0, doors: 0, labor: 0, permits: 0, grand: 0 }
+      );
+    }
+
+    function renderEstimateSummary() {
+      const totals = getEstimateTotals();
+
+      document.getElementById("estimateSummaryStrip").innerHTML = [
+        { label: "Bath Fitter", value: totals.bf },
+        { label: "Doors", value: totals.doors },
+        { label: "Labor", value: totals.labor },
+        { label: "Permits", value: totals.permits },
+        { label: "Estimate Total", value: totals.grand }
+      ]
+        .map(
+          (item) => `
+            <div class="estimate-summary-chip">
+              <span>${escapeHtml(item.label)}</span>
+              <strong>${formatCurrencyFromCents(item.value)}</strong>
+            </div>
+          `
+        )
+        .join("");
+    }
+
+    function renderEstimateList() {
+      const container = document.getElementById("estimateList");
+
+      if (!state.estimateItems.length) {
+        container.innerHTML = emptyState("No estimate lines yet. Add a price-list item or a custom line item to start building a quote.");
+      } else {
+        container.innerHTML = state.estimateItems
+          .map(
+            (item) => `
+              <article class="estimate-line">
+                <div class="estimate-line-top">
+                  <div>
+                    <h4>${escapeHtml(item.label)}</h4>
+                    <p>${escapeHtml(item.variantLabel || item.category)}</p>
+                  </div>
+                  <button class="mini-button danger" type="button" data-remove-estimate="${escapeHtml(item.id)}">Remove</button>
+                </div>
+                <div class="estimate-line-meta">
+                  ${escapeHtml(BUCKET_LABELS[item.bucket])} bucket | ${escapeHtml(item.source === "catalog" ? "Price list" : "Custom")} line
+                </div>
+                <div class="estimate-line-meta">
+                  Qty ${escapeHtml(item.quantity)} x ${formatCurrencyFromCents(item.unitCents)} = ${formatCurrencyFromCents(item.totalCents)}
+                </div>
+                ${item.description ? `<div class="estimate-line-meta">${escapeHtml(item.description)}</div>` : ""}
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      document.getElementById("estimateStatus").textContent =
+        state.estimateMessage ||
+        "Catalog items come from a curated slice of the 2/11/2026 price list. Use custom lines for permit-sheet values or anything that still depends on a matrix.";
+    }
+
+    function getCatalogCategories() {
+      return ["all"].concat(
+        Array.from(new Set(catalogItems.map((item) => item.category))).sort((a, b) => a.localeCompare(b))
+      );
+    }
+
+    function refreshCatalogCategories() {
+      const categorySelect = document.getElementById("catalogCategory");
+      const currentValue = categorySelect.value || "all";
+      const categories = getCatalogCategories();
+
+      categorySelect.innerHTML = categories
+        .map((category) => {
+          const label = category === "all" ? "All Categories" : category;
+          return `<option value="${escapeHtml(category)}">${escapeHtml(label)}</option>`;
+        })
+        .join("");
+
+      categorySelect.value = categories.includes(currentValue) ? currentValue : "all";
+    }
+
+    function getFilteredCatalogItems() {
+      const category = document.getElementById("catalogCategory").value;
+      const search = document.getElementById("catalogSearch").value.trim().toLowerCase();
+
+      return catalogItems.filter((item) => {
+        const matchesCategory = category === "all" || item.category === category;
+        const haystack = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
+          .join(" ")
+          .toLowerCase();
+        const matchesSearch = !search || haystack.includes(search);
+        return matchesCategory && matchesSearch;
+      });
+    }
+
+    function getSelectedCatalogItem() {
+      const itemId = document.getElementById("catalogItem").value;
+      return catalogItems.find((item) => item.id === itemId) || null;
+    }
+
+    function getSelectedCatalogVariant() {
+      const item = getSelectedCatalogItem();
+      if (!item) {
+        return null;
+      }
+
+      const variantId = document.getElementById("catalogVariant").value;
+      return item.variants.find((variant) => variant.id === variantId) || item.variants[0] || null;
+    }
+
+    function refreshCatalogPicker() {
+      refreshCatalogCategories();
+
+      const itemSelect = document.getElementById("catalogItem");
+      const currentItemId = itemSelect.value;
+      const filteredItems = getFilteredCatalogItems();
+
+      itemSelect.innerHTML = filteredItems.length
+        ? filteredItems
+            .map(
+              (item) =>
+                `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)} | ${escapeHtml(item.category)}</option>`
+            )
+            .join("")
+        : `<option value="">No matching catalog items</option>`;
+
+      const selectedId = filteredItems.some((item) => item.id === currentItemId) ? currentItemId : filteredItems[0]?.id || "";
+      itemSelect.value = selectedId;
+
+      refreshCatalogVariants();
+      renderCatalogDetail();
+    }
+
+    function refreshCatalogVariants() {
+      const variantSelect = document.getElementById("catalogVariant");
+      const quantityInput = document.getElementById("catalogQuantity");
+      const item = getSelectedCatalogItem();
+
+      if (!item) {
+        variantSelect.innerHTML = `<option value="">No variant</option>`;
+        quantityInput.step = 1;
+        quantityInput.value = "1";
+        return;
+      }
+
+      const currentVariantId = variantSelect.value;
+      variantSelect.innerHTML = item.variants
+        .map(
+          (variant) =>
+            `<option value="${escapeHtml(variant.id)}">${escapeHtml(variant.label)} | ${formatCurrency(variant.price)}</option>`
+        )
+        .join("");
+
+      variantSelect.value = item.variants.some((variant) => variant.id === currentVariantId)
+        ? currentVariantId
+        : item.variants[0].id;
+
+      quantityInput.step = item.quantityStep || 1;
+      if (!quantityInput.value || Number(quantityInput.value) <= 0) {
+        quantityInput.value = "1";
+      }
+    }
+
+    function renderCatalogDetail() {
+      const item = getSelectedCatalogItem();
+      const variant = getSelectedCatalogVariant();
+      const quantityInput = document.getElementById("catalogQuantity");
+
+      if (!item || !variant) {
+        document.getElementById("catalogItemDetail").textContent = "Pick a category and item to preview the current price-list detail.";
+        return;
+      }
+
+      const quantity = Math.max(1, Number(quantityInput.value) || 1);
+      const lineTotal = dollarsToCents(variant.price) * quantity;
+      const quantitySuffix = item.quantityLabel ? ` per ${item.quantityLabel}` : "";
+
+      document.getElementById("catalogItemDetail").textContent =
+        `${item.description} Bucket: ${BUCKET_LABELS[item.bucket]}. ` +
+        `Selected: ${variant.label} at ${formatCurrency(variant.price)}${quantitySuffix}. ` +
+        `Extended total: ${formatCurrencyFromCents(lineTotal)}.`;
+    }
+
+    function addCatalogItem() {
+      const item = getSelectedCatalogItem();
+      const variant = getSelectedCatalogVariant();
+      const quantity = Math.max(1, Number(document.getElementById("catalogQuantity").value) || 1);
+
+      if (!item || !variant) {
+        state.estimateMessage = "Pick a valid price-list item before adding it to the estimate.";
+        renderEstimateList();
+        return;
+      }
+
+      const unitCents = dollarsToCents(variant.price);
+      const totalCents = clampCents(unitCents * quantity);
+
+      state.estimateItems.unshift({
+        id: `estimate-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        source: "catalog",
+        label: item.label,
+        bucket: item.bucket,
+        category: item.category,
+        variantLabel: variant.label,
+        description: item.description,
+        quantity,
+        unitCents,
+        totalCents
+      });
+
+      state.estimateMessage = `${item.label} added to the estimate.`;
+      render();
+    }
+
+    function addCustomItem() {
+      const label = document.getElementById("customLabel").value.trim();
+      const bucket = document.getElementById("customBucket").value;
+      const amount = amountToCents(document.getElementById("customAmount").value);
+      const quantity = Math.max(1, Number(document.getElementById("customQuantity").value) || 1);
+
+      if (!label || !amount) {
+        state.estimateMessage = "Add a custom name and price before creating a custom line item.";
+        renderEstimateList();
+        return;
+      }
+
+      const totalCents = clampCents(amount * quantity);
+      state.estimateItems.unshift({
+        id: `estimate-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        source: "custom",
+        label,
+        bucket,
+        category: "Custom",
+        variantLabel: "Custom line item",
+        description: "",
+        quantity,
+        unitCents: amount,
+        totalCents
+      });
+
+      document.getElementById("customLabel").value = "";
+      document.getElementById("customAmount").value = "";
+      document.getElementById("customQuantity").value = "1";
+      state.estimateMessage = `${label} added to the estimate.`;
+      render();
+    }
+
+    function removeEstimateItem(id) {
+      state.estimateItems = state.estimateItems.filter((item) => item.id !== id);
+      state.estimateMessage = "Estimate line removed.";
+      render();
+    }
+
+    function applyEstimateToCalculator() {
+      const totals = getEstimateTotals();
+
+      document.getElementById("bf").value = totals.bf ? formatInputAmount(totals.bf) : "";
+      document.getElementById("doors").value = totals.doors ? formatInputAmount(totals.doors) : "";
+      document.getElementById("labor").value = totals.labor ? formatInputAmount(totals.labor) : "";
+      document.getElementById("permits").value = totals.permits ? formatInputAmount(totals.permits) : "";
+
+      state.estimateMessage = "Estimate totals loaded into the calculator inputs.";
+      render();
+      document.getElementById("bf").focus();
+    }
+
+    function clearEstimate() {
+      state.estimateItems = [];
+      state.estimateMessage = "Estimate cleared.";
+      render();
+    }
+
+    function setActiveTab(panelId) {
+      tabButtons.forEach((button) => {
+        const isActive = button.dataset.tab === panelId;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      tabPanels.forEach((panel) => {
+        panel.classList.toggle("active", panel.id === panelId);
+      });
+    }
+
+    function chooseDefaultTab(inputs) {
+      if (inputs.bf) {
+        return "panelContract";
+      }
+
+      if (inputs.doors || inputs.labor || inputs.permits) {
+        return "panelOther";
+      }
+
+      return "panelContract";
+    }
+
+    function ensureHelpfulActiveTab(inputs) {
+      const hasAddOns = Boolean(inputs.doors || inputs.labor || inputs.permits);
+      const activePanel = tabPanels.find((panel) => panel.classList.contains("active"));
+
+      if (!activePanel) {
+        setActiveTab(chooseDefaultTab(inputs));
+        return;
+      }
+
+      if (!inputs.bf && hasAddOns && activePanel.id === "panelContract") {
+        setActiveTab("panelOther");
+        return;
+      }
+
+      if ((!inputs.bf || !hasAddOns) && activePanel.id === "panelCumulative") {
+        setActiveTab(inputs.bf ? "panelContract" : chooseDefaultTab(inputs));
+      }
+    }
+
+    function render() {
+      const inputs = readInputs();
+      const anyInput = inputIds.some((id) => clampCents(amountToCents(document.getElementById(id).value)) > 0);
+
+      refreshCommissionControls();
+      renderSummary(inputs);
+      renderEstimateSummary();
+      renderEstimateList();
+      renderCommission(inputs);
+
+      document.getElementById("panelContract").innerHTML = buildContractTab(inputs);
+      document.getElementById("panelCumulative").innerHTML = buildCumulativeTab(inputs);
+      document.getElementById("panelOther").innerHTML = buildOtherContractsTab(inputs);
+
+      document.getElementById("statusLine").textContent = anyInput
+        ? "Math is now using the new deal rules: 50% deposit on cash, check, and charge deals, 30% deposit on financing, true cumulative subtotals, and no negative edge-case balances."
+        : "Start with a Bath Fitter amount, build an estimate from the price list, or enter side-contract totals. Results update automatically as you type.";
+
+      ensureHelpfulActiveTab(inputs);
+      saveState();
+    }
+
+    function clearInputs() {
+      inputIds.forEach((id) => {
+        document.getElementById(id).value = "";
+      });
+
+      setActiveTab("panelContract");
+      render();
+      document.getElementById("bf").focus();
+    }
+
+    initializeCommissionControls();
+    refreshCatalogPicker();
+    applyStoredState();
+    refreshCatalogPicker();
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setActiveTab(button.dataset.tab);
+      });
+    });
+
+    inputIds.forEach((id) => {
+      document.getElementById(id).addEventListener("input", render);
+    });
+
+    document.getElementById("catalogCategory").addEventListener("change", refreshCatalogPicker);
+    document.getElementById("catalogSearch").addEventListener("input", refreshCatalogPicker);
+    document.getElementById("catalogItem").addEventListener("change", () => {
+      refreshCatalogVariants();
+      renderCatalogDetail();
+    });
+    document.getElementById("catalogVariant").addEventListener("change", renderCatalogDetail);
+    document.getElementById("catalogQuantity").addEventListener("input", renderCatalogDetail);
+    document.getElementById("addCatalogItemButton").addEventListener("click", addCatalogItem);
+    document.getElementById("addCustomItemButton").addEventListener("click", addCustomItem);
+    document.getElementById("applyEstimateButton").addEventListener("click", applyEstimateToCalculator);
+    document.getElementById("clearEstimateButton").addEventListener("click", clearEstimate);
+    document.getElementById("commissionSalesType").addEventListener("change", render);
+    document.getElementById("commissionScenario").addEventListener("change", render);
+    document.getElementById("commissionPaymentMethod").addEventListener("change", render);
+    document.getElementById("commissionDepositMethod").addEventListener("change", render);
+    document.getElementById("commissionFinancePlan").addEventListener("change", render);
+
+    document.getElementById("estimateList").addEventListener("click", (event) => {
+      const removeButton = event.target.closest("[data-remove-estimate]");
+      if (removeButton) {
+        removeEstimateItem(removeButton.getAttribute("data-remove-estimate"));
+      }
+    });
+
+    document.getElementById("refreshButton").addEventListener("click", render);
+    document.getElementById("clearButton").addEventListener("click", clearInputs);
+
+    render();
   </script>
 </body>
 </html>
