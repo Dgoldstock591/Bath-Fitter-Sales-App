@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Calculator V2.11</title>
+  <title>Bath Fitter Sales Calculator V2.12</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -622,7 +622,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter pricing helper | V2.11</p>
+      <p class="eyebrow">Bath Fitter pricing helper | V2.12</p>
       <h1>Bath Fitter Sales Calculator</h1>
       <p class="hero-copy">
         Cleaner math, easier quoting, and a layout that works better on the sales floor.
@@ -1760,22 +1760,26 @@
       const grossTotal = inputs.bf + addOns;
 
       function cumulativeMathLine(discountCents, discountedBathFitterCents, cumulativeTotalCents) {
-        return (
-          "BF subtotal " +
-          formatCurrencyFromCents(inputs.bf) +
-          " - discount " +
-          formatCurrencyFromCents(discountCents) +
-          " = BF total " +
-          formatCurrencyFromCents(discountedBathFitterCents) +
-          " + Doors " +
-          formatCurrencyFromCents(inputs.doors) +
-          " + Labor " +
-          formatCurrencyFromCents(inputs.labor) +
-          " + Permit " +
-          formatCurrencyFromCents(inputs.permits) +
-          " = Cumulative total " +
-          formatCurrencyFromCents(cumulativeTotalCents)
-        );
+        const parts = [
+          "BF subtotal " + formatCurrencyFromCents(inputs.bf),
+          "- discount " + formatCurrencyFromCents(discountCents),
+          "= BF total " + formatCurrencyFromCents(discountedBathFitterCents)
+        ];
+
+        if (inputs.doors) {
+          parts.push("+ Doors " + formatCurrencyFromCents(inputs.doors));
+        }
+
+        if (inputs.labor) {
+          parts.push("+ Labor " + formatCurrencyFromCents(inputs.labor));
+        }
+
+        if (inputs.permits) {
+          parts.push("+ Permit " + formatCurrencyFromCents(inputs.permits));
+        }
+
+        parts.push("= Cumulative total " + formatCurrencyFromCents(cumulativeTotalCents));
+        return parts.join(" ");
       }
 
       function cumulativeDeposit(discountedBathFitterCents, dealType) {
