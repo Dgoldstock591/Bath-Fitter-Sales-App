@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Calculator V2.12</title>
+  <title>Bath Fitter Sales Calculator V2.13</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -622,7 +622,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter pricing helper | V2.12</p>
+      <p class="eyebrow">Bath Fitter pricing helper | V2.13</p>
       <h1>Bath Fitter Sales Calculator</h1>
       <p class="hero-copy">
         Cleaner math, easier quoting, and a layout that works better on the sales floor.
@@ -934,7 +934,7 @@
         mode: "cash",
         type: "percent",
         percent: 25,
-        note: "Veterans / first responders / multi-bathroom style special discount."
+        note: "Veterans deals or managers specials."
       },
       {
         id: "finance-13",
@@ -1647,17 +1647,17 @@
       });
 
       const special = findCleanDiscount(inputs.bf, 25);
-      cashCards.push(
+      const specialCards = [
         scenarioCardMarkup({
           title: "25% Special Discount",
-          badge: "Veterans / First Responders / Multi-Bathroom | 50% Deposit",
-          note: "Special discount on the Bath Fitter contract only. This card assumes a non-financed sale.",
+          badge: "Veterans Deals / Managers Specials | 50% Deposit",
+          note: "Veterans deals or managers specials.",
           subtotalCents: inputs.bf,
           discountCents: special.discountCents,
           totalCents: special.finalCents,
           depositCents: calculateCashDeposit(special.finalCents)
         })
-      );
+      ];
 
       const standard = findCleanDiscount(inputs.bf, 13);
       const standardDeposit = calculateFinanceDeposit(standard.finalCents);
@@ -1738,6 +1738,12 @@
           "Discount Options",
           "These cards focus only on the Bath Fitter contract. All non-financed deals shown here use a 50% deposit.",
           cashCards
+        ) +
+        sectionMarkup(
+          "Veterans Deals / Managers Specials",
+          "Dedicated 25% special pricing.",
+          specialCards,
+          false
         ) +
         sectionMarkup(
           "Financing Options",
@@ -1825,17 +1831,20 @@
       const emergencyBalance = Math.max(0, emergencyTotal - emergencyDeposit);
       const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
 
-      const financingCards = [
+      const specialCards = [
         scenarioCardMarkup({
           title: "25% Special Discount",
-          badge: "Non-Financed | 50% Deposit",
-          note: "Special cumulative total using the discounted Bath Fitter price plus full-price doors, labor, and permits.",
+          badge: "Veterans Deals / Managers Specials | 50% Deposit",
+          note: "Veterans deals or managers specials.",
           subtotalCents: grossTotal,
           discountCents: special.discountCents,
           totalCents: specialTotal,
           depositCents: specialDeposit,
           mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialTotal)
-        }),
+        })
+      ];
+
+      const financingCards = [
         scenarioCardMarkup({
           title: "13% Standard Financing",
           badge: "Cumulative Finance | 30% Deposit",
@@ -1897,6 +1906,12 @@
           "Cumulative Discount Views",
           "This section compares non-financed discount outcomes for the full job while only discounting the Bath Fitter portion.",
           cumulativeCards
+        ) +
+        sectionMarkup(
+          "Veterans Deals / Managers Specials",
+          "Dedicated 25% special pricing for the full cumulative job.",
+          specialCards,
+          false
         ) +
         sectionMarkup(
           "Cumulative Financing Views",
