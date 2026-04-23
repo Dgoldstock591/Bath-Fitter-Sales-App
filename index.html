@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.27</title>
+  <title>Bath Fitter Sales Tool V2.28</title>
+  <link rel="icon" href="icon-192.png" />
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -734,9 +735,20 @@
       color: #fff;
     }
 
+    .choice-button:disabled,
+    .rough-checklist input:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
     .rough-checklist {
       display: grid;
       gap: 0.55rem;
+    }
+
+    .rough-checklist[hidden],
+    .form-field[hidden] {
+      display: none !important;
     }
 
     .rough-checklist label {
@@ -860,7 +872,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=226"></script>
+  <script src="price-list-data.js?v=228"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -873,7 +885,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.27</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.28</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, wainscoting, cumulative totals, deposits, and financing from one screen.
@@ -1044,43 +1056,57 @@
 
         <div class="rough-grid">
           <div class="rough-step">
-            <h3>1. Job Type</h3>
-            <p class="estimator-detail">Pick the main product path first. The next fields narrow from here.</p>
-            <div class="choice-row" data-condition-group="jobType">
-              <button class="choice-button" type="button" data-value="tub-liner">Tub liner</button>
-              <button class="choice-button active" type="button" data-value="tub-liner-walls">Tub liner + walls</button>
-              <button class="choice-button" type="button" data-value="freestanding-tub">Freestanding tub</button>
-              <button class="choice-button" type="button" data-value="freestanding-tub-walls">Freestanding tub + walls</button>
-              <button class="choice-button" type="button" data-value="shower-base-walls">Shower base + walls</button>
+            <h3>1. Job Route</h3>
+            <p class="estimator-detail">Choose the finished route first, then define what is there now. Invalid routes will drop out as conditions are selected.</p>
+            <div class="choice-row" data-condition-group="route">
+              <button class="choice-button active" type="button" data-value="tub-liner">Tub liner</button>
+              <button class="choice-button" type="button" data-value="tub-replacement">Tub replacement / freestanding tub</button>
               <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
-              <button class="choice-button" type="button" data-value="shower-replacement">Shower replacement</button>
-              <button class="choice-button" type="button" data-value="base-only">Base only</button>
-              <button class="choice-button" type="button" data-value="walls-only">Walls only</button>
-              <button class="choice-button" type="button" data-value="custom">Other/custom</button>
+              <button class="choice-button" type="button" data-value="shower-base">Shower base + walls</button>
+              <button class="choice-button" type="button" data-value="freestanding-base">Freestanding base + walls</button>
+              <button class="choice-button" type="button" data-value="neo-curved-base">Neo-angle / curved base + walls</button>
+              <button class="choice-button" type="button" data-value="molded-base">Rare molded base replacement</button>
+              <button class="choice-button" type="button" data-value="wains-only">Wainscoting only</button>
+              <button class="choice-button" type="button" data-value="custom">Other / custom</button>
             </div>
+            <p class="estimator-detail" id="roughRulesSummary"></p>
           </div>
 
           <div class="rough-step">
-            <h3>2. Existing Fixture</h3>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughExistingTubStays" checked /> Existing tub stays</label>
-              <label><input type="checkbox" id="roughFiberglassTub" /> Fiberglass tub</label>
-              <label><input type="checkbox" id="roughCastTub" /> Cast tub</label>
-              <label><input type="checkbox" id="roughSteelTub" /> Steel tub</label>
-              <label><input type="checkbox" id="roughExistingShowerBase" /> Existing shower base</label>
-              <label><input type="checkbox" id="roughOnePieceFiberglass" /> Existing one-piece fiberglass unit</label>
-              <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece fiberglass unit with ceiling</label>
-              <label><input type="checkbox" id="roughExistingBfLiner" /> Existing Bath Fitter liner</label>
+            <h3>2. Existing Conditions</h3>
+            <p class="estimator-detail">This drives the tear-out path and blocks invalid finished options.</p>
+            <div class="form-field">
+              <label>Existing Bathing Fixture</label>
+              <div class="choice-row" data-condition-group="existingFixture">
+                <button class="choice-button" type="button" data-value="cast-tub">Cast iron tub</button>
+                <button class="choice-button active" type="button" data-value="steel-tub">Steel tub</button>
+                <button class="choice-button" type="button" data-value="fiberglass-tub">Fiberglass tub</button>
+                <button class="choice-button" type="button" data-value="shower-base">Existing shower base</button>
+                <button class="choice-button" type="button" data-value="one-piece-fiberglass">One-piece fiberglass unit</button>
+                <button class="choice-button" type="button" data-value="bf-liner">Existing Bath Fitter liner</button>
+                <button class="choice-button" type="button" data-value="concrete-tile-base">Concrete / tile style base</button>
+                <button class="choice-button" type="button" data-value="other">Other / unknown</button>
+              </div>
             </div>
-          </div>
-
-          <div class="rough-step">
-            <h3>3. Existing Walls</h3>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughNoWallTearout" checked /> No wall tear-out</label>
-              <label><input type="checkbox" id="roughFiberglassWalls" /> Fiberglass walls</label>
-              <label><input type="checkbox" id="roughTileWalls" /> Tile walls</label>
-              <label><input type="checkbox" id="roughMudWalls" /> Mud walls</label>
+            <div class="rough-checklist" id="roughOnePieceWithCeilingField" hidden>
+              <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece unit includes ceiling</label>
+            </div>
+            <div class="form-field">
+              <label>Existing Wet-Area Walls</label>
+              <div class="choice-row" data-condition-group="wallCondition">
+                <button class="choice-button active" type="button" data-value="staying">Walls staying / no wall removal</button>
+                <button class="choice-button" type="button" data-value="fiberglass">Fiberglass walls</button>
+                <button class="choice-button" type="button" data-value="tile">Tile walls</button>
+                <button class="choice-button" type="button" data-value="mud">Mud walls</button>
+              </div>
+            </div>
+            <div class="form-field" id="roughTileWallCountField" hidden>
+              <label for="roughTileWallCount">Tile Walls Being Removed</label>
+              <select id="roughTileWallCount">
+                <option value="1">1 wall</option>
+                <option value="2">2 walls</option>
+                <option value="3">3 walls</option>
+              </select>
             </div>
           </div>
 
@@ -1090,17 +1116,25 @@
               <button class="choice-button active" type="button" data-value="standard">Standard</button>
               <button class="choice-button" type="button" data-value="neo-angle">Neo-angle</button>
               <button class="choice-button" type="button" data-value="curved">Curved</button>
-              <button class="choice-button" type="button" data-value="freestanding">Freestanding / threshold condition</button>
               <button class="choice-button" type="button" data-value="barrier-free">Barrier free / roll-in</button>
+              <button class="choice-button" type="button" data-value="special-threshold">Special threshold condition</button>
+            </div>
+            <div class="rough-checklist" id="roughConcreteBeveledField" hidden>
+              <label><input type="checkbox" id="roughConcreteBeveled" /> Specific beveled concrete molded-base condition</label>
+            </div>
+            <div class="rough-checklist" id="roughBaseOnlyField" hidden>
+              <label><input type="checkbox" id="roughBaseOnlyException" /> Rare base-only exception with existing walls staying</label>
             </div>
             <div class="rough-checklist">
-              <label><input type="checkbox" id="roughSpecialBaseRemoval" /> Neo/curved/tile base tear-out condition</label>
               <label><input type="checkbox" id="roughRemoveExistingDoor" /> Remove existing shower door</label>
             </div>
           </div>
 
           <div class="rough-step">
             <h3>5. Product / Finish</h3>
+            <div class="rough-checklist" id="roughIncludeWetWallsField" hidden>
+              <label><input type="checkbox" id="roughIncludeWetWalls" checked /> Include wet-area walls on this route</label>
+            </div>
             <div class="form-field" id="roughPrimaryProductField">
               <label for="roughPrimaryProduct">Tub / Base Product</label>
               <select id="roughPrimaryProduct"></select>
@@ -1174,48 +1208,79 @@
 
           <div class="rough-step">
             <h3>6. Rebuild / Prep</h3>
+            <p class="estimator-detail">Wall prep is added automatically whenever wet-area walls, wainscoting, or wall disturbance are involved.</p>
+            <div class="form-field" id="roughWallRepairCountField">
+              <label for="roughWallRepairCount">Wall Repair Needed</label>
+              <select id="roughWallRepairCount">
+                <option value="0">No wall repair</option>
+                <option value="1">1 wall</option>
+                <option value="2">2 walls</option>
+                <option value="3">3 walls</option>
+              </select>
+            </div>
+            <div class="form-field" id="roughExtraSheetrockCountField">
+              <label for="roughExtraSheetrockCount">Extra New Sheetrock</label>
+              <select id="roughExtraSheetrockCount">
+                <option value="0">No extra sheetrock</option>
+                <option value="1">1 wall</option>
+                <option value="2">2 walls</option>
+                <option value="3">3 walls</option>
+              </select>
+            </div>
             <div class="rough-checklist">
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-wall-prep" /> Wall prep</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-wall-repair" /> Wall repair</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-build-wall" /> Build wall</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-new-sheetrock" /> New sheetrock per wall</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-subfloor-replace" /> Subfloor replacement</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-wrap-threshold" /> Wrap threshold</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-remove-build-wrap-threshold" /> Build and wrap threshold</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-remove-header" /> Header removal</label>
-              <label><input type="checkbox" data-rough-add="rebuild" value="labor-cover-window" /> Cover existing window</label>
+              <label><input type="checkbox" id="roughBuildWall" /> Build wall</label>
+              <label><input type="checkbox" id="roughSubfloorReplace" /> Subfloor replacement</label>
+              <label><input type="checkbox" id="roughWrapThreshold" /> Wrap threshold</label>
+              <label><input type="checkbox" id="roughBuildWrapThreshold" /> Build and wrap threshold</label>
+              <label><input type="checkbox" id="roughRemoveHeader" /> Header removal</label>
+              <label><input type="checkbox" id="roughCoverWindow" /> Cover existing window</label>
+              <label><input type="checkbox" id="roughJackhammerCharge" /> Jack hammer charge</label>
             </div>
           </div>
 
           <div class="rough-step">
             <h3>7. Plumbing / Mechanical</h3>
             <div class="rough-checklist">
-              <label><input type="checkbox" data-rough-add="plumbing" value="relocate-drain" /> Relocate drain</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="move-shower-head-overflow" /> Move shower head / overflow</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="relocate-plumbing-copper" /> Relocate plumbing copper</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="labor-add-gooseneck" /> Add spigot / gooseneck</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="labor-remove-spigot" /> Remove spigot and cap off</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="delta-lahara" /> Add / change valve set</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="delta-lahara-handheld-bar" /> Add handheld / diverter</label>
-              <label><input type="checkbox" data-rough-add="plumbing" value="delta-in2ition-kinetic" /> In2ition handheld combo</label>
+              <label><input type="checkbox" id="roughValveEnabled" checked /> Include valve / trim set</label>
+            </div>
+            <div class="form-field" id="roughValveProductField">
+              <label for="roughValveProduct">Valve / Trim</label>
+              <select id="roughValveProduct"></select>
+            </div>
+            <div class="form-field" id="roughHandheldProductField">
+              <label for="roughHandheldProduct">Handheld / Diverter Upgrade</label>
+              <select id="roughHandheldProduct"></select>
+            </div>
+            <div class="rough-checklist">
+              <label><input type="checkbox" id="roughRelocateDrain" /> Relocate drain</label>
+              <label><input type="checkbox" id="roughMoveShowerHeadOverflow" /> Move shower head / overflow</label>
+              <label><input type="checkbox" id="roughRelocatePlumbingCopper" /> Relocate plumbing copper</label>
+              <label><input type="checkbox" id="roughAddGooseneck" /> Add spigot / gooseneck</label>
+              <label><input type="checkbox" id="roughRemoveSpigot" /> Remove spigot and cap off</label>
             </div>
           </div>
 
           <div class="rough-step">
             <h3>8. Accessories / Add-Ons</h3>
+            <div class="form-field" id="roughCurtainRodField">
+              <label for="roughCurtainRodProduct">Curtain Rod</label>
+              <select id="roughCurtainRodProduct"></select>
+            </div>
+            <div class="form-field" id="roughShowerRodField">
+              <label for="roughShowerRodProduct">Shower Rod</label>
+              <select id="roughShowerRodProduct"></select>
+            </div>
             <div class="rough-checklist">
-              <label><input type="checkbox" data-rough-add="accessory" value="curtain-rod-tension-5" /> Curtain rod</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="shower-rod-curved-5" /> Shower rod</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="safety-bar-16" /> Grab bar</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="safety-bar-l-shape" /> L-shaped grab bar</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="corner-seat" /> Corner seat</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="fold-down-seat-18" /> Fold-down seat</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="soap-dish" /> Soap dish</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="towel-bar" /> Towel bar</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="acrylic-shelf" /> Acrylic shelf</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="oxford-full-length-shelf" /> Full-length shelf</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="window-cutout" /> Window trim / cutout</label>
-              <label><input type="checkbox" data-rough-add="accessory" value="collapsible-threshold" /> Collapsible threshold</label>
+              <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Grab bar</label>
+              <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L-shaped grab bar</label>
+              <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner seat</label>
+              <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> Fold-down seat</label>
+              <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap dish</label>
+              <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel bar</label>
+              <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic shelf</label>
+              <label><input type="checkbox" data-rough-accessory="oxford-full-length-shelf" /> Full-length shelf</label>
+              <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window trim / cutout</label>
+              <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible threshold</label>
             </div>
           </div>
 
@@ -1318,7 +1383,7 @@
       currency: "USD"
     });
 
-    const STORAGE_KEY = "bf-sales-app-state-v2-6";
+    const STORAGE_KEY = "bf-sales-app-state-v2-8";
     const DEPOSIT_RULES = {
       cash: 50,
       finance: 30
@@ -1398,12 +1463,13 @@
       activeMatrix: "wall"
     };
     const roughState = {
-      jobType: "tub-liner-walls",
+      route: "tub-liner",
+      existingFixture: "steel-tub",
+      wallCondition: "staying",
       layout: "standard"
     };
     const ROUGH_GROUP_LABELS = {
       product: "Product Total",
-      wainscoting: "Wainscoting Total",
       tearout: "Tear-Out Total",
       rebuild: "Rebuild / Prep Total",
       plumbing: "Plumbing / Fixture Total",
@@ -1412,30 +1478,84 @@
     const ROUGH_ITEM_IDS = {
       drain: "drain-kit",
       formedFront: "tub-liner-formed-front",
-      tilePattern: "tile-pattern-upcharge"
+      tilePattern: "tile-pattern-upcharge",
+      wallPrep: "labor-wall-prep",
+      wallRepair: "labor-wall-repair",
+      sheetrock: "labor-new-sheetrock",
+      buildWall: "labor-build-wall",
+      subfloor: "labor-subfloor-replace",
+      wrapThreshold: "labor-wrap-threshold",
+      buildWrapThreshold: "labor-remove-build-wrap-threshold",
+      removeHeader: "labor-remove-header",
+      coverWindow: "labor-cover-window",
+      jackhammer: "jackhammer-charge"
     };
-    const ROUGH_PRODUCT_PATHS = {
-      "tub-liner": ["tub-liner"],
-      "tub-liner-walls": ["tub-liner"],
-      "freestanding-tub": ["fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"],
-      "freestanding-tub-walls": ["fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"],
-      "shower-base-walls": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
-      "tub-to-shower": ["threshold-base-fs-6", "threshold-base-fs-3", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in"],
-      "shower-replacement": ["threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
-      "base-only": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
-      "walls-only": [],
-      custom: ["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]
-    };
-    const ROUGH_WALL_PATH_JOBS = new Set(["tub-liner-walls", "freestanding-tub-walls", "shower-base-walls", "tub-to-shower", "shower-replacement", "walls-only", "custom"]);
-    const ROUGH_TUB_JOBS = new Set(["tub-liner", "tub-liner-walls", "freestanding-tub", "freestanding-tub-walls"]);
-    const ROUGH_BASE_PRODUCT_IDS = new Set(["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]);
-    const ROUGH_LAYOUT_PRODUCT_PREFERENCES = {
-      "neo-angle": "threshold-base-neo-angle",
-      curved: "threshold-base-curved-front",
-      freestanding: "threshold-base-fs-6",
-      "barrier-free": "ez-roll-in"
-    };
-    const ROUGH_LAYOUT_AUTO_PRODUCTS = new Set(["", "threshold-base-6", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "ez-roll-in"]);
+    const ROUGH_ROUTE_ORDER = [
+      "tub-liner",
+      "tub-replacement",
+      "tub-to-shower",
+      "shower-base",
+      "freestanding-base",
+      "neo-curved-base",
+      "molded-base",
+      "wains-only",
+      "custom"
+    ];
+    const ROUGH_TUB_PRODUCT_IDS = [
+      "fs-empress-standard",
+      "fs-empress-xl",
+      "fs-garden-tub-40",
+      "freestanding-a-front"
+    ];
+    const ROUGH_STANDARD_BASE_IDS = [
+      "threshold-base-6",
+      "threshold-base-fs-3",
+      "threshold-base-fs-6",
+      "xl-fs-base"
+    ];
+    const ROUGH_FREESTANDING_BASE_IDS = [
+      "threshold-base-fs-3",
+      "threshold-base-fs-6",
+      "flat-floor-base",
+      "flat-floor-1x1-tile-pattern",
+      "flat-floor-handicap",
+      "ez-roll-in",
+      "xl-fs-base"
+    ];
+    const ROUGH_CONVERSION_BASE_IDS = [
+      "threshold-base-fs-3",
+      "threshold-base-fs-6",
+      "threshold-base-neo-angle",
+      "threshold-base-curved-front",
+      "flat-floor-base",
+      "flat-floor-1x1-tile-pattern",
+      "flat-floor-handicap",
+      "ez-roll-in",
+      "xl-fs-base"
+    ];
+    const ROUGH_NEO_CURVED_BASE_IDS = ["threshold-base-neo-angle", "threshold-base-curved-front"];
+    const ROUGH_MOLDED_BASE_IDS = [
+      "threshold-base-6",
+      "flat-floor-base",
+      "flat-floor-1x1-tile-pattern",
+      "flat-floor-handicap"
+    ];
+    const ROUGH_CUSTOM_PRIMARY_IDS = Array.from(
+      new Set(
+        ["tub-liner"]
+          .concat(ROUGH_TUB_PRODUCT_IDS)
+          .concat(ROUGH_STANDARD_BASE_IDS)
+          .concat(ROUGH_FREESTANDING_BASE_IDS)
+          .concat(ROUGH_NEO_CURVED_BASE_IDS)
+          .concat(ROUGH_MOLDED_BASE_IDS)
+      )
+    );
+    const ROUGH_FLAT_FLOOR_IDS = new Set([
+      "flat-floor-base",
+      "flat-floor-1x1-tile-pattern",
+      "flat-floor-handicap"
+    ]);
+    const ROUGH_ANY_TUB_OR_BASE_IDS = new Set(["tub-liner"].concat(ROUGH_CUSTOM_PRIMARY_IDS));
     const ROUGH_WALL_IDS = [
       "wall-flat-84x132",
       "wall-flat-84x156",
@@ -1476,6 +1596,55 @@
       "latitude-tub-shield-32",
       "latitude-shower-shield-29",
       "latitude-shower-shield-38-44"
+    ];
+    const ROUGH_TUB_DOOR_IDS = [
+      "elegance-tub-door-60",
+      "prestige-tub-door-60",
+      "latitude-tub-shield-28",
+      "latitude-tub-shield-32"
+    ];
+    const ROUGH_SHOWER_DOOR_IDS = [
+      "elegance-shower-door-60",
+      "elegance-shower-door-66",
+      "prestige-shower-door-48",
+      "prestige-shower-door-60",
+      "latitude-shower-shield-29",
+      "latitude-shower-shield-38-44"
+    ];
+    const ROUGH_NEO_DOOR_IDS = ["neo-angle-door-36", "neo-angle-door-38"];
+    const ROUGH_CURVED_DOOR_IDS = ["curved-door-32", "curved-door-36", "curved-door-40"];
+    const ROUGH_VALVE_IDS = [
+      "delta-lahara",
+      "delta-trinsic",
+      "delta-kayra-basic",
+      "delta-kayra-intuition",
+      "delta-ashlyn",
+      "moen-flara",
+      "moen-voss"
+    ];
+    const ROUGH_HANDHELD_IDS = [
+      "delta-lahara-handheld-bar",
+      "delta-in2ition-kinetic",
+      "delta-kinetic-raincan"
+    ];
+    const ROUGH_CURTAIN_ROD_IDS = ["curtain-rod-tension-5"];
+    const ROUGH_SHOWER_ROD_IDS = [
+      "shower-rod-curved-5",
+      "shower-rod-curved-6",
+      "shower-rod-fixed-5-5",
+      "shower-rod-fixed-6"
+    ];
+    const ROUGH_ACCESSORY_TOGGLE_IDS = [
+      "safety-bar-16",
+      "safety-bar-l-shape",
+      "corner-seat",
+      "fold-down-seat-18",
+      "soap-dish",
+      "towel-bar",
+      "acrylic-shelf",
+      "oxford-full-length-shelf",
+      "window-cutout",
+      "collapsible-threshold"
     ];
     const PRODUCT_MATRICES = {
       wall: [
@@ -1854,6 +2023,45 @@
       return clampCents(clampCents(cents) * ((paymentMethod?.costPercent || 0) / 100));
     }
 
+    function calculateSplitPaymentCost(totalCents, depositCents, depositMethod, balanceMethod) {
+      const safeTotal = clampCents(totalCents);
+      const safeDeposit = Math.min(safeTotal, clampCents(depositCents));
+      const balanceCents = Math.max(0, safeTotal - safeDeposit);
+      return clampCents(
+        calculatePaymentCost(safeDeposit, depositMethod) +
+        calculatePaymentCost(balanceCents, balanceMethod)
+      );
+    }
+
+    function buildPrimaryCashRateContext(grossCents, finalCents, discountCents) {
+      const depositCents = calculateCashDeposit(finalCents);
+      const cardCostCents = calculateSplitPaymentCost(
+        finalCents,
+        depositCents,
+        getCommissionDepositMethod(),
+        getCommissionPaymentMethod()
+      );
+
+      return {
+        grossCents,
+        discountCents,
+        cardCostCents,
+        tierGrossCents: grossCents,
+        tierTransactionCostsCents: clampCents(discountCents + cardCostCents)
+      };
+    }
+
+    function calculateCommissionFromRateContext(rateContext, commissionableCents) {
+      return calculateCardCommission({
+        grossCents: rateContext.grossCents,
+        commissionableCents,
+        discountCents: rateContext.discountCents,
+        cardCostCents: rateContext.cardCostCents,
+        tierGrossCents: rateContext.tierGrossCents,
+        tierTransactionCostsCents: rateContext.tierTransactionCostsCents
+      });
+    }
+
     function calculateCardCommission({
       grossCents,
       commissionableCents,
@@ -2035,15 +2243,11 @@
 
       const cashCards = [];
       const cashDiscounts = DISCOUNT_LEVELS;
-      const paymentMethod = getCommissionPaymentMethod();
-
       const coupon = createFlatDiscount(inputs.bf, 900);
-      const couponCommission = calculateCardCommission({
-        grossCents: inputs.bf,
-        commissionableCents: coupon.finalCents,
-        discountCents: coupon.discountCents,
-        cardCostCents: calculatePaymentCost(coupon.finalCents, paymentMethod)
-      });
+      const couponCommission = calculateCommissionFromRateContext(
+        buildPrimaryCashRateContext(inputs.bf, coupon.finalCents, coupon.discountCents),
+        coupon.finalCents
+      );
       cashCards.push(
         scenarioCardMarkup({
           title: "Coupon Discount",
@@ -2060,12 +2264,10 @@
 
       cashDiscounts.forEach((percent) => {
         const plan = findCleanDiscount(inputs.bf, percent);
-        const commission = calculateCardCommission({
-          grossCents: inputs.bf,
-          commissionableCents: plan.finalCents,
-          discountCents: plan.discountCents,
-          cardCostCents: calculatePaymentCost(plan.finalCents, paymentMethod)
-        });
+        const commission = calculateCommissionFromRateContext(
+          buildPrimaryCashRateContext(inputs.bf, plan.finalCents, plan.discountCents),
+          plan.finalCents
+        );
         cashCards.push(
           scenarioCardMarkup({
             title: percent + "% Discount",
@@ -2082,12 +2284,10 @@
       });
 
       const special = findCleanDiscount(inputs.bf, 25);
-      const specialCommission = calculateCardCommission({
-        grossCents: inputs.bf,
-        commissionableCents: special.finalCents,
-        discountCents: special.discountCents,
-        cardCostCents: calculatePaymentCost(special.finalCents, paymentMethod)
-      });
+      const specialCommission = calculateCommissionFromRateContext(
+        buildPrimaryCashRateContext(inputs.bf, special.finalCents, special.discountCents),
+        special.finalCents
+      );
       const specialCards = [
         scenarioCardMarkup({
           title: "25% Special Discount",
@@ -2189,7 +2389,6 @@
       }
 
       const grossTotal = inputs.bf + addOns;
-      const paymentMethod = getCommissionPaymentMethod();
       const depositMethod = getCommissionDepositMethod();
 
       function cumulativeMathLine(bfDiscountCents, discountedBathFitterCents, wainsDiscountCents, discountedWainscotingCents, cumulativeTotalCents) {
@@ -2239,14 +2438,14 @@
         const wainsDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
         const total = discount.finalCents + wainsDiscount.finalCents + nonDiscountableAddOns;
         const totalDiscount = discount.discountCents + wainsDiscount.discountCents;
-        const commission = calculateCardCommission({
-          grossCents: grossTotal,
-          commissionableCents: discount.finalCents + wainsDiscount.finalCents + inputs.doors + inputs.labor,
-          discountCents: totalDiscount,
-          cardCostCents: calculatePaymentCost(total, paymentMethod),
-          tierGrossCents: inputs.bf,
-          tierTransactionCostsCents: clampCents(discount.discountCents + calculatePaymentCost(discount.finalCents, paymentMethod))
-        });
+        const primaryRateContext = buildPrimaryCashRateContext(inputs.bf, discount.finalCents, discount.discountCents);
+        const commission = calculateCommissionFromRateContext(
+          {
+            ...primaryRateContext,
+            grossCents: grossTotal
+          },
+          discount.finalCents + wainsDiscount.finalCents + inputs.doors + inputs.labor
+        );
 
         return scenarioCardMarkup({
           title: percent + "% Discount on Bath Fitter" + (inputs.wainscoting && percent > WAINSCOTING_MAX_DISCOUNT_PERCENT ? " / Wains 20% Cap" : ""),
@@ -2267,14 +2466,14 @@
       const specialTotal = special.finalCents + specialWains.finalCents + nonDiscountableAddOns;
       const specialDiscount = special.discountCents + specialWains.discountCents;
       const specialDeposit = cumulativeDeposit(special.finalCents, specialWains.finalCents, "cash");
-      const specialCommission = calculateCardCommission({
-        grossCents: grossTotal,
-        commissionableCents: special.finalCents + specialWains.finalCents + inputs.doors + inputs.labor,
-        discountCents: specialDiscount,
-        cardCostCents: calculatePaymentCost(specialTotal, paymentMethod),
-        tierGrossCents: inputs.bf,
-        tierTransactionCostsCents: clampCents(special.discountCents + calculatePaymentCost(special.finalCents, paymentMethod))
-      });
+      const specialPrimaryRateContext = buildPrimaryCashRateContext(inputs.bf, special.finalCents, special.discountCents);
+      const specialCommission = calculateCommissionFromRateContext(
+        {
+          ...specialPrimaryRateContext,
+          grossCents: grossTotal
+        },
+        special.finalCents + specialWains.finalCents + inputs.doors + inputs.labor
+      );
 
       const specialCards = [
         scenarioCardMarkup({
@@ -2379,15 +2578,13 @@
     function buildOtherContractsTab(inputs) {
       const cards = [];
       const wainscotingCards = [];
-      const paymentMethod = getCommissionPaymentMethod();
       const depositMethod = getCommissionDepositMethod();
 
       if (inputs.wainscoting) {
-        const noDiscountCommission = calculateCardCommission({
-          grossCents: inputs.wainscoting,
-          commissionableCents: inputs.wainscoting,
-          cardCostCents: calculatePaymentCost(inputs.wainscoting, paymentMethod)
-        });
+        const noDiscountContext = inputs.bf
+          ? buildPrimaryCashRateContext(inputs.bf, inputs.bf, 0)
+          : buildPrimaryCashRateContext(inputs.wainscoting, inputs.wainscoting, 0);
+        const noDiscountCommission = calculateCommissionFromRateContext(noDiscountContext, inputs.wainscoting);
         wainscotingCards.push(
           scenarioCardMarkup({
             title: "Wainscoting EOI - No Discount",
@@ -2405,12 +2602,10 @@
         DISCOUNT_LEVELS.forEach((percent) => {
           const wainsDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
           const effectivePercent = getWainscotingDiscountPercent(percent);
-          const commission = calculateCardCommission({
-            grossCents: inputs.wainscoting,
-            commissionableCents: wainsDiscount.finalCents,
-            discountCents: wainsDiscount.discountCents,
-            cardCostCents: calculatePaymentCost(wainsDiscount.finalCents, paymentMethod)
-          });
+          const rateContext = inputs.bf
+            ? buildPrimaryCashRateContext(inputs.bf, findCleanDiscount(inputs.bf, percent).finalCents, findCleanDiscount(inputs.bf, percent).discountCents)
+            : buildPrimaryCashRateContext(inputs.wainscoting, wainsDiscount.finalCents, wainsDiscount.discountCents);
+          const commission = calculateCommissionFromRateContext(rateContext, wainsDiscount.finalCents);
           wainscotingCards.push(
             scenarioCardMarkup({
               title: `${percent}% BF Discount / ${effectivePercent}% Wains Discount`,
@@ -2434,12 +2629,13 @@
         });
 
         const specialWainsDiscount = findWainscotingDiscount(inputs.wainscoting, 25);
-        const specialWainsCommission = calculateCardCommission({
-          grossCents: inputs.wainscoting,
-          commissionableCents: specialWainsDiscount.finalCents,
-          discountCents: specialWainsDiscount.discountCents,
-          cardCostCents: calculatePaymentCost(specialWainsDiscount.finalCents, paymentMethod)
-        });
+        const specialWainsRateContext = inputs.bf
+          ? buildPrimaryCashRateContext(inputs.bf, findCleanDiscount(inputs.bf, 25).finalCents, findCleanDiscount(inputs.bf, 25).discountCents)
+          : buildPrimaryCashRateContext(inputs.wainscoting, specialWainsDiscount.finalCents, specialWainsDiscount.discountCents);
+        const specialWainsCommission = calculateCommissionFromRateContext(
+          specialWainsRateContext,
+          specialWainsDiscount.finalCents
+        );
         wainscotingCards.push(
           scenarioCardMarkup({
             title: "25% BF Special / 20% Wains Discount",
@@ -2497,11 +2693,10 @@
       }
 
       if (inputs.doors) {
-        const doorsCommission = calculateCardCommission({
-          grossCents: inputs.doors,
-          commissionableCents: inputs.doors,
-          cardCostCents: calculatePaymentCost(inputs.doors, paymentMethod)
-        });
+        const doorsCommission = calculateCommissionFromRateContext(
+          buildPrimaryCashRateContext(inputs.doors, inputs.doors, 0),
+          inputs.doors
+        );
         cards.push(
           scenarioCardMarkup({
             title: "Doors Contract",
@@ -2518,11 +2713,10 @@
       }
 
       if (inputs.labor) {
-        const laborCommission = calculateCardCommission({
-          grossCents: inputs.labor,
-          commissionableCents: inputs.labor,
-          cardCostCents: calculatePaymentCost(inputs.labor, paymentMethod)
-        });
+        const laborCommission = calculateCommissionFromRateContext(
+          buildPrimaryCashRateContext(inputs.labor, inputs.labor, 0),
+          inputs.labor
+        );
         cards.push(
           scenarioCardMarkup({
             title: "Labor Contract",
@@ -2811,23 +3005,29 @@
         return "accessory";
       }
 
-      if (item.bucket === "doors") {
-        return "accessory";
-      }
-
-      if (item.bucket === "wainscoting") {
-        return "wainscoting";
-      }
-
-      if (item.bucket === "permits") {
-        return "accessory";
-      }
-
       if (item.category === "Plumbing & Fixtures") {
         return "plumbing";
       }
 
+      if (item.bucket === "doors" || item.category === "Shower Doors") {
+        return "accessory";
+      }
+
+      if (item.bucket === "wainscoting" || item.bucket === "permits") {
+        return "accessory";
+      }
+
       if (item.bucket === "labor") {
+        const label = `${item.label || ""} ${item.description || ""}`.toLowerCase();
+        if (
+          label.includes("remove") ||
+          label.includes("dispose") ||
+          label.includes("jack hammer") ||
+          label.includes("mud wall")
+        ) {
+          return "tearout";
+        }
+
         return "rebuild";
       }
 
@@ -2874,163 +3074,498 @@
       return document.getElementById(id)?.value || "";
     }
 
-    function getRoughConditionSnapshot() {
-      const onePieceWithCeiling = roughChecked("roughOnePieceWithCeiling");
-      const onePiece = roughChecked("roughOnePieceFiberglass") || onePieceWithCeiling;
-      const fixtureRemovalSelected =
-        roughChecked("roughFiberglassTub") ||
-        roughChecked("roughCastTub") ||
-        roughChecked("roughSteelTub") ||
-        roughChecked("roughExistingShowerBase") ||
-        onePiece;
-      const wallRemovalSelected =
-        roughChecked("roughFiberglassWalls") ||
-        roughChecked("roughTileWalls") ||
-        roughChecked("roughMudWalls");
+    function roughIntValue(id, fallback = 0) {
+      const value = parseInt(roughValue(id), 10);
+      return Number.isFinite(value) ? value : fallback;
+    }
 
+    function setChoiceGroupState(groupName, activeValue, allowedValues = null) {
+      const group = document.querySelector(`[data-condition-group="${groupName}"]`);
+      if (!group) {
+        return;
+      }
+
+      group.querySelectorAll(".choice-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.value === activeValue);
+        button.disabled = allowedValues instanceof Set ? !allowedValues.has(button.dataset.value) : false;
+      });
+    }
+
+    function chooseFirstAllowedRoute(allowedRoutes) {
+      return ROUGH_ROUTE_ORDER.find((routeId) => allowedRoutes.has(routeId)) || "custom";
+    }
+
+    function chooseFirstAllowedLayout(allowedLayouts) {
+      const ordered = ["standard", "neo-angle", "curved", "barrier-free", "special-threshold"];
+      return ordered.find((layoutId) => allowedLayouts.has(layoutId)) || "standard";
+    }
+
+    function routeSupportsWetWallsToggle(route) {
+      return route === "tub-liner" || route === "custom";
+    }
+
+    function getAllowedRoughRoutes(existingFixture) {
+      const shared = new Set(["wains-only", "custom"]);
+
+      switch (existingFixture) {
+        case "cast-tub":
+        case "steel-tub":
+          return new Set([...shared, "tub-liner", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+        case "fiberglass-tub":
+          return new Set([...shared, "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+        case "shower-base":
+          return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base"]);
+        case "one-piece-fiberglass":
+          return new Set([...shared, "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+        case "bf-liner":
+          return new Set([...shared, "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+        case "concrete-tile-base":
+          return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base", "molded-base"]);
+        default:
+          return new Set([...shared, "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+      }
+    }
+
+    function getAllowedLayouts(route) {
+      switch (route) {
+        case "neo-curved-base":
+          return new Set(["neo-angle", "curved"]);
+        case "shower-base":
+        case "freestanding-base":
+        case "tub-to-shower":
+          return new Set(["standard", "barrier-free", "special-threshold"]);
+        case "molded-base":
+          return new Set(["standard", "barrier-free", "special-threshold"]);
+        default:
+          return new Set(["standard"]);
+      }
+    }
+
+    function getPrimaryProductsForRoute(route, layout) {
+      switch (route) {
+        case "tub-liner":
+          return ["tub-liner"];
+        case "tub-replacement":
+          return ROUGH_TUB_PRODUCT_IDS;
+        case "tub-to-shower":
+          return layout === "barrier-free"
+            ? ["ez-roll-in", "flat-floor-handicap", "flat-floor-base", "flat-floor-1x1-tile-pattern", "threshold-base-fs-3", "threshold-base-fs-6", "xl-fs-base"]
+            : ROUGH_CONVERSION_BASE_IDS;
+        case "shower-base":
+          return layout === "barrier-free"
+            ? ["ez-roll-in", "flat-floor-handicap", "flat-floor-base", "flat-floor-1x1-tile-pattern", "threshold-base-fs-3", "threshold-base-fs-6", "xl-fs-base"]
+            : ROUGH_STANDARD_BASE_IDS.concat(["flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in"]);
+        case "freestanding-base":
+          return layout === "barrier-free"
+            ? ["ez-roll-in", "flat-floor-handicap", "flat-floor-base", "flat-floor-1x1-tile-pattern", "threshold-base-fs-3", "threshold-base-fs-6", "xl-fs-base"]
+            : ROUGH_FREESTANDING_BASE_IDS;
+        case "neo-curved-base":
+          return layout === "curved" ? ["threshold-base-curved-front"] : ["threshold-base-neo-angle", "threshold-base-curved-front"];
+        case "molded-base":
+          return layout === "barrier-free"
+            ? ["flat-floor-handicap", "flat-floor-base", "flat-floor-1x1-tile-pattern"]
+            : ROUGH_MOLDED_BASE_IDS;
+        case "wains-only":
+          return [];
+        default:
+          return ROUGH_CUSTOM_PRIMARY_IDS;
+      }
+    }
+
+    function getDoorOptionIds(route, layout) {
+      if (route === "wains-only") {
+        return [];
+      }
+
+      if (layout === "neo-angle") {
+        return ROUGH_NEO_DOOR_IDS;
+      }
+
+      if (layout === "curved") {
+        return ROUGH_CURVED_DOOR_IDS;
+      }
+
+      if (route === "tub-liner" || route === "tub-replacement") {
+        return ROUGH_TUB_DOOR_IDS;
+      }
+
+      return ROUGH_SHOWER_DOOR_IDS;
+    }
+
+    function getCurrentRoughSelections() {
       return {
-        jobType: roughState.jobType,
+        route: roughState.route,
+        existingFixture: roughState.existingFixture,
+        wallCondition: roughState.wallCondition,
         layout: roughState.layout,
-        existingTubStays: roughChecked("roughExistingTubStays") && !fixtureRemovalSelected,
-        fiberglassTub: roughChecked("roughFiberglassTub") && !onePiece,
-        castTub: roughChecked("roughCastTub") && !onePiece,
-        steelTub: roughChecked("roughSteelTub") && !onePiece,
-        existingShowerBase: roughChecked("roughExistingShowerBase") && !onePiece,
-        onePieceFiberglass: onePiece,
-        onePieceWithCeiling,
-        existingBfLiner: roughChecked("roughExistingBfLiner"),
-        noWallTearout: roughChecked("roughNoWallTearout") && !wallRemovalSelected,
-        fiberglassWalls: roughChecked("roughFiberglassWalls") && !onePiece,
-        tileWalls: roughChecked("roughTileWalls") && !roughChecked("roughMudWalls"),
-        mudWalls: roughChecked("roughMudWalls"),
-        specialBaseRemoval: roughChecked("roughSpecialBaseRemoval"),
-        removeExistingDoor: roughChecked("roughRemoveExistingDoor")
+        onePieceWithCeiling: roughChecked("roughOnePieceWithCeiling"),
+        concreteBeveled: roughChecked("roughConcreteBeveled"),
+        baseOnlyRequested: roughChecked("roughBaseOnlyException"),
+        includeWetWalls: roughChecked("roughIncludeWetWalls"),
+        primaryProduct: roughValue("roughPrimaryProduct"),
+        formedFront: roughValue("roughFormedFront"),
+        wallProduct: roughValue("roughWallProduct"),
+        wainscotingProduct: roughValue("roughWainscotingProduct"),
+        wallPattern: roughValue("roughWallPattern"),
+        doorProduct: roughValue("roughDoorProduct"),
+        customDoorPrice: amountToCents(roughValue("roughCustomDoorPrice")),
+        ceilingProduct: roughValue("roughCeilingProduct"),
+        tileWallCount: roughIntValue("roughTileWallCount", 3),
+        wallRepairCount: roughIntValue("roughWallRepairCount", 0),
+        extraSheetrockCount: roughIntValue("roughExtraSheetrockCount", 0),
+        valveEnabled: roughChecked("roughValveEnabled"),
+        valveProduct: roughValue("roughValveProduct"),
+        handheldProduct: roughValue("roughHandheldProduct"),
+        relocateDrain: roughChecked("roughRelocateDrain"),
+        moveShowerHeadOverflow: roughChecked("roughMoveShowerHeadOverflow"),
+        relocatePlumbingCopper: roughChecked("roughRelocatePlumbingCopper"),
+        addGooseneck: roughChecked("roughAddGooseneck"),
+        removeSpigot: roughChecked("roughRemoveSpigot"),
+        buildWall: roughChecked("roughBuildWall"),
+        subfloorReplace: roughChecked("roughSubfloorReplace"),
+        wrapThreshold: roughChecked("roughWrapThreshold"),
+        buildWrapThreshold: roughChecked("roughBuildWrapThreshold"),
+        removeHeader: roughChecked("roughRemoveHeader"),
+        coverWindow: roughChecked("roughCoverWindow"),
+        jackhammerCharge: roughChecked("roughJackhammerCharge"),
+        removeExistingDoor: roughChecked("roughRemoveExistingDoor"),
+        curtainRodProduct: roughValue("roughCurtainRodProduct"),
+        showerRodProduct: roughValue("roughShowerRodProduct")
       };
     }
 
-    function addConditionTearOutLines(items, conditions) {
-      if (conditions.onePieceFiberglass) {
-        addRoughCatalogLine(items, conditions.onePieceWithCeiling ? "labor-remove-fg-1-piece-ceiling" : "labor-remove-fg-1-piece", "tearout", {
-          reason: "One-piece fiberglass unit selected; separate fiberglass tub/base/wall removal is suppressed."
-        });
-      } else {
-        if (conditions.castTub || conditions.steelTub) {
-          addRoughCatalogLine(items, "labor-remove-cast-steel-tub", "tearout");
-        } else if (conditions.fiberglassTub && !conditions.existingTubStays) {
-          addRoughCatalogLine(items, "labor-remove-fiberglass-base", "tearout", {
-            labelSuffix: "Fiberglass tub"
-          });
-        }
+    function getRoughEngineState() {
+      const raw = getCurrentRoughSelections();
+      const primaryProductIds = getPrimaryProductsForRoute(raw.route, raw.layout);
+      const doorOptionIds = getDoorOptionIds(raw.route, raw.layout);
+      const flatFloorSelected = ROUGH_FLAT_FLOOR_IDS.has(raw.primaryProduct);
+      const baseOnlyUnlocked =
+        raw.route === "molded-base" &&
+        raw.existingFixture === "concrete-tile-base" &&
+        raw.concreteBeveled;
+      const baseOnlyAllowed =
+        baseOnlyUnlocked &&
+        raw.baseOnlyRequested &&
+        raw.wallCondition === "staying" &&
+        !raw.wallRepairCount &&
+        !raw.extraSheetrockCount &&
+        !raw.buildWall &&
+        !raw.wrapThreshold &&
+        !raw.buildWrapThreshold &&
+        !raw.removeHeader &&
+        !raw.coverWindow &&
+        raw.primaryProduct === "threshold-base-6";
+      const includeWetWalls = routeSupportsWetWallsToggle(raw.route)
+        ? raw.includeWetWalls
+        : raw.route === "wains-only"
+          ? false
+          : raw.route === "molded-base"
+            ? !baseOnlyAllowed
+            : true;
+      const effectiveWallCondition =
+        raw.existingFixture === "one-piece-fiberglass" || !includeWetWalls ? "staying" : raw.wallCondition;
+      const tileWallCount = effectiveWallCondition === "tile" ? Math.max(1, raw.tileWallCount) : 0;
+      const wallRepairCount = Math.max(0, raw.wallRepairCount);
+      const extraSheetrockCount = Math.max(0, raw.extraSheetrockCount);
+      const showWetAreaScope = raw.route !== "wains-only";
+      const valveEnabled = showWetAreaScope && raw.valveEnabled;
+      const removeMainFixture =
+        raw.route !== "tub-liner" &&
+        raw.route !== "wains-only" &&
+        (raw.route !== "custom" ? primaryProductIds.length > 0 : Boolean(raw.primaryProduct && raw.primaryProduct !== "tub-liner"));
+      const wallPrepNeeded =
+        includeWetWalls || Boolean(raw.wainscotingProduct) || effectiveWallCondition !== "staying" || wallRepairCount > 0;
+      const notes = [];
 
-        if (conditions.existingShowerBase || conditions.specialBaseRemoval) {
-          const specialBase =
-            conditions.specialBaseRemoval ||
-            conditions.layout === "neo-angle" ||
-            conditions.layout === "curved";
+      if (raw.route === "tub-liner") {
+        notes.push("Tub liner stays available only on cast iron or steel tubs, with the tub remaining in place.");
+      }
+
+      if (raw.route === "tub-replacement") {
+        notes.push("Freestanding tub replacement always carries walls and drain kit.");
+      }
+
+      if (raw.route === "freestanding-base" || raw.route === "neo-curved-base") {
+        notes.push("Freestanding, neo-angle, curved, barrier-free, and flat-floor routes always require walls.");
+      }
+
+      if (raw.route === "molded-base") {
+        notes.push("Molded base remains a rare concrete / beveled exception and is not treated like a standard base route.");
+      }
+
+      if (raw.existingFixture === "one-piece-fiberglass") {
+        notes.push("One-piece fiberglass removal suppresses separate fiberglass wall and base demo charges for the same unit.");
+      }
+
+      if (effectiveWallCondition === "mud") {
+        notes.push("Mud wall removal overrides separate tile wall demo for the same walls.");
+      }
+
+      if (baseOnlyUnlocked && raw.baseOnlyRequested && !baseOnlyAllowed) {
+        if (flatFloorSelected) {
+          notes.push("Flat floor never qualifies for base-only, even inside the molded-base route.");
+        } else {
+          notes.push("Base-only stays blocked until this is a true molded-base concrete/beveled replacement with walls staying and no wall work.");
+        }
+      }
+
+      return {
+        ...raw,
+        includeWetWalls,
+        showWetAreaScope,
+        valveEnabled,
+        wallCondition: effectiveWallCondition,
+        tileWallCount,
+        wallRepairCount,
+        extraSheetrockCount,
+        primaryProductIds,
+        doorOptionIds,
+        removeMainFixture,
+        wallPrepNeeded,
+        baseOnlyUnlocked,
+        baseOnlyAllowed,
+        flatFloorSelected,
+        notes
+      };
+    }
+
+    function addMainFixtureRemovalLine(items, snapshot) {
+      if (!snapshot.removeMainFixture) {
+        return;
+      }
+
+      switch (snapshot.existingFixture) {
+        case "cast-tub":
+        case "steel-tub":
+          addRoughCatalogLine(items, "labor-remove-cast-steel-tub", "tearout", {
+            reason: "Main fixture tear-out shifts the job into a replacement route."
+          });
+          break;
+        case "fiberglass-tub":
+          addRoughCatalogLine(items, "labor-remove-fiberglass-base", "tearout", {
+            labelSuffix: "Fiberglass tub",
+            reason: "Tub removal blocks the liner path and forces a replacement route."
+          });
+          break;
+        case "shower-base":
           addRoughCatalogLine(
             items,
-            specialBase ? "labor-jackhammer-tile-base" : "labor-remove-fiberglass-base",
+            snapshot.layout === "neo-angle" || snapshot.layout === "curved" ? "labor-jackhammer-tile-base" : "labor-remove-fiberglass-base",
             "tearout",
             {
-              reason: specialBase
-                ? "Special base tear-out overrides standard fiberglass base removal."
-                : ""
+              reason:
+                snapshot.layout === "neo-angle" || snapshot.layout === "curved"
+                  ? "Neo-angle and curved tear-out override standard base demo for the same footprint."
+                  : ""
             }
           );
-        }
-
-        if (conditions.mudWalls) {
-          addRoughCatalogLine(items, "labor-mud-wall-removal", "tearout", {
-            reason: "Mud wall removal all 3 walls selected; per-wall tile removal is suppressed."
+          break;
+        case "one-piece-fiberglass":
+          addRoughCatalogLine(
+            items,
+            snapshot.onePieceWithCeiling ? "labor-remove-fg-1-piece-ceiling" : "labor-remove-fg-1-piece",
+            "tearout",
+            {
+              reason: "One-piece fiberglass removal replaces separate tub/base and wall demo."
+            }
+          );
+          break;
+        case "bf-liner":
+          addRoughCatalogLine(items, "labor-remove-existing-bf-liner", "tearout");
+          break;
+        case "concrete-tile-base":
+          addRoughCatalogLine(items, "labor-jackhammer-tile-base", "tearout", {
+            reason: "Concrete / tile style base conditions use tile-base demo labor."
           });
-        } else {
-          if (conditions.fiberglassWalls) {
-            addRoughCatalogLine(items, "labor-remove-3pc-wall-system", "tearout");
-          }
-
-          if (conditions.tileWalls) {
-            addRoughCatalogLine(items, "labor-remove-tile-wall", "tearout", {
-              quantity: 3,
-              labelSuffix: "All 3 walls"
-            });
-          }
-        }
-      }
-
-      if (conditions.existingBfLiner) {
-        addRoughCatalogLine(items, "labor-remove-existing-bf-liner", "tearout");
-      }
-
-      if (conditions.removeExistingDoor) {
-        addRoughCatalogLine(items, "labor-remove-shower-door", "tearout");
+          break;
+        default:
+          break;
       }
     }
 
-    function addCheckedRoughSection(items, group) {
-      document.querySelectorAll(`[data-rough-add="${group}"]:checked`).forEach((input) => {
-        addRoughCatalogLine(items, input.value, group);
+    function addWallRemovalLines(items, snapshot) {
+      if (snapshot.existingFixture === "one-piece-fiberglass") {
+        return;
+      }
+
+      if (snapshot.wallCondition === "fiberglass") {
+        addRoughCatalogLine(items, "labor-remove-3pc-wall-system", "tearout");
+        return;
+      }
+
+      if (snapshot.wallCondition === "tile") {
+        addRoughCatalogLine(items, "labor-remove-tile-wall", "tearout", {
+          quantity: snapshot.tileWallCount,
+          labelSuffix: `${snapshot.tileWallCount} wall${snapshot.tileWallCount === 1 ? "" : "s"}`
+        });
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.sheetrock, "rebuild", {
+          quantity: snapshot.tileWallCount,
+          labelSuffix: `${snapshot.tileWallCount} wall${snapshot.tileWallCount === 1 ? "" : "s"}`,
+          reason: "Tile wall removal requires separate re-rock per wall."
+        });
+        return;
+      }
+
+      if (snapshot.wallCondition === "mud") {
+        addRoughCatalogLine(items, "labor-mud-wall-removal", "tearout", {
+          reason: "Mud wall removal suppresses separate tile-wall demo for the same walls."
+        });
+      }
+    }
+
+    function addRebuildAndPrepLines(items, snapshot) {
+      if (snapshot.wallPrepNeeded) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.wallPrep, "rebuild", {
+          reason: "Wall prep applies whenever wet-area walls, wainscoting, or wall disturbance are involved."
+        });
+      }
+
+      if (snapshot.wallRepairCount) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.wallRepair, "rebuild", {
+          quantity: snapshot.wallRepairCount,
+          labelSuffix: `${snapshot.wallRepairCount} wall${snapshot.wallRepairCount === 1 ? "" : "s"}`
+        });
+      }
+
+      if (snapshot.extraSheetrockCount) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.sheetrock, "rebuild", {
+          quantity: snapshot.extraSheetrockCount,
+          labelSuffix: `${snapshot.extraSheetrockCount} wall${snapshot.extraSheetrockCount === 1 ? "" : "s"}`
+        });
+      }
+
+      if (snapshot.buildWall) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.buildWall, "rebuild");
+      }
+
+      if (snapshot.subfloorReplace) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.subfloor, "rebuild");
+      }
+
+      if (snapshot.wrapThreshold) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.wrapThreshold, "rebuild");
+      }
+
+      if (snapshot.buildWrapThreshold) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.buildWrapThreshold, "rebuild");
+      }
+
+      if (snapshot.removeHeader) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.removeHeader, "rebuild");
+      }
+
+      if (snapshot.coverWindow) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.coverWindow, "rebuild");
+      }
+
+      if (snapshot.jackhammerCharge) {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.jackhammer, "rebuild");
+      }
+    }
+
+    function addPlumbingLines(items, snapshot) {
+      if (snapshot.valveEnabled && snapshot.valveProduct) {
+        addRoughCatalogLine(items, snapshot.valveProduct, "plumbing");
+      }
+
+      if (snapshot.valveEnabled && snapshot.handheldProduct) {
+        addRoughCatalogLine(items, snapshot.handheldProduct, "plumbing");
+      }
+
+      if (snapshot.relocateDrain) {
+        addRoughCatalogLine(items, "relocate-drain", "plumbing");
+      }
+
+      if (snapshot.moveShowerHeadOverflow) {
+        addRoughCatalogLine(items, "move-shower-head-overflow", "plumbing");
+      }
+
+      if (snapshot.relocatePlumbingCopper) {
+        addRoughCatalogLine(items, "relocate-plumbing-copper", "plumbing");
+      }
+
+      if (snapshot.addGooseneck) {
+        addRoughCatalogLine(items, "labor-add-gooseneck", "plumbing");
+      }
+
+      if (snapshot.removeSpigot) {
+        addRoughCatalogLine(items, "labor-remove-spigot", "plumbing");
+      }
+    }
+
+    function addSelectedAccessoryLines(items) {
+      document.querySelectorAll("[data-rough-accessory]:checked").forEach((input) => {
+        addRoughCatalogLine(items, input.getAttribute("data-rough-accessory"), "accessory");
       });
     }
 
     function buildRoughEstimateItems() {
       const items = [];
-      const conditions = getRoughConditionSnapshot();
-      const primaryProduct = roughValue("roughPrimaryProduct");
-      const wallProduct = roughValue("roughWallProduct");
-      const wainscotingProduct = roughValue("roughWainscotingProduct");
-      const wallPattern = roughValue("roughWallPattern");
-      const doorProduct = roughValue("roughDoorProduct");
-      const ceilingProduct = roughValue("roughCeilingProduct");
+      const snapshot = getRoughEngineState();
 
-      if (primaryProduct) {
-        addRoughCatalogLine(items, primaryProduct, "product");
+      if (snapshot.primaryProduct) {
+        addRoughCatalogLine(items, snapshot.primaryProduct, "product");
 
-        if (ROUGH_BASE_PRODUCT_IDS.has(primaryProduct)) {
+        if (ROUGH_ANY_TUB_OR_BASE_IDS.has(snapshot.primaryProduct)) {
           addRoughCatalogLine(items, ROUGH_ITEM_IDS.drain, "product", {
             labelSuffix: roughValue("roughDrainFinish")
           });
         }
       }
 
-      if (primaryProduct === "tub-liner" && roughValue("roughFormedFront") === "yes") {
+      if (snapshot.primaryProduct === "tub-liner" && snapshot.formedFront === "yes") {
         addRoughCatalogLine(items, ROUGH_ITEM_IDS.formedFront, "product");
       }
 
-      if (ROUGH_WALL_PATH_JOBS.has(conditions.jobType) && wallProduct) {
-        addRoughCatalogLine(items, wallProduct, "product");
+      if (snapshot.includeWetWalls && snapshot.wallProduct) {
+        addRoughCatalogLine(items, snapshot.wallProduct, "product");
 
-        if (wallPattern) {
+        if (snapshot.wallPattern) {
           addRoughCatalogLine(items, ROUGH_ITEM_IDS.tilePattern, "product", {
-            labelSuffix: wallPattern
+            labelSuffix: snapshot.wallPattern
           });
         }
       }
 
-      if (wainscotingProduct) {
-        addRoughCatalogLine(items, wainscotingProduct, "wainscoting");
+      if (snapshot.wainscotingProduct) {
+        addRoughCatalogLine(items, snapshot.wainscotingProduct, "accessory");
       }
 
-      if (ceilingProduct) {
-        addRoughCatalogLine(items, ceilingProduct, "product");
+      if (snapshot.ceilingProduct && snapshot.showWetAreaScope) {
+        addRoughCatalogLine(items, snapshot.ceilingProduct, "product");
       }
 
-      if (doorProduct === "custom") {
+      if (snapshot.doorProduct === "custom") {
         addRoughCustomLine(
           items,
           "Custom Door",
           "doors",
-          amountToCents(roughValue("roughCustomDoorPrice")),
+          snapshot.customDoorPrice,
           "accessory",
           "Call Erin for all custom door pricing."
         );
-      } else if (doorProduct) {
-        addRoughCatalogLine(items, doorProduct, "accessory");
+      } else if (snapshot.doorProduct) {
+        addRoughCatalogLine(items, snapshot.doorProduct, "accessory");
       }
 
-      addConditionTearOutLines(items, conditions);
-      addCheckedRoughSection(items, "rebuild");
-      addCheckedRoughSection(items, "plumbing");
-      addCheckedRoughSection(items, "accessory");
+      if (snapshot.curtainRodProduct) {
+        addRoughCatalogLine(items, snapshot.curtainRodProduct, "accessory");
+      }
+
+      if (snapshot.showerRodProduct) {
+        addRoughCatalogLine(items, snapshot.showerRodProduct, "accessory");
+      }
+
+      addMainFixtureRemovalLine(items, snapshot);
+      addWallRemovalLines(items, snapshot);
+
+      if (snapshot.removeExistingDoor) {
+        addRoughCatalogLine(items, "labor-remove-shower-door", "tearout");
+      }
+
+      addRebuildAndPrepLines(items, snapshot);
+      addPlumbingLines(items, snapshot);
+      addSelectedAccessoryLines(items);
 
       return items.filter(Boolean).concat(state.roughAddOns);
     }
@@ -3067,41 +3602,120 @@
     }
 
     function renderRoughControls() {
-      const productIds = ROUGH_PRODUCT_PATHS[roughState.jobType] || [];
-      const hasPrimaryProduct = productIds.length > 0;
-      const needsWalls = ROUGH_WALL_PATH_JOBS.has(roughState.jobType);
+      const includeWetWallsInput = document.getElementById("roughIncludeWetWalls");
+      const onePieceField = document.getElementById("roughOnePieceWithCeilingField");
+      const concreteField = document.getElementById("roughConcreteBeveledField");
+      const baseOnlyField = document.getElementById("roughBaseOnlyField");
 
-      setSelectFromItems("roughPrimaryProduct", productIds, !hasPrimaryProduct, "No tub/base product");
+      const allowedRoutes = getAllowedRoughRoutes(roughState.existingFixture);
+      if (!allowedRoutes.has(roughState.route)) {
+        roughState.route = chooseFirstAllowedRoute(allowedRoutes);
+      }
+
+      const allowedLayouts = getAllowedLayouts(roughState.route);
+      if (!allowedLayouts.has(roughState.layout)) {
+        roughState.layout = chooseFirstAllowedLayout(allowedLayouts);
+      }
+
+      onePieceField.hidden = roughState.existingFixture !== "one-piece-fiberglass";
+      if (onePieceField.hidden) {
+        document.getElementById("roughOnePieceWithCeiling").checked = false;
+      }
+
+      const showConcreteField = roughState.existingFixture === "concrete-tile-base" || roughState.route === "molded-base";
+      concreteField.hidden = !showConcreteField;
+      if (!showConcreteField) {
+        document.getElementById("roughConcreteBeveled").checked = false;
+      }
+
+      const includeWetWallsField = document.getElementById("roughIncludeWetWallsField");
+      includeWetWallsField.hidden = !routeSupportsWetWallsToggle(roughState.route);
+      if (includeWetWallsField.hidden) {
+        includeWetWallsInput.checked = roughState.route !== "wains-only";
+      }
+
+      let allowedWallConditions = new Set(["staying", "fiberglass", "tile", "mud"]);
+      if (
+        roughState.existingFixture === "one-piece-fiberglass" ||
+        roughState.route === "wains-only" ||
+        (routeSupportsWetWallsToggle(roughState.route) && !includeWetWallsInput.checked)
+      ) {
+        allowedWallConditions = new Set(["staying"]);
+      }
+
+      if (!allowedWallConditions.has(roughState.wallCondition)) {
+        roughState.wallCondition = "staying";
+      }
+
+      setChoiceGroupState("route", roughState.route, allowedRoutes);
+      setChoiceGroupState("existingFixture", roughState.existingFixture);
+      setChoiceGroupState("wallCondition", roughState.wallCondition, allowedWallConditions);
+      setChoiceGroupState("layout", roughState.layout, allowedLayouts);
+
+      const primaryProductIds = getPrimaryProductsForRoute(roughState.route, roughState.layout);
+      const hasPrimaryProduct = primaryProductIds.length > 0;
+      setSelectFromItems("roughPrimaryProduct", primaryProductIds, !hasPrimaryProduct, "No tub/base product");
       setSelectFromItems("roughWallProduct", ROUGH_WALL_IDS, true, "No walls");
       setSelectFromItems("roughWainscotingProduct", ROUGH_WAINSCOTING_IDS, true, "No wainscoting");
-      setSelectFromItems("roughDoorProduct", ROUGH_DOOR_IDS, true, "No door", [
+      setSelectFromItems("roughDoorProduct", getDoorOptionIds(roughState.route, roughState.layout), true, "No door", [
         { value: "custom", label: "Custom Door - Call Erin" }
       ]);
       setSelectFromItems("roughCeilingProduct", ROUGH_CEILING_IDS, true, "No ceiling panel");
+      setSelectFromItems("roughValveProduct", ROUGH_VALVE_IDS, true, "No valve");
+      setSelectFromItems("roughHandheldProduct", ROUGH_HANDHELD_IDS, true, "No handheld / diverter");
+      setSelectFromItems("roughCurtainRodProduct", ROUGH_CURTAIN_ROD_IDS, true, "No curtain rod");
+      setSelectFromItems("roughShowerRodProduct", ROUGH_SHOWER_ROD_IDS, true, "No shower rod");
 
-      const primarySelect = document.getElementById("roughPrimaryProduct");
-      const preferredProduct = ROUGH_LAYOUT_PRODUCT_PREFERENCES[roughState.layout];
-      if (preferredProduct && productIds.includes(preferredProduct) && ROUGH_LAYOUT_AUTO_PRODUCTS.has(primarySelect.value)) {
-        primarySelect.value = preferredProduct;
-      }
-
+      let snapshot = getRoughEngineState();
       const wallSelect = document.getElementById("roughWallProduct");
-      if (needsWalls && roughState.jobType !== "custom" && !wallSelect.value) {
+      if (snapshot.includeWetWalls && !wallSelect.value) {
         wallSelect.value = ROUGH_WALL_IDS.find((itemId) => getCatalogItemById(itemId)) || "";
+        snapshot = getRoughEngineState();
       }
 
-      const primaryProduct = roughValue("roughPrimaryProduct");
-      const wallProduct = roughValue("roughWallProduct");
-      const doorProduct = roughValue("roughDoorProduct");
+      if (!snapshot.includeWetWalls) {
+        wallSelect.value = "";
+        document.getElementById("roughWallPattern").value = "";
+        snapshot = getRoughEngineState();
+      }
 
-      document.getElementById("roughPrimaryProductField").hidden = !hasPrimaryProduct;
+      if (!snapshot.showWetAreaScope) {
+        document.getElementById("roughDoorProduct").value = "";
+        document.getElementById("roughCeilingProduct").value = "";
+        document.getElementById("roughCurtainRodProduct").value = "";
+        document.getElementById("roughShowerRodProduct").value = "";
+        document.getElementById("roughValveEnabled").checked = false;
+        document.getElementById("roughValveProduct").value = "";
+        document.getElementById("roughHandheldProduct").value = "";
+        snapshot = getRoughEngineState();
+      }
+
+      baseOnlyField.hidden = !snapshot.baseOnlyUnlocked;
+      if (!snapshot.baseOnlyUnlocked) {
+        document.getElementById("roughBaseOnlyException").checked = false;
+        snapshot = getRoughEngineState();
+      }
+
+      document.getElementById("roughPrimaryProductField").hidden = !hasPrimaryProduct || !snapshot.showWetAreaScope;
       document.getElementById("roughFormedFrontField").hidden =
-        !ROUGH_TUB_JOBS.has(roughState.jobType) || primaryProduct !== "tub-liner";
+        roughState.route !== "tub-liner" || snapshot.primaryProduct !== "tub-liner";
       document.getElementById("roughDrainFinishField").hidden =
-        !primaryProduct || !ROUGH_BASE_PRODUCT_IDS.has(primaryProduct);
-      document.getElementById("roughWallProductField").hidden = !needsWalls;
-      document.getElementById("roughWallPatternField").hidden = !needsWalls || !wallProduct;
-      document.getElementById("roughCustomDoorField").hidden = doorProduct !== "custom";
+        !snapshot.primaryProduct || !ROUGH_ANY_TUB_OR_BASE_IDS.has(snapshot.primaryProduct);
+      document.getElementById("roughWallProductField").hidden = !snapshot.includeWetWalls;
+      document.getElementById("roughWallPatternField").hidden = !snapshot.includeWetWalls || !snapshot.wallProduct;
+      document.getElementById("roughWainscotingProductField").hidden = false;
+      document.getElementById("roughDoorProductField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughCustomDoorField").hidden = roughValue("roughDoorProduct") !== "custom";
+      document.getElementById("roughCeilingProductField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughTileWallCountField").hidden = snapshot.wallCondition !== "tile";
+      document.getElementById("roughValveProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
+      document.getElementById("roughHandheldProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
+      document.getElementById("roughCurtainRodField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughShowerRodField").hidden = !snapshot.showWetAreaScope;
+
+      document.getElementById("roughRulesSummary").textContent =
+        snapshot.notes.join(" ") ||
+        "Route, tear-out, wall prep, plumbing, and grouped totals are being built from the selected field conditions.";
     }
 
     function renderRoughPreview() {
@@ -3110,9 +3724,21 @@
       const contractTotals = getRoughContractTotals(previewItems);
 
       if (!previewItems.length) {
-        document.getElementById("roughEstimatePreview").innerHTML = emptyState("Choose job conditions to build an exact estimate.");
+        document.getElementById("roughEstimatePreview").innerHTML = emptyState("Choose route and conditions to build the exact estimate.");
         return;
       }
+
+      const groupedRows = Object.entries(roughTotals.groups)
+        .filter(([, value]) => value > 0)
+        .map(
+          ([group, value]) => `
+            <article class="rough-row">
+              <h4>${escapeHtml(ROUGH_GROUP_LABELS[group])}</h4>
+              <p>${formatCurrencyFromCents(value)}</p>
+            </article>
+          `
+        )
+        .join("");
 
       const contractRows = [
         { label: "BF System EOI", value: contractTotals.bf },
@@ -3121,6 +3747,7 @@
         { label: "Labor EOI", value: contractTotals.labor },
         { label: "Permit EOI", value: contractTotals.permits }
       ]
+        .filter((row) => row.value > 0)
         .map((row) => `
           <article class="rough-row">
             <h4>${escapeHtml(row.label)}</h4>
@@ -3142,9 +3769,10 @@
         .join("");
 
       document.getElementById("roughEstimatePreview").innerHTML =
-        contractRows +
+        groupedRows +
         `<article class="rough-row"><h4>Estimated Subtotal</h4><p>${formatCurrencyFromCents(roughTotals.subtotal)}</p></article>` +
         `<article class="rough-row"><h4>Estimated Total</h4><p>${formatCurrencyFromCents(roughTotals.total)}</p></article>` +
+        contractRows +
         lineRows;
     }
 
@@ -3497,62 +4125,6 @@
       render();
     }
 
-    function syncConditionExclusivity(changedId) {
-      const fixtureRemovalIds = [
-        "roughFiberglassTub",
-        "roughCastTub",
-        "roughSteelTub",
-        "roughExistingShowerBase",
-        "roughOnePieceFiberglass",
-        "roughOnePieceWithCeiling"
-      ];
-      const wallRemovalIds = ["roughFiberglassWalls", "roughTileWalls", "roughMudWalls"];
-
-      if (changedId === "roughExistingTubStays" && roughChecked("roughExistingTubStays")) {
-        fixtureRemovalIds.forEach((id) => {
-          document.getElementById(id).checked = false;
-        });
-      }
-
-      if (fixtureRemovalIds.includes(changedId) && roughChecked(changedId)) {
-        document.getElementById("roughExistingTubStays").checked = false;
-      }
-
-      if (changedId === "roughOnePieceFiberglass" && roughChecked("roughOnePieceFiberglass")) {
-        ["roughFiberglassTub", "roughExistingShowerBase", "roughFiberglassWalls", "roughOnePieceWithCeiling"].forEach((id) => {
-          document.getElementById(id).checked = false;
-        });
-      }
-
-      if (changedId === "roughOnePieceWithCeiling" && roughChecked("roughOnePieceWithCeiling")) {
-        ["roughFiberglassTub", "roughExistingShowerBase", "roughFiberglassWalls", "roughOnePieceFiberglass"].forEach((id) => {
-          document.getElementById(id).checked = false;
-        });
-      }
-
-      if (!fixtureRemovalIds.some((id) => roughChecked(id))) {
-        document.getElementById("roughExistingTubStays").checked = true;
-      }
-
-      if (changedId === "roughNoWallTearout" && roughChecked("roughNoWallTearout")) {
-        wallRemovalIds.forEach((id) => {
-          document.getElementById(id).checked = false;
-        });
-      }
-
-      if (wallRemovalIds.includes(changedId) && roughChecked(changedId)) {
-        document.getElementById("roughNoWallTearout").checked = false;
-      }
-
-      if (changedId === "roughMudWalls" && roughChecked("roughMudWalls")) {
-        document.getElementById("roughTileWalls").checked = false;
-      }
-
-      if (!wallRemovalIds.some((id) => roughChecked(id))) {
-        document.getElementById("roughNoWallTearout").checked = true;
-      }
-    }
-
     initializeCommissionControls();
     refreshCatalogPicker();
     applyStoredState();
@@ -3606,30 +4178,19 @@
     document.querySelectorAll("[data-condition-group]").forEach((group) => {
       group.addEventListener("click", (event) => {
         const button = event.target.closest(".choice-button");
-        if (!button) {
+        if (!button || button.disabled) {
           return;
         }
 
-        group.querySelectorAll(".choice-button").forEach((choice) => choice.classList.remove("active"));
-        button.classList.add("active");
         roughState[group.dataset.conditionGroup] = button.dataset.value;
         render();
       });
     });
     [
-      "roughExistingTubStays",
-      "roughFiberglassTub",
-      "roughCastTub",
-      "roughSteelTub",
-      "roughExistingShowerBase",
-      "roughOnePieceFiberglass",
       "roughOnePieceWithCeiling",
-      "roughExistingBfLiner",
-      "roughNoWallTearout",
-      "roughFiberglassWalls",
-      "roughTileWalls",
-      "roughMudWalls",
-      "roughSpecialBaseRemoval",
+      "roughConcreteBeveled",
+      "roughBaseOnlyException",
+      "roughIncludeWetWalls",
       "roughRemoveExistingDoor",
       "roughPrimaryProduct",
       "roughDrainFinish",
@@ -3639,27 +4200,37 @@
       "roughWallPattern",
       "roughDoorProduct",
       "roughCustomDoorPrice",
-      "roughCeilingProduct"
+      "roughCeilingProduct",
+      "roughTileWallCount",
+      "roughWallRepairCount",
+      "roughExtraSheetrockCount",
+      "roughValveEnabled",
+      "roughValveProduct",
+      "roughHandheldProduct",
+      "roughRelocateDrain",
+      "roughMoveShowerHeadOverflow",
+      "roughRelocatePlumbingCopper",
+      "roughAddGooseneck",
+      "roughRemoveSpigot",
+      "roughBuildWall",
+      "roughSubfloorReplace",
+      "roughWrapThreshold",
+      "roughBuildWrapThreshold",
+      "roughRemoveHeader",
+      "roughCoverWindow",
+      "roughJackhammerCharge",
+      "roughCurtainRodProduct",
+      "roughShowerRodProduct"
     ].forEach((id) => {
       const element = document.getElementById(id);
       if (!element) {
         return;
       }
 
-      element.addEventListener("input", () => {
-        if (element.type === "checkbox") {
-          syncConditionExclusivity(id);
-        }
-        render();
-      });
-      element.addEventListener("change", () => {
-        if (element.type === "checkbox") {
-          syncConditionExclusivity(id);
-        }
-        render();
-      });
+      element.addEventListener("input", render);
+      element.addEventListener("change", render);
     });
-    document.querySelectorAll("[data-rough-add]").forEach((input) => {
+    document.querySelectorAll("[data-rough-accessory]").forEach((input) => {
       input.addEventListener("change", render);
     });
     document.getElementById("buildRoughEstimateButton").addEventListener("click", buildRoughEstimate);
