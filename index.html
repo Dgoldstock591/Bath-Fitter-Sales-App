@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.21</title>
+  <title>Bath Fitter Sales Tool V2.22</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -806,7 +806,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.21</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.22</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, and financing from one screen.
@@ -2352,7 +2352,7 @@
       }
 
       const filteredItems = catalogItems.filter((item) => {
-        const categoryMatch = !categorySelect.value || item.category === categorySelect.value;
+        const categoryMatch = !categorySelect.value || itemMatchesCategory(item, categorySelect.value);
         const searchable = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
           .join(" ")
           .toLowerCase();
@@ -2563,6 +2563,14 @@
       );
     }
 
+    function itemMatchesCategory(item, category) {
+      if (category === "all" || item.category === category) {
+        return true;
+      }
+
+      return category === "Labor & Prep" && item.bucket === "labor";
+    }
+
     function refreshCatalogCategories() {
       const categorySelect = document.getElementById("catalogCategory");
       const currentValue = categorySelect.value || "all";
@@ -2583,7 +2591,7 @@
       const search = document.getElementById("catalogSearch").value.trim().toLowerCase();
 
       return catalogItems.filter((item) => {
-        const matchesCategory = category === "all" || item.category === category;
+        const matchesCategory = itemMatchesCategory(item, category);
         const haystack = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
           .join(" ")
           .toLowerCase();
