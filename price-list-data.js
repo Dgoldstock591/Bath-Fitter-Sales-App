@@ -918,7 +918,7 @@ const PRICE_LIST_DATA = [
   },
   {
     id: "jackhammer-charge",
-    category: "Ceilings & Flooring",
+    category: "Labor & Prep",
     label: "Jack Hammer Charge",
     bucket: "labor",
     description: "Jack hammer charge.",

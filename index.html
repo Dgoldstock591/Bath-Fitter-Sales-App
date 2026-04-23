@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.22</title>
+  <title>Bath Fitter Sales Tool V2.24</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -806,7 +806,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.22</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.24</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, and financing from one screen.
@@ -891,10 +891,6 @@
                   <div class="form-field">
                     <label for="commissionDepositMethod">Deposit Method</label>
                     <select id="commissionDepositMethod"></select>
-                  </div>
-                  <div class="form-field">
-                    <label for="commissionFinancePlan">Financing Plan</label>
-                    <select id="commissionFinancePlan"></select>
                   </div>
                 </div>
               </div>
@@ -1016,6 +1012,19 @@
               <label for="roughWall">Wall Product</label>
               <select id="roughWall"></select>
             </div>
+            <div class="form-field" id="roughWallPatternField">
+              <label for="roughWallPattern">Wall Pattern</label>
+              <select id="roughWallPattern">
+                <option value="">Flat / No Pattern Upgrade</option>
+                <option value="Tile Pattern Upgrade">Tile Pattern Upgrade</option>
+                <option value="Palermo">Palermo</option>
+                <option value="Napoli">Napoli</option>
+                <option value="Padova">Padova</option>
+                <option value="Rimini">Rimini</option>
+                <option value="Milano">Milano</option>
+                <option value="Savona">Savona</option>
+              </select>
+            </div>
           </div>
           <div class="rough-step">
             <h3>Enclosure / Accessories</h3>
@@ -1070,8 +1079,8 @@
         <div class="estimator-layout">
           <div class="builder-stack">
             <div class="builder-card">
-              <h3>Price List Item</h3>
-              <p></p>
+              <h3>Quick Add From Price List</h3>
+              <p>Search and add any price-list item to the rough estimate.</p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="catalogCategory">Category</label>
@@ -1095,13 +1104,13 @@
                 </div>
               </div>
               <div class="actions">
-                <button class="button primary" id="addCatalogItemButton" type="button">Add Price List Item</button>
+                <button class="button primary" id="addCatalogItemButton" type="button">Add To Rough Estimate</button>
               </div>
               <p class="estimator-detail" id="catalogItemDetail"></p>
             </div>
 
             <div class="builder-card">
-              <h3>Custom Line Item</h3>
+              <h3>Custom Rough Estimate Item</h3>
               <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
@@ -1127,13 +1136,13 @@
                 </div>
               </div>
               <div class="actions">
-                <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Item</button>
+                <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Rough Item</button>
               </div>
             </div>
           </div>
 
           <div class="estimate-card">
-            <h3>Quote Lines</h3>
+            <h3>Rough Estimate Lines</h3>
             <p></p>
             <div class="estimate-summary-strip" id="estimateSummaryStrip"></div>
             <div class="actions">
@@ -1160,8 +1169,11 @@
       cash: 50,
       finance: 30
     };
-    const DISCOUNT_LEVELS = [23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8];
-    const FEATURED_FINANCE_PLAN_IDS = ["965", "925", "924", "960", "922"];
+    const DISCOUNT_LEVELS = [23, 22, 21, 20, 19, 18, 15, 13, 11, 10, 8];
+    const FINANCE_DISCOUNT_LEVELS = [13, 15, 18];
+    const FEATURED_FINANCE_PLAN_IDS = ["965", "925", "924", "922"];
+    const PLAN_960_ID = "960";
+    const MAX_FINANCE_TRANSACTION_COST_PERCENT = 26;
     const SYNCHRONY_PLANS = [
       { id: "925", title: "No Interest if Paid in Full", alias: "24-Month Payoff", kind: "deferred", months: 24, minimumFactor: 0.025, transactionCostPct: 10.85 },
       { id: "965", title: "Reduced APR", alias: "Flex Plan", kind: "fixedApr", apr: 11.99, paymentFactor: 0.0175, transactionCostPct: 3.85 },
@@ -1223,6 +1235,7 @@
 
     const state = {
       estimateItems: [],
+      roughAddOns: [],
       estimateMessage: "",
       internalSettingsVisible: false,
       expandedCommissionCards: {}
@@ -1235,6 +1248,7 @@
       drain: "drain-kit",
       formedFront: "tub-liner-formed-front",
       wallPrep: "labor-wall-prep",
+      tilePattern: "tile-pattern-upcharge",
       curtainRod: "curtain-rod-tension-5",
       showerRod: "shower-rod-curved-5",
       tubDoor: "elegance-tub-door-60",
@@ -1424,11 +1438,6 @@
       return COMMISSION_PAYMENT_METHODS.find((method) => method.id === id) || COMMISSION_PAYMENT_METHODS[0];
     }
 
-    function getCommissionFinancePlan() {
-      const id = document.getElementById("commissionFinancePlan").value;
-      return COMMISSION_FINANCE_PLANS.find((plan) => plan.id === id) || COMMISSION_FINANCE_PLANS[0];
-    }
-
     function getCommissionTier(transactionCostPercent, saleTypeId) {
       const roundedPercent = roundToCents(transactionCostPercent);
 
@@ -1450,8 +1459,7 @@
     function getCommissionInputSnapshot() {
       return {
         paymentMethod: document.getElementById("commissionPaymentMethod").value,
-        depositMethod: document.getElementById("commissionDepositMethod").value,
-        financePlan: document.getElementById("commissionFinancePlan").value
+        depositMethod: document.getElementById("commissionDepositMethod").value
       };
     }
 
@@ -1471,12 +1479,6 @@
     function initializeCommissionControls() {
       setSelectOptions("commissionPaymentMethod", COMMISSION_PAYMENT_METHODS, "cash-check");
       setSelectOptions("commissionDepositMethod", COMMISSION_PAYMENT_METHODS, "cash-check");
-      setSelectOptions(
-        "commissionFinancePlan",
-        COMMISSION_FINANCE_PLANS,
-        "965",
-        (plan) => `${plan.label} | ${plan.costPercent.toFixed(2)}% processor cost`
-      );
     }
 
     function escapeHtml(value) {
@@ -1506,6 +1508,29 @@
       };
     }
 
+    function normalizeEstimateItem(item) {
+      const unitCents = clampCents(item?.unitCents);
+      const quantity = Math.max(1, Number(item?.quantity) || 1);
+      const totalCents = clampCents(item?.totalCents || unitCents * quantity);
+
+      if (!item?.id || !totalCents) {
+        return null;
+      }
+
+      return {
+        id: String(item.id),
+        source: item.source === "custom" ? "custom" : "catalog",
+        label: String(item.label || "Line Item"),
+        bucket: BUCKET_LABELS[item.bucket] ? item.bucket : "bf",
+        category: String(item.category || "Custom"),
+        variantLabel: String(item.variantLabel || ""),
+        description: String(item.description || ""),
+        quantity,
+        unitCents,
+        totalCents
+      };
+    }
+
     function applyStoredState() {
       try {
         const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -1527,26 +1552,14 @@
           if (parsed.commission.depositMethod) {
             document.getElementById("commissionDepositMethod").value = parsed.commission.depositMethod;
           }
-          if (parsed.commission.financePlan) {
-            document.getElementById("commissionFinancePlan").value = parsed.commission.financePlan;
-          }
         }
 
         if (Array.isArray(parsed?.estimateItems)) {
-          state.estimateItems = parsed.estimateItems
-            .map((item) => ({
-              id: String(item.id || ""),
-              source: item.source === "custom" ? "custom" : "catalog",
-              label: String(item.label || "Line Item"),
-              bucket: BUCKET_LABELS[item.bucket] ? item.bucket : "bf",
-              category: String(item.category || "Custom"),
-              variantLabel: String(item.variantLabel || ""),
-              description: String(item.description || ""),
-              quantity: Math.max(1, Number(item.quantity) || 1),
-              unitCents: clampCents(item.unitCents),
-              totalCents: clampCents(item.totalCents || clampCents(item.unitCents) * (Number(item.quantity) || 1))
-            }))
-            .filter((item) => item.id);
+          state.estimateItems = parsed.estimateItems.map(normalizeEstimateItem).filter(Boolean);
+        }
+
+        if (Array.isArray(parsed?.roughAddOns)) {
+          state.roughAddOns = parsed.roughAddOns.map(normalizeEstimateItem).filter(Boolean);
         }
       } catch (error) {
         console.warn("Unable to restore saved state.", error);
@@ -1560,7 +1573,8 @@
           JSON.stringify({
             inputs: getCurrentInputSnapshot(),
             commission: getCommissionInputSnapshot(),
-            estimateItems: state.estimateItems
+            estimateItems: state.estimateItems,
+            roughAddOns: state.roughAddOns
           })
         );
       } catch (error) {
@@ -1592,11 +1606,21 @@
       return clampCents(clampCents(cents) * ((paymentMethod?.costPercent || 0) / 100));
     }
 
-    function calculateCardCommission({ grossCents, commissionableCents, discountCents = 0, financeCostCents = 0, cardCostCents = 0 }) {
+    function calculateCardCommission({
+      grossCents,
+      commissionableCents,
+      discountCents = 0,
+      financeCostCents = 0,
+      cardCostCents = 0,
+      tierGrossCents,
+      tierTransactionCostsCents
+    }) {
       const gross = clampCents(grossCents);
       const commissionable = clampCents(commissionableCents);
       const transactionCostsCents = clampCents(discountCents + financeCostCents + cardCostCents);
-      const transactionCostPercent = gross ? roundToCents((transactionCostsCents / gross) * 100) : 0;
+      const rateGrossCents = clampCents(tierGrossCents ?? gross);
+      const rateTransactionCostsCents = clampCents(tierTransactionCostsCents ?? transactionCostsCents);
+      const transactionCostPercent = rateGrossCents ? roundToCents((rateTransactionCostsCents / rateGrossCents) * 100) : 0;
       const tier = getCommissionTier(transactionCostPercent, getCommissionSaleType().id);
       const commissionBaseCents = clampCents(commissionable * 0.85);
 
@@ -1605,29 +1629,53 @@
         commissionRate: tier.rate,
         transactionCostPercent,
         transactionCostsCents,
+        tierTransactionCostsCents: rateTransactionCostsCents,
         cardCostCents
       };
     }
 
-    function featuredFinancePlanItems(balanceCents) {
-      return FEATURED_FINANCE_PLAN_IDS.map((planId) => SYNCHRONY_PLANS.find((plan) => plan.id === planId))
+    function featuredFinancePlanItems(balanceCents, context = {}, planIds = FEATURED_FINANCE_PLAN_IDS) {
+      return planIds.map((planId) => SYNCHRONY_PLANS.find((plan) => plan.id === planId))
         .filter(Boolean)
         .map((plan) => {
           const result = calculateSynchronyPlan(balanceCents, plan);
           const paymentLabel = plan.kind === "deferred" ? "Payoff target" : "Monthly";
           const timeline = plan.kind === "deferred" ? `${plan.months} months` : `Est. ${result.months} months`;
+          const merchantCostCents = clampCents(balanceCents * (plan.transactionCostPct / 100));
+          const rateBalanceCents = clampCents(context.rateBalanceCents ?? balanceCents);
+          const rateFinanceCostCents = clampCents(rateBalanceCents * (plan.transactionCostPct / 100));
+          const cardCostCents = calculatePaymentCost(context.depositCents || 0, context.depositMethod);
+          const commission = context.grossCents
+            ? calculateCardCommission({
+                grossCents: context.grossCents,
+                commissionableCents: context.commissionableCents,
+                discountCents: context.discountCents,
+                financeCostCents: rateFinanceCostCents,
+                cardCostCents,
+                tierGrossCents: context.tierGrossCents,
+                tierTransactionCostsCents: clampCents((context.discountCents || 0) + rateFinanceCostCents + cardCostCents)
+              })
+            : null;
+
+          if (commission && commission.transactionCostPercent > MAX_FINANCE_TRANSACTION_COST_PERCENT) {
+            return null;
+          }
+
           return {
             label: `Plan ${plan.id} - ${plan.alias}`,
             details:
               `${paymentLabel}: ${formatCurrency(result.payment)}/mo` +
               ` | ${timeline}` +
-              ` | Cost ${plan.transactionCostPct.toFixed(2)}%` +
-              ` | ${formatCurrencyFromCents(clampCents(balanceCents * (plan.transactionCostPct / 100)))}`
+              ` | Merchant cost: ${plan.transactionCostPct.toFixed(2)}% (${formatCurrencyFromCents(merchantCostCents)})` +
+              (commission ? ` | Total cost: ${commission.transactionCostPercent.toFixed(2)}%` : ""),
+            commissionCents: commission?.commissionCents,
+            commissionRate: commission?.commissionRate
           };
-        });
+        })
+        .filter(Boolean);
     }
 
-    function financeItemsMarkup(items) {
+    function financeItemsMarkup(items, showCommission = false) {
       if (!items.length) {
         return "";
       }
@@ -1642,6 +1690,7 @@
                   <div class="finance-item">
                     <strong>${escapeHtml(item.label)}</strong>
                     <p>${escapeHtml(item.details)}</p>
+                    ${showCommission && typeof item.commissionCents === "number" ? `<p>Commission earned: ${formatCurrencyFromCents(item.commissionCents)} @ ${item.commissionRate.toFixed(2)}%</p>` : ""}
                   </div>
                 `
               )
@@ -1660,7 +1709,7 @@
         config.depositCents,
         config.discountCents
       ].join("|");
-      const hasCommission = typeof config.commissionCents === "number";
+      const hasCommission = typeof config.commissionCents === "number" || (config.financeItems || []).some((item) => typeof item.commissionCents === "number");
       const commissionExpanded = Boolean(state.expandedCommissionCards[commissionKey]);
       const commissionRate = config.commissionRate ? ` @ ${config.commissionRate.toFixed(2)}%` : "";
 
@@ -1709,7 +1758,7 @@
               </button>
             </div>
           ` : ""}
-          ${financeItemsMarkup(config.financeItems || [])}
+          ${financeItemsMarkup(config.financeItems || [], commissionExpanded)}
         </article>
       `;
     }
@@ -1804,99 +1853,52 @@
         })
       ];
 
-      const standard = findCleanDiscount(inputs.bf, 13);
-      const standardDeposit = calculateFinanceDeposit(standard.finalCents);
-      const standardBalance = Math.max(0, standard.finalCents - standardDeposit);
-      const standard28 = calcFinance(standardBalance, 7.99, 28);
-      const standard86 = calcFinance(standardBalance, 11.99, 86);
-      const selectedFinancePlan = getCommissionFinancePlan();
       const depositMethod = getCommissionDepositMethod();
-      const standardFinanceCost = clampCents(standardBalance * (selectedFinancePlan.costPercent / 100));
-      const standardCommission = calculateCardCommission({
-        grossCents: inputs.bf,
-        commissionableCents: standard.finalCents,
-        discountCents: standard.discountCents,
-        financeCostCents: standardFinanceCost,
-        cardCostCents: calculatePaymentCost(standardDeposit, depositMethod)
-      });
+      const financingCards = FINANCE_DISCOUNT_LEVELS.map((percent) => {
+        const financeDiscount = findCleanDiscount(inputs.bf, percent);
+        const financeDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
+        const financeBalance = Math.max(0, financeDiscount.finalCents - financeDeposit);
 
-      const emergency = findCleanDiscount(inputs.bf, 18);
-      const emergencyDeposit = calculateFinanceDeposit(emergency.finalCents);
-      const emergencyBalance = Math.max(0, emergency.finalCents - emergencyDeposit);
-      const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
-      const emergencyFinanceCost = clampCents(emergencyBalance * (selectedFinancePlan.costPercent / 100));
-      const emergencyCommission = calculateCardCommission({
-        grossCents: inputs.bf,
-        commissionableCents: emergency.finalCents,
-        discountCents: emergency.discountCents,
-        financeCostCents: emergencyFinanceCost,
-        cardCostCents: calculatePaymentCost(emergencyDeposit, depositMethod)
-      });
-
-      const financingCards = [
-        scenarioCardMarkup({
-          title: "13% Standard Financing",
-          badge: "Finance | 30% Deposit",
+        return scenarioCardMarkup({
+          title: percent + "% Financing",
+          badge: `Finance | ${percent}% Discount | 30% Deposit`,
           note: "",
           subtotalCents: inputs.bf,
-          discountCents: standard.discountCents,
-          totalCents: standard.finalCents,
-          depositCents: standardDeposit,
-          commissionCents: standardCommission.commissionCents,
-          commissionRate: standardCommission.commissionRate,
-          financeItems: [
-            {
-              label: "18 Months at 0%",
-              details: "Estimated payment: " + formatCurrency(standardBalance / 18)
-            },
-            {
-              label: "24 Months at 0%",
-              details: "Estimated payment: " + formatCurrency(standardBalance / 24)
-            },
-            {
-              label: "28 Months at 7.99%",
-              details:
-                "Monthly: " +
-                formatCurrency(standard28.monthly) +
-                " | Total: " +
-                formatCurrency(standard28.total) +
-                " | Interest: " +
-                formatCurrency(standard28.interest)
-            },
-            {
-              label: "86 Months at 11.99%",
-              details:
-                "Monthly: " +
-                formatCurrency(standard86.monthly) +
-                " | Total: " +
-                formatCurrency(standard86.total) +
-                " | Interest: " +
-                formatCurrency(standard86.interest)
-            }
-          ].concat(featuredFinancePlanItems(standardBalance))
-        }),
+          discountCents: financeDiscount.discountCents,
+          totalCents: financeDiscount.finalCents,
+          depositCents: financeDeposit,
+          financeItems: featuredFinancePlanItems(financeBalance, {
+            grossCents: inputs.bf,
+            tierGrossCents: inputs.bf,
+            commissionableCents: financeDiscount.finalCents,
+            discountCents: financeDiscount.discountCents,
+            depositCents: financeDeposit,
+            depositMethod,
+            rateBalanceCents: financeBalance
+          })
+        });
+      });
+
+      const plan960Deposit = calculateFinanceDeposit(inputs.bf);
+      const plan960Balance = Math.max(0, inputs.bf - plan960Deposit);
+      const plan960Cards = [
         scenarioCardMarkup({
-          title: "Emergency 86-Month Financing",
-          badge: "18% Discount | 30% Deposit",
+          title: "Plan 960 - $0 Discount Financing",
+          badge: "Plan 960 | $0 Discount | 30% Deposit",
           note: "",
           subtotalCents: inputs.bf,
-          discountCents: emergency.discountCents,
-          totalCents: emergency.finalCents,
-          depositCents: emergencyDeposit,
-          commissionCents: emergencyCommission.commissionCents,
-          commissionRate: emergencyCommission.commissionRate,
-          financeItems: [
-            {
-              label: "86 Months at 11.99%",
-              details:
-                "Monthly: " +
-                formatCurrency(emergencyPlan.monthly) +
-                " | Total: " +
-                formatCurrency(emergencyPlan.total) +
-                " | Interest: " +
-                formatCurrency(emergencyPlan.interest)
-            }
-          ].concat(featuredFinancePlanItems(emergencyBalance))
+          discountCents: 0,
+          totalCents: inputs.bf,
+          depositCents: plan960Deposit,
+          financeItems: featuredFinancePlanItems(plan960Balance, {
+            grossCents: inputs.bf,
+            tierGrossCents: inputs.bf,
+            commissionableCents: inputs.bf,
+            discountCents: 0,
+            depositCents: plan960Deposit,
+            depositMethod,
+            rateBalanceCents: plan960Balance
+          }, [PLAN_960_ID])
         })
       ];
 
@@ -1916,6 +1918,12 @@
           "Financing",
           "",
           financingCards
+        ) +
+        sectionMarkup(
+          "Plan 960 - $0 Discount",
+          "",
+          plan960Cards,
+          false
         )
       );
     }
@@ -1974,7 +1982,9 @@
           grossCents: grossTotal,
           commissionableCents: discount.finalCents + inputs.doors + inputs.labor,
           discountCents: discount.discountCents,
-          cardCostCents: calculatePaymentCost(total, paymentMethod)
+          cardCostCents: calculatePaymentCost(total, paymentMethod),
+          tierGrossCents: inputs.bf,
+          tierTransactionCostsCents: clampCents(discount.discountCents + calculatePaymentCost(discount.finalCents, paymentMethod))
         });
 
         return scenarioCardMarkup({
@@ -1998,37 +2008,9 @@
         grossCents: grossTotal,
         commissionableCents: special.finalCents + inputs.doors + inputs.labor,
         discountCents: special.discountCents,
-        cardCostCents: calculatePaymentCost(specialTotal, paymentMethod)
-      });
-
-      const standard = findCleanDiscount(inputs.bf, 13);
-      const standardTotal = standard.finalCents + addOns;
-      const standardDeposit = cumulativeDeposit(standard.finalCents, "finance");
-      const standardBalance = Math.max(0, standardTotal - standardDeposit);
-      const standard28 = calcFinance(standardBalance, 7.99, 28);
-      const standard86 = calcFinance(standardBalance, 11.99, 86);
-      const selectedFinancePlan = getCommissionFinancePlan();
-      const standardFinanceCost = clampCents(standardBalance * (selectedFinancePlan.costPercent / 100));
-      const standardCommission = calculateCardCommission({
-        grossCents: grossTotal,
-        commissionableCents: standard.finalCents + inputs.doors + inputs.labor,
-        discountCents: standard.discountCents,
-        financeCostCents: standardFinanceCost,
-        cardCostCents: calculatePaymentCost(standardDeposit, depositMethod)
-      });
-
-      const emergency = findCleanDiscount(inputs.bf, 18);
-      const emergencyTotal = emergency.finalCents + addOns;
-      const emergencyDeposit = cumulativeDeposit(emergency.finalCents, "finance");
-      const emergencyBalance = Math.max(0, emergencyTotal - emergencyDeposit);
-      const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
-      const emergencyFinanceCost = clampCents(emergencyBalance * (selectedFinancePlan.costPercent / 100));
-      const emergencyCommission = calculateCardCommission({
-        grossCents: grossTotal,
-        commissionableCents: emergency.finalCents + inputs.doors + inputs.labor,
-        discountCents: emergency.discountCents,
-        financeCostCents: emergencyFinanceCost,
-        cardCostCents: calculatePaymentCost(emergencyDeposit, depositMethod)
+        cardCostCents: calculatePaymentCost(specialTotal, paymentMethod),
+        tierGrossCents: inputs.bf,
+        tierTransactionCostsCents: clampCents(special.discountCents + calculatePaymentCost(special.finalCents, paymentMethod))
       });
 
       const specialCards = [
@@ -2046,64 +2028,59 @@
         })
       ];
 
-      const financingCards = [
-        scenarioCardMarkup({
-          title: "13% Standard Financing",
-          badge: "Cumulative Finance | 30% Deposit",
+      const financingCards = FINANCE_DISCOUNT_LEVELS.map((percent) => {
+        const financeDiscount = findCleanDiscount(inputs.bf, percent);
+        const financeTotal = financeDiscount.finalCents + addOns;
+        const financeDeposit = cumulativeDeposit(financeDiscount.finalCents, "finance");
+        const financeBalance = Math.max(0, financeTotal - financeDeposit);
+        const bfDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
+        const bfBalance = Math.max(0, financeDiscount.finalCents - bfDeposit);
+
+        return scenarioCardMarkup({
+          title: percent + "% Financing",
+          badge: `Cumulative Finance | ${percent}% Discount | 30% Deposit`,
           note: "",
           subtotalCents: grossTotal,
-          discountCents: standard.discountCents,
-          totalCents: standardTotal,
-          depositCents: standardDeposit,
-          mathLine: cumulativeMathLine(standard.discountCents, standard.finalCents, standardTotal),
-          commissionCents: standardCommission.commissionCents,
-          commissionRate: standardCommission.commissionRate,
-          financeItems: [
-            {
-              label: "28 Months at 7.99%",
-              details:
-                "Monthly: " +
-                formatCurrency(standard28.monthly) +
-                " | Total: " +
-                formatCurrency(standard28.total) +
-                " | Interest: " +
-                formatCurrency(standard28.interest)
-            },
-            {
-              label: "86 Months at 11.99%",
-              details:
-                "Monthly: " +
-                formatCurrency(standard86.monthly) +
-                " | Total: " +
-                formatCurrency(standard86.total) +
-                " | Interest: " +
-                formatCurrency(standard86.interest)
-            }
-          ].concat(featuredFinancePlanItems(standardBalance))
-        }),
+          discountCents: financeDiscount.discountCents,
+          totalCents: financeTotal,
+          depositCents: financeDeposit,
+          mathLine: cumulativeMathLine(financeDiscount.discountCents, financeDiscount.finalCents, financeTotal),
+          financeItems: featuredFinancePlanItems(financeBalance, {
+            grossCents: grossTotal,
+            tierGrossCents: inputs.bf,
+            commissionableCents: financeDiscount.finalCents + inputs.doors + inputs.labor,
+            discountCents: financeDiscount.discountCents,
+            depositCents: bfDeposit,
+            depositMethod,
+            rateBalanceCents: bfBalance
+          })
+        });
+      });
+
+      const plan960Total = inputs.bf + addOns;
+      const plan960Deposit = cumulativeDeposit(inputs.bf, "finance");
+      const plan960Balance = Math.max(0, plan960Total - plan960Deposit);
+      const plan960BfDeposit = calculateFinanceDeposit(inputs.bf);
+      const plan960BfBalance = Math.max(0, inputs.bf - plan960BfDeposit);
+      const plan960Cards = [
         scenarioCardMarkup({
-          title: "Emergency 86-Month Financing",
-          badge: "18% Discount | 30% Deposit",
+          title: "Plan 960 - $0 Discount Financing",
+          badge: "Plan 960 | $0 Discount | 30% Deposit",
           note: "",
           subtotalCents: grossTotal,
-          discountCents: emergency.discountCents,
-          totalCents: emergencyTotal,
-          depositCents: emergencyDeposit,
-          mathLine: cumulativeMathLine(emergency.discountCents, emergency.finalCents, emergencyTotal),
-          commissionCents: emergencyCommission.commissionCents,
-          commissionRate: emergencyCommission.commissionRate,
-          financeItems: [
-            {
-              label: "86 Months at 11.99%",
-              details:
-                "Monthly: " +
-                formatCurrency(emergencyPlan.monthly) +
-                " | Total: " +
-                formatCurrency(emergencyPlan.total) +
-                " | Interest: " +
-                formatCurrency(emergencyPlan.interest)
-            }
-          ].concat(featuredFinancePlanItems(emergencyBalance))
+          discountCents: 0,
+          totalCents: plan960Total,
+          depositCents: plan960Deposit,
+          mathLine: cumulativeMathLine(0, inputs.bf, plan960Total),
+          financeItems: featuredFinancePlanItems(plan960Balance, {
+            grossCents: grossTotal,
+            tierGrossCents: inputs.bf,
+            commissionableCents: inputs.bf + inputs.doors + inputs.labor,
+            discountCents: 0,
+            depositCents: plan960BfDeposit,
+            depositMethod,
+            rateBalanceCents: plan960BfBalance
+          }, [PLAN_960_ID])
         })
       ];
 
@@ -2123,6 +2100,12 @@
           "Financing Cumulative",
           "",
           financingCards
+        ) +
+        sectionMarkup(
+          "Plan 960 - $0 Discount Cumulative",
+          "",
+          plan960Cards,
+          false
         )
       );
     }
@@ -2237,7 +2220,7 @@
       const container = document.getElementById("estimateList");
 
       if (!state.estimateItems.length) {
-        container.innerHTML = emptyState("No quote lines yet.");
+        container.innerHTML = emptyState("No rough estimate lines yet.");
       } else {
         container.innerHTML = state.estimateItems
           .map(
@@ -2451,6 +2434,14 @@
             items.push(line);
           }
         });
+
+        const wallPattern = document.getElementById("roughWallPattern").value;
+        if (wallPattern) {
+          const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.tilePattern, null, 1, wallPattern);
+          if (line) {
+            items.push(line);
+          }
+        }
       }
 
       if (document.getElementById("roughCurtainRod").checked) {
@@ -2494,7 +2485,7 @@
         }
       });
 
-      return items.filter(Boolean);
+      return items.filter(Boolean).concat(state.roughAddOns);
     }
 
     function renderRoughControls() {
@@ -2518,6 +2509,7 @@
 
       document.getElementById("tearoutStep").hidden = roughState.route !== "tearout";
       document.getElementById("formedFrontField").hidden = roughState.jobType !== "tub";
+      document.getElementById("roughWallPatternField").hidden = !document.getElementById("roughWall").value;
       document.getElementById("roughDoorTypeField").hidden = !document.getElementById("roughDoors").checked;
       document.getElementById("roughCustomDoorField").hidden =
         !document.getElementById("roughDoors").checked || document.getElementById("roughDoorType").value !== "custom";
@@ -2564,11 +2556,7 @@
     }
 
     function itemMatchesCategory(item, category) {
-      if (category === "all" || item.category === category) {
-        return true;
-      }
-
-      return category === "Labor & Prep" && item.bucket === "labor";
+      return category === "all" || item.category === category;
     }
 
     function refreshCatalogCategories() {
@@ -2697,23 +2685,16 @@
         return;
       }
 
-      const unitCents = dollarsToCents(variant.price);
-      const totalCents = clampCents(unitCents * quantity);
+      const line = createEstimateLineFromCatalog(item.id, variant.id, quantity);
+      if (!line) {
+        state.estimateMessage = "Unable to add that item.";
+        renderEstimateList();
+        return;
+      }
 
-      state.estimateItems.unshift({
-        id: `estimate-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
-        source: "catalog",
-        label: item.label,
-        bucket: item.bucket,
-        category: item.category,
-        variantLabel: variant.label,
-        description: item.description,
-        quantity,
-        unitCents,
-        totalCents
-      });
-
-      state.estimateMessage = `${item.label} added.`;
+      state.roughAddOns.unshift(line);
+      state.estimateItems = buildRoughEstimateItems();
+      state.estimateMessage = `${item.label} added to rough estimate.`;
       render();
     }
 
@@ -2730,7 +2711,7 @@
       }
 
       const totalCents = clampCents(amount * quantity);
-      state.estimateItems.unshift({
+      state.roughAddOns.unshift({
         id: `estimate-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
         source: "custom",
         label,
@@ -2746,12 +2727,14 @@
       document.getElementById("customLabel").value = "";
       document.getElementById("customAmount").value = "";
       document.getElementById("customQuantity").value = "1";
-      state.estimateMessage = `${label} added.`;
+      state.estimateItems = buildRoughEstimateItems();
+      state.estimateMessage = `${label} added to rough estimate.`;
       render();
     }
 
     function removeEstimateItem(id) {
       state.estimateItems = state.estimateItems.filter((item) => item.id !== id);
+      state.roughAddOns = state.roughAddOns.filter((item) => item.id !== id);
       state.estimateMessage = "Line removed.";
       render();
     }
@@ -2771,7 +2754,8 @@
 
     function clearEstimate() {
       state.estimateItems = [];
-      state.estimateMessage = "Quote cleared.";
+      state.roughAddOns = [];
+      state.estimateMessage = "Rough estimate cleared.";
       render();
     }
 
@@ -2955,6 +2939,7 @@
       "roughFormedFront",
       "roughDrainFinish",
       "roughWall",
+      "roughWallPattern",
       "roughCurtainRod",
       "roughShowerRod",
       "roughDoors",
@@ -2979,7 +2964,6 @@
     document.getElementById("clearEstimateButton").addEventListener("click", clearEstimate);
     document.getElementById("commissionPaymentMethod").addEventListener("change", render);
     document.getElementById("commissionDepositMethod").addEventListener("change", render);
-    document.getElementById("commissionFinancePlan").addEventListener("change", render);
     document.getElementById("internalToggleButton").addEventListener("click", toggleInternalSettings);
     document.getElementById("calculatorTool").addEventListener("click", (event) => {
       const commissionButton = event.target.closest("[data-toggle-commission-card]");
