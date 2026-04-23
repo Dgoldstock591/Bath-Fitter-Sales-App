@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.17</title>
+  <title>Bath Fitter Sales Tool V2.18</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -766,7 +766,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.17</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.18</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, financing, and commission from one screen.
@@ -2001,6 +2001,10 @@
         .join("");
     }
 
+    function calculatePaymentCost(cents, paymentMethod) {
+      return clampCents(clampCents(cents) * ((paymentMethod?.costPercent || 0) / 100));
+    }
+
     function calculateCardCommission({ grossCents, commissionableCents, discountCents = 0, financeCostCents = 0, cardCostCents = 0 }) {
       const gross = clampCents(grossCents);
       const commissionable = clampCents(commissionableCents);
@@ -2011,7 +2015,10 @@
 
       return {
         commissionCents: clampCents(commissionBaseCents * (tier.rate / 100)),
-        commissionRate: tier.rate
+        commissionRate: tier.rate,
+        transactionCostPercent,
+        transactionCostsCents,
+        cardCostCents
       };
     }
 
@@ -2126,12 +2133,14 @@
 
       const cashCards = [];
       const cashDiscounts = DISCOUNT_LEVELS;
+      const paymentMethod = getCommissionPaymentMethod();
 
       const coupon = createFlatDiscount(inputs.bf, 900);
       const couponCommission = calculateCardCommission({
         grossCents: inputs.bf,
         commissionableCents: coupon.finalCents,
-        discountCents: coupon.discountCents
+        discountCents: coupon.discountCents,
+        cardCostCents: calculatePaymentCost(coupon.finalCents, paymentMethod)
       });
       cashCards.push(
         scenarioCardMarkup({
@@ -2152,7 +2161,8 @@
         const commission = calculateCardCommission({
           grossCents: inputs.bf,
           commissionableCents: plan.finalCents,
-          discountCents: plan.discountCents
+          discountCents: plan.discountCents,
+          cardCostCents: calculatePaymentCost(plan.finalCents, paymentMethod)
         });
         cashCards.push(
           scenarioCardMarkup({
@@ -2173,7 +2183,8 @@
       const specialCommission = calculateCardCommission({
         grossCents: inputs.bf,
         commissionableCents: special.finalCents,
-        discountCents: special.discountCents
+        discountCents: special.discountCents,
+        cardCostCents: calculatePaymentCost(special.finalCents, paymentMethod)
       });
       const specialCards = [
         scenarioCardMarkup({
@@ -2195,12 +2206,14 @@
       const standard28 = calcFinance(standardBalance, 7.99, 28);
       const standard86 = calcFinance(standardBalance, 11.99, 86);
       const selectedFinancePlan = getCommissionFinancePlan();
+      const depositMethod = getCommissionDepositMethod();
       const standardFinanceCost = clampCents(standardBalance * (selectedFinancePlan.costPercent / 100));
       const standardCommission = calculateCardCommission({
         grossCents: inputs.bf,
         commissionableCents: standard.finalCents,
         discountCents: standard.discountCents,
-        financeCostCents: standardFinanceCost
+        financeCostCents: standardFinanceCost,
+        cardCostCents: calculatePaymentCost(standardDeposit, depositMethod)
       });
 
       const emergency = findCleanDiscount(inputs.bf, 18);
@@ -2212,7 +2225,8 @@
         grossCents: inputs.bf,
         commissionableCents: emergency.finalCents,
         discountCents: emergency.discountCents,
-        financeCostCents: emergencyFinanceCost
+        financeCostCents: emergencyFinanceCost,
+        cardCostCents: calculatePaymentCost(emergencyDeposit, depositMethod)
       });
 
       const financingCards = [
@@ -2313,6 +2327,8 @@
       }
 
       const grossTotal = inputs.bf + addOns;
+      const paymentMethod = getCommissionPaymentMethod();
+      const depositMethod = getCommissionDepositMethod();
 
       function cumulativeMathLine(discountCents, discountedBathFitterCents, cumulativeTotalCents) {
         const parts = [
@@ -2353,7 +2369,8 @@
         const commission = calculateCardCommission({
           grossCents: grossTotal,
           commissionableCents: discount.finalCents + inputs.doors + inputs.labor,
-          discountCents: discount.discountCents
+          discountCents: discount.discountCents,
+          cardCostCents: calculatePaymentCost(total, paymentMethod)
         });
 
         return scenarioCardMarkup({
@@ -2376,7 +2393,8 @@
       const specialCommission = calculateCardCommission({
         grossCents: grossTotal,
         commissionableCents: special.finalCents + inputs.doors + inputs.labor,
-        discountCents: special.discountCents
+        discountCents: special.discountCents,
+        cardCostCents: calculatePaymentCost(specialTotal, paymentMethod)
       });
 
       const standard = findCleanDiscount(inputs.bf, 13);
@@ -2391,7 +2409,8 @@
         grossCents: grossTotal,
         commissionableCents: standard.finalCents + inputs.doors + inputs.labor,
         discountCents: standard.discountCents,
-        financeCostCents: standardFinanceCost
+        financeCostCents: standardFinanceCost,
+        cardCostCents: calculatePaymentCost(standardDeposit, depositMethod)
       });
 
       const emergency = findCleanDiscount(inputs.bf, 18);
@@ -2404,7 +2423,8 @@
         grossCents: grossTotal,
         commissionableCents: emergency.finalCents + inputs.doors + inputs.labor,
         discountCents: emergency.discountCents,
-        financeCostCents: emergencyFinanceCost
+        financeCostCents: emergencyFinanceCost,
+        cardCostCents: calculatePaymentCost(emergencyDeposit, depositMethod)
       });
 
       const specialCards = [
@@ -2505,11 +2525,13 @@
 
     function buildOtherContractsTab(inputs) {
       const cards = [];
+      const paymentMethod = getCommissionPaymentMethod();
 
       if (inputs.doors) {
         const doorsCommission = calculateCardCommission({
           grossCents: inputs.doors,
-          commissionableCents: inputs.doors
+          commissionableCents: inputs.doors,
+          cardCostCents: calculatePaymentCost(inputs.doors, paymentMethod)
         });
         cards.push(
           scenarioCardMarkup({
@@ -2529,7 +2551,8 @@
       if (inputs.labor) {
         const laborCommission = calculateCardCommission({
           grossCents: inputs.labor,
-          commissionableCents: inputs.labor
+          commissionableCents: inputs.labor,
+          cardCostCents: calculatePaymentCost(inputs.labor, paymentMethod)
         });
         cards.push(
           scenarioCardMarkup({
