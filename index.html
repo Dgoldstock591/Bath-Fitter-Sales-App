@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.29</title>
+  <title>Bath Fitter Sales Tool V2.30</title>
   <link rel="icon" href="icon-192.png" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -885,7 +885,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-          <p class="eyebrow">Bath Fitter sales tool | V2.29</p>
+          <p class="eyebrow">Bath Fitter sales tool | V2.30</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, wainscoting, cumulative totals, deposits, and financing from one screen.
@@ -1067,24 +1067,7 @@
 
         <div class="rough-grid">
           <div class="rough-step">
-            <h3>1. Job Route</h3>
-            <p class="estimator-detail">Choose the finished route first, then define what is there now. Invalid routes will drop out as conditions are selected.</p>
-            <div class="choice-row" data-condition-group="route">
-              <button class="choice-button active" type="button" data-value="tub-liner">Tub liner</button>
-              <button class="choice-button" type="button" data-value="tub-replacement">Tub replacement / freestanding tub</button>
-              <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
-              <button class="choice-button" type="button" data-value="shower-base">Shower base + walls</button>
-              <button class="choice-button" type="button" data-value="freestanding-base">Freestanding base + walls</button>
-              <button class="choice-button" type="button" data-value="neo-curved-base">Neo-angle / curved base + walls</button>
-              <button class="choice-button" type="button" data-value="molded-base">Rare molded base replacement</button>
-              <button class="choice-button" type="button" data-value="wains-only">Wainscoting only</button>
-              <button class="choice-button" type="button" data-value="custom">Other / custom</button>
-            </div>
-            <p class="estimator-detail" id="roughRulesSummary"></p>
-          </div>
-
-          <div class="rough-step">
-            <h3>2. Existing Conditions</h3>
+            <h3>1. Existing Conditions</h3>
             <p class="estimator-detail">This drives the tear-out path and blocks invalid finished options.</p>
             <div class="form-field">
               <label>Existing Bathing Fixture</label>
@@ -1122,7 +1105,24 @@
           </div>
 
           <div class="rough-step">
-            <h3>4. Shape / Layout</h3>
+            <h3>2. Job Route</h3>
+            <p class="estimator-detail">Choose the finished route after defining what is there now. Invalid routes will drop out as conditions are selected.</p>
+            <div class="choice-row" data-condition-group="route">
+              <button class="choice-button active" type="button" data-value="tub-liner">Tub liner</button>
+              <button class="choice-button" type="button" data-value="tub-replacement">Tub replacement / freestanding tub</button>
+              <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
+              <button class="choice-button" type="button" data-value="shower-base">Shower base + walls</button>
+              <button class="choice-button" type="button" data-value="freestanding-base">Freestanding base + walls</button>
+              <button class="choice-button" type="button" data-value="neo-curved-base">Neo-angle / curved base + walls</button>
+              <button class="choice-button" type="button" data-value="molded-base">Rare molded base replacement</button>
+              <button class="choice-button" type="button" data-value="wains-only">Wainscoting only</button>
+              <button class="choice-button" type="button" data-value="custom">Other / custom</button>
+            </div>
+            <p class="estimator-detail" id="roughRulesSummary"></p>
+          </div>
+
+          <div class="rough-step">
+            <h3>3. Shape / Layout</h3>
             <div class="choice-row" data-condition-group="layout">
               <button class="choice-button active" type="button" data-value="standard">Standard</button>
               <button class="choice-button" type="button" data-value="neo-angle">Neo-angle</button>
@@ -1142,7 +1142,7 @@
           </div>
 
           <div class="rough-step">
-            <h3>5. Product / Finish</h3>
+            <h3>4. Product / Finish</h3>
             <div class="rough-checklist" id="roughIncludeWetWallsField" hidden>
               <label><input type="checkbox" id="roughIncludeWetWalls" checked /> Include wet-area walls on this route</label>
             </div>
@@ -1218,7 +1218,7 @@
           </div>
 
           <div class="rough-step">
-            <h3>6. Rebuild / Prep</h3>
+            <h3>5. Rebuild / Prep</h3>
             <p class="estimator-detail">Wall prep is added automatically whenever wet-area walls, wainscoting, or wall disturbance are involved.</p>
             <div class="form-field" id="roughWallRepairCountField">
               <label for="roughWallRepairCount">Wall Repair Needed</label>
@@ -1250,7 +1250,7 @@
           </div>
 
           <div class="rough-step">
-            <h3>7. Plumbing / Mechanical</h3>
+            <h3>6. Plumbing / Mechanical</h3>
             <div class="rough-checklist">
               <label><input type="checkbox" id="roughValveEnabled" checked /> Include valve / trim set</label>
             </div>
@@ -1272,7 +1272,7 @@
           </div>
 
           <div class="rough-step">
-            <h3>8. Accessories / Add-Ons</h3>
+            <h3>7. Accessories / Add-Ons</h3>
             <div class="form-field" id="roughCurtainRodField">
               <label for="roughCurtainRodProduct">Curtain Rod</label>
               <select id="roughCurtainRodProduct"></select>
@@ -1296,7 +1296,7 @@
           </div>
 
           <div class="rough-step">
-            <h3>Exact Estimate Output</h3>
+            <h3>8. Exact Estimate Output</h3>
             <div class="rough-output-list" id="roughEstimatePreview"></div>
             <div class="actions">
               <button class="button primary" id="buildRoughEstimateButton" type="button">Build Exact Estimate</button>
