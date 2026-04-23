@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.24</title>
+  <title>Bath Fitter Sales Tool V2.25</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -25,13 +25,17 @@
       --radius-sm: 12px;
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
+      max-width: 100%;
+      overflow-x: hidden;
       font-family: "Trebuchet MS", "Gill Sans", sans-serif;
       color: var(--text);
       background:
@@ -48,6 +52,7 @@
       width: min(1220px, calc(100% - 2rem));
       margin: 0 auto;
       padding: 1.5rem 0 3rem;
+      max-width: 100%;
     }
 
     .hero {
@@ -629,6 +634,40 @@
       gap: 0.9rem;
     }
 
+    .panel,
+    .panel-inner,
+    .results-shell,
+    .scenario-card,
+    .builder-card,
+    .estimate-card,
+    .rough-step,
+    .guide-row,
+    .rough-row,
+    .estimate-line,
+    .tab-panel {
+      min-width: 0;
+    }
+
+    .choice-row,
+    .actions,
+    .input-grid,
+    .summary-strip,
+    .metrics,
+    .estimator-form-grid,
+    .estimate-summary-strip,
+    .estimator-layout,
+    .landing-grid,
+    .rough-grid {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    input,
+    select,
+    button {
+      max-width: 100%;
+    }
+
     .pricing-guide-list,
     .rough-output-list {
       display: grid;
@@ -706,6 +745,12 @@
       gap: 0.55rem;
       color: var(--text);
       font-weight: 700;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .rough-step:last-child {
+      grid-column: 1 / -1;
     }
 
     .panel-heading p:empty,
@@ -791,9 +836,31 @@
       .actions .button {
         width: 100%;
       }
+
+      .button,
+      .tab-button,
+      .choice-button,
+      .mini-button,
+      .badge {
+        white-space: normal;
+      }
+
+      .scenario-top,
+      .estimate-line-top {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .math-line,
+      .finance-item p,
+      .estimate-line-meta,
+      .guide-row p,
+      .rough-row p {
+        overflow-wrap: anywhere;
+      }
     }
   </style>
-  <script src="price-list-data.js"></script>
+  <script src="price-list-data.js?v=225"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -806,7 +873,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.24</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.25</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, and financing from one screen.
@@ -959,38 +1026,78 @@
         </div>
         <div class="panel-heading">
           <h2>Rough Estimate Generator</h2>
-          <p>Build a fast field estimate, then drop the totals into pricing.</p>
+          <p>Internal rep exact-math estimator for remote quotes, landlord calls, and fast scenario building.</p>
         </div>
 
         <div class="rough-grid">
           <div class="rough-step">
             <h3>1. Job Type</h3>
-            <div class="choice-row" data-rough-group="jobType">
-              <button class="choice-button active" type="button" data-value="tub">Tub</button>
-              <button class="choice-button" type="button" data-value="shower">Shower</button>
+            <p class="estimator-detail">Pick the main product path first. The next fields narrow from here.</p>
+            <div class="choice-row" data-condition-group="jobType">
+              <button class="choice-button" type="button" data-value="tub-liner">Tub liner</button>
+              <button class="choice-button active" type="button" data-value="tub-liner-walls">Tub liner + walls</button>
+              <button class="choice-button" type="button" data-value="shower-base-walls">Shower base + walls</button>
+              <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
+              <button class="choice-button" type="button" data-value="shower-replacement">Shower replacement</button>
+              <button class="choice-button" type="button" data-value="base-only">Base only</button>
+              <button class="choice-button" type="button" data-value="walls-only">Walls only</button>
+              <button class="choice-button" type="button" data-value="custom">Other/custom</button>
             </div>
           </div>
+
           <div class="rough-step">
-            <h3>2. Install Route</h3>
-            <div class="choice-row" data-rough-group="route">
-              <button class="choice-button active" type="button" data-value="liner">Liner</button>
-              <button class="choice-button" type="button" data-value="tearout">Tear-Out</button>
+            <h3>2. Existing Fixture</h3>
+            <div class="rough-checklist">
+              <label><input type="checkbox" id="roughExistingTubStays" checked /> Existing tub stays</label>
+              <label><input type="checkbox" id="roughFiberglassTub" /> Fiberglass tub</label>
+              <label><input type="checkbox" id="roughCastTub" /> Cast tub</label>
+              <label><input type="checkbox" id="roughSteelTub" /> Steel tub</label>
+              <label><input type="checkbox" id="roughExistingShowerBase" /> Existing shower base</label>
+              <label><input type="checkbox" id="roughOnePieceFiberglass" /> Existing one-piece fiberglass unit</label>
+              <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece fiberglass unit with ceiling</label>
+              <label><input type="checkbox" id="roughExistingBfLiner" /> Existing Bath Fitter liner</label>
             </div>
           </div>
+
           <div class="rough-step">
-            <h3>3. Unit</h3>
-            <div class="form-field">
-              <label for="roughUnit">Finished Unit</label>
-              <select id="roughUnit"></select>
+            <h3>3. Existing Walls</h3>
+            <div class="rough-checklist">
+              <label><input type="checkbox" id="roughNoWallTearout" checked /> No wall tear-out</label>
+              <label><input type="checkbox" id="roughFiberglassWalls" /> Fiberglass walls</label>
+              <label><input type="checkbox" id="roughTileWalls" /> Tile walls</label>
+              <label><input type="checkbox" id="roughMudWalls" /> Mud walls</label>
             </div>
-            <div class="form-field" id="formedFrontField">
+          </div>
+
+          <div class="rough-step">
+            <h3>4. Shape / Layout</h3>
+            <div class="choice-row" data-condition-group="layout">
+              <button class="choice-button active" type="button" data-value="standard">Standard</button>
+              <button class="choice-button" type="button" data-value="neo-angle">Neo-angle</button>
+              <button class="choice-button" type="button" data-value="curved">Curved</button>
+              <button class="choice-button" type="button" data-value="freestanding">Freestanding / threshold condition</button>
+              <button class="choice-button" type="button" data-value="barrier-free">Barrier free / roll-in</button>
+            </div>
+            <div class="rough-checklist">
+              <label><input type="checkbox" id="roughSpecialBaseRemoval" /> Neo/curved/tile base tear-out condition</label>
+              <label><input type="checkbox" id="roughRemoveExistingDoor" /> Remove existing shower door</label>
+            </div>
+          </div>
+
+          <div class="rough-step">
+            <h3>5. Product / Finish</h3>
+            <div class="form-field" id="roughPrimaryProductField">
+              <label for="roughPrimaryProduct">Tub / Base Product</label>
+              <select id="roughPrimaryProduct"></select>
+            </div>
+            <div class="form-field" id="roughFormedFrontField">
               <label for="roughFormedFront">Formed Front</label>
               <select id="roughFormedFront">
                 <option value="no">No</option>
                 <option value="yes">Yes</option>
               </select>
             </div>
-            <div class="form-field">
+            <div class="form-field" id="roughDrainFinishField">
               <label for="roughDrainFinish">Drain Finish</label>
               <select id="roughDrainFinish">
                 <option value="Chrome">Chrome</option>
@@ -1001,21 +1108,14 @@
                 <option value="Champagne Bronze">Champagne Bronze</option>
               </select>
             </div>
-          </div>
-          <div class="rough-step" id="tearoutStep">
-            <h3>Tear-Out Items</h3>
-            <div class="rough-checklist" id="roughTearoutList"></div>
-          </div>
-          <div class="rough-step">
-            <h3>Walls</h3>
-            <div class="form-field">
-              <label for="roughWall">Wall Product</label>
-              <select id="roughWall"></select>
+            <div class="form-field" id="roughWallProductField">
+              <label for="roughWallProduct">Wall Product</label>
+              <select id="roughWallProduct"></select>
             </div>
             <div class="form-field" id="roughWallPatternField">
               <label for="roughWallPattern">Wall Pattern</label>
               <select id="roughWallPattern">
-                <option value="">Flat / No Pattern Upgrade</option>
+                <option value="">Flat / no pattern upgrade</option>
                 <option value="Tile Pattern Upgrade">Tile Pattern Upgrade</option>
                 <option value="Palermo">Palermo</option>
                 <option value="Napoli">Napoli</option>
@@ -1025,52 +1125,73 @@
                 <option value="Savona">Savona</option>
               </select>
             </div>
-          </div>
-          <div class="rough-step">
-            <h3>Enclosure / Accessories</h3>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughCurtainRod" /> Curtain rod</label>
-              <label><input type="checkbox" id="roughShowerRod" /> Shower rod</label>
-              <label><input type="checkbox" id="roughDoors" /> Doors</label>
-            </div>
-            <div class="form-field" id="roughDoorTypeField">
-              <label for="roughDoorType">Door Type</label>
-              <select id="roughDoorType">
-                <option value="bf">Bath Fitter Door</option>
-                <option value="custom">Custom Door</option>
-              </select>
+            <div class="form-field" id="roughDoorProductField">
+              <label for="roughDoorProduct">Door / Enclosure</label>
+              <select id="roughDoorProduct"></select>
             </div>
             <div class="form-field" id="roughCustomDoorField">
               <label for="roughCustomDoorPrice">Custom Door Price</label>
               <input type="number" id="roughCustomDoorPrice" min="0" step="0.01" placeholder="0.00" />
               <p class="estimator-detail">Call Erin for all custom door pricing.</p>
             </div>
+            <div class="form-field" id="roughCeilingProductField">
+              <label for="roughCeilingProduct">Ceiling Panel</label>
+              <select id="roughCeilingProduct"></select>
+            </div>
           </div>
+
           <div class="rough-step">
-            <h3>Fixtures / Safety / Labor</h3>
+            <h3>6. Rebuild / Prep</h3>
             <div class="rough-checklist">
-              <label><input type="checkbox" id="roughFixtures" /> Fixtures</label>
-              <label><input type="checkbox" id="roughSafety" /> Safety items</label>
-              <label><input type="checkbox" id="roughLabor" /> Additional labor</label>
-            </div>
-            <div class="form-field" id="roughFixtureField">
-              <label for="roughFixtureItem">Fixture</label>
-              <select id="roughFixtureItem"></select>
-            </div>
-            <div class="form-field" id="roughSafetyField">
-              <label for="roughSafetyItem">Safety Item</label>
-              <select id="roughSafetyItem"></select>
-            </div>
-            <div class="form-field" id="roughLaborField">
-              <label for="roughLaborItem">Labor Item</label>
-              <select id="roughLaborItem"></select>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-wall-prep" /> Wall prep</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-wall-repair" /> Wall repair</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-build-wall" /> Build wall</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-new-sheetrock" /> New sheetrock per wall</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-subfloor-replace" /> Subfloor replacement</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-wrap-threshold" /> Wrap threshold</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-remove-build-wrap-threshold" /> Build and wrap threshold</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-remove-header" /> Header removal</label>
+              <label><input type="checkbox" data-rough-add="rebuild" value="labor-cover-window" /> Cover existing window</label>
             </div>
           </div>
+
           <div class="rough-step">
-            <h3>Rough Estimate Output</h3>
+            <h3>7. Plumbing / Mechanical</h3>
+            <div class="rough-checklist">
+              <label><input type="checkbox" data-rough-add="plumbing" value="relocate-drain" /> Relocate drain</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="move-shower-head-overflow" /> Move shower head / overflow</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="relocate-plumbing-copper" /> Relocate plumbing copper</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="labor-add-gooseneck" /> Add spigot / gooseneck</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="labor-remove-spigot" /> Remove spigot and cap off</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="delta-lahara" /> Add / change valve set</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="delta-lahara-handheld-bar" /> Add handheld / diverter</label>
+              <label><input type="checkbox" data-rough-add="plumbing" value="delta-in2ition-kinetic" /> In2ition handheld combo</label>
+            </div>
+          </div>
+
+          <div class="rough-step">
+            <h3>8. Accessories / Add-Ons</h3>
+            <div class="rough-checklist">
+              <label><input type="checkbox" data-rough-add="accessory" value="curtain-rod-tension-5" /> Curtain rod</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="shower-rod-curved-5" /> Shower rod</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="safety-bar-16" /> Grab bar</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="safety-bar-l-shape" /> L-shaped grab bar</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="corner-seat" /> Corner seat</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="fold-down-seat-18" /> Fold-down seat</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="soap-dish" /> Soap dish</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="towel-bar" /> Towel bar</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="acrylic-shelf" /> Acrylic shelf</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="oxford-full-length-shelf" /> Full-length shelf</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="window-cutout" /> Window trim / cutout</label>
+              <label><input type="checkbox" data-rough-add="accessory" value="collapsible-threshold" /> Collapsible threshold</label>
+            </div>
+          </div>
+
+          <div class="rough-step">
+            <h3>Exact Estimate Output</h3>
             <div class="rough-output-list" id="roughEstimatePreview"></div>
             <div class="actions">
-              <button class="button primary" id="buildRoughEstimateButton" type="button">Build Rough Estimate</button>
+              <button class="button primary" id="buildRoughEstimateButton" type="button">Build Exact Estimate</button>
               <button class="button secondary" id="loadRoughEstimateButton" type="button">Load Into Pricing</button>
             </div>
           </div>
@@ -1080,7 +1201,7 @@
           <div class="builder-stack">
             <div class="builder-card">
               <h3>Quick Add From Price List</h3>
-              <p>Search and add any price-list item to the rough estimate.</p>
+              <p>Search one exact price-list item when the condition flow needs an extra line.</p>
               <div class="estimator-form-grid">
                 <div class="form-field">
                   <label for="catalogCategory">Category</label>
@@ -1104,13 +1225,13 @@
                 </div>
               </div>
               <div class="actions">
-                <button class="button primary" id="addCatalogItemButton" type="button">Add To Rough Estimate</button>
+                <button class="button primary" id="addCatalogItemButton" type="button">Add To Exact Estimate</button>
               </div>
               <p class="estimator-detail" id="catalogItemDetail"></p>
             </div>
 
             <div class="builder-card">
-              <h3>Custom Rough Estimate Item</h3>
+              <h3>Custom Exact Estimate Item</h3>
               <p></p>
               <div class="estimator-form-grid">
                 <div class="form-field">
@@ -1136,13 +1257,13 @@
                 </div>
               </div>
               <div class="actions">
-                <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Rough Item</button>
+                <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Exact Item</button>
               </div>
             </div>
           </div>
 
           <div class="estimate-card">
-            <h3>Rough Estimate Lines</h3>
+            <h3>Exact Estimate Lines</h3>
             <p></p>
             <div class="estimate-summary-strip" id="estimateSummaryStrip"></div>
             <div class="actions">
@@ -1241,39 +1362,34 @@
       expandedCommissionCards: {}
     };
     const roughState = {
-      jobType: "tub",
-      route: "liner"
+      jobType: "tub-liner-walls",
+      layout: "standard"
+    };
+    const ROUGH_GROUP_LABELS = {
+      product: "Product Total",
+      tearout: "Tear-Out Total",
+      rebuild: "Rebuild / Prep Total",
+      plumbing: "Plumbing / Fixture Total",
+      accessory: "Accessories / Add-Ons Total"
     };
     const ROUGH_ITEM_IDS = {
       drain: "drain-kit",
       formedFront: "tub-liner-formed-front",
-      wallPrep: "labor-wall-prep",
-      tilePattern: "tile-pattern-upcharge",
-      curtainRod: "curtain-rod-tension-5",
-      showerRod: "shower-rod-curved-5",
-      tubDoor: "elegance-tub-door-60",
-      showerDoor: "elegance-shower-door-60"
+      tilePattern: "tile-pattern-upcharge"
     };
-    const ROUGH_UNITS = {
-      tub: {
-        liner: ["tub-liner"],
-        tearout: ["fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]
-      },
-      shower: {
-        liner: ["threshold-base-6"],
-        tearout: ["threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"]
-      }
+    const ROUGH_PRODUCT_PATHS = {
+      "tub-liner": ["tub-liner"],
+      "tub-liner-walls": ["tub-liner"],
+      "shower-base-walls": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
+      "tub-to-shower": ["threshold-base-fs-6", "threshold-base-fs-3", "flat-floor-base", "flat-floor-handicap", "ez-roll-in"],
+      "shower-replacement": ["threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
+      "base-only": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
+      "walls-only": [],
+      custom: ["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]
     };
-    const ROUGH_TEAROUT_IDS = [
-      "labor-remove-cast-steel-tub",
-      "labor-remove-fg-1-piece",
-      "labor-remove-fiberglass-base",
-      "labor-remove-tile-wall",
-      "labor-remove-3pc-wall-system",
-      "labor-mud-wall-removal",
-      "labor-remove-existing-bf-liner",
-      "labor-remove-shower-door"
-    ];
+    const ROUGH_WALL_PATH_JOBS = new Set(["tub-liner-walls", "shower-base-walls", "tub-to-shower", "shower-replacement", "walls-only", "custom"]);
+    const ROUGH_TUB_JOBS = new Set(["tub-liner", "tub-liner-walls"]);
+    const ROUGH_BASE_PRODUCT_IDS = new Set(["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]);
     const ROUGH_WALL_IDS = [
       "wall-flat-84x132",
       "wall-flat-84x156",
@@ -1282,6 +1398,32 @@
       "wall-flat-90x192",
       "wainscot-6x6",
       "wainscot-beadboard"
+    ];
+    const ROUGH_CEILING_IDS = [
+      "ceiling-flat-3x5",
+      "ceiling-flat-cutout",
+      "ceiling-flat-return-cutout",
+      "ceiling-oversized",
+      "ceiling-tile-pattern",
+      "ceiling-entire-bathroom",
+      "ceiling-domed"
+    ];
+    const ROUGH_DOOR_IDS = [
+      "elegance-tub-door-60",
+      "elegance-shower-door-60",
+      "elegance-shower-door-66",
+      "prestige-tub-door-60",
+      "prestige-shower-door-48",
+      "prestige-shower-door-60",
+      "neo-angle-door-36",
+      "neo-angle-door-38",
+      "curved-door-32",
+      "curved-door-36",
+      "curved-door-40",
+      "latitude-tub-shield-28",
+      "latitude-tub-shield-32",
+      "latitude-shower-shield-29",
+      "latitude-shower-shield-38-44"
     ];
 
     function roundToCents(value) {
@@ -1525,6 +1667,8 @@
         category: String(item.category || "Custom"),
         variantLabel: String(item.variantLabel || ""),
         description: String(item.description || ""),
+        group: ROUGH_GROUP_LABELS[item.group] ? item.group : "",
+        engineReason: String(item.engineReason || ""),
         quantity,
         unitCents,
         totalCents
@@ -2220,7 +2364,7 @@
       const container = document.getElementById("estimateList");
 
       if (!state.estimateItems.length) {
-        container.innerHTML = emptyState("No rough estimate lines yet.");
+        container.innerHTML = emptyState("No exact estimate lines yet.");
       } else {
         container.innerHTML = state.estimateItems
           .map(
@@ -2234,7 +2378,7 @@
                   <button class="mini-button danger" type="button" data-remove-estimate="${escapeHtml(item.id)}">Remove</button>
                 </div>
                 <div class="estimate-line-meta">
-                  ${escapeHtml(BUCKET_LABELS[item.bucket])} bucket | ${escapeHtml(item.source === "catalog" ? "Price list" : "Custom")} line
+                  ${escapeHtml(ROUGH_GROUP_LABELS[getRoughGroup(item)])} | ${escapeHtml(BUCKET_LABELS[item.bucket])} bucket | ${escapeHtml(item.source === "catalog" ? "Price list" : "Custom")} line
                 </div>
                 <div class="estimate-line-meta">
                   Qty ${escapeHtml(item.quantity)} x ${formatCurrencyFromCents(item.unitCents)} = ${formatCurrencyFromCents(item.totalCents)}
@@ -2361,190 +2505,351 @@
         : emptyState("No matching price-list items.");
     }
 
-    function setSelectFromItems(selectId, itemIds, includeNone = false) {
+    function setSelectFromItems(selectId, itemIds, includeNone = false, noneLabel = "None", extraOptions = []) {
       const select = document.getElementById(selectId);
+      if (!select) {
+        return;
+      }
+
       const currentValue = select.value;
       const options = itemIds.map(getCatalogItemById).filter(Boolean);
+      const allowedValues = new Set(options.map((item) => item.id).concat(extraOptions.map((option) => option.value)));
+      if (includeNone) {
+        allowedValues.add("");
+      }
+
       select.innerHTML =
-        (includeNone ? `<option value="">None</option>` : "") +
+        (includeNone ? `<option value="">${escapeHtml(noneLabel)}</option>` : "") +
+        extraOptions
+          .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
+          .join("") +
         options
           .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`)
           .join("");
-      select.value = options.some((item) => item.id === currentValue) || (includeNone && currentValue === "")
+
+      select.value = allowedValues.has(currentValue)
         ? currentValue
         : includeNone
           ? ""
-          : options[0]?.id || "";
+          : extraOptions[0]?.value || options[0]?.id || "";
     }
 
-    function renderRoughTearoutList() {
-      document.getElementById("roughTearoutList").innerHTML = ROUGH_TEAROUT_IDS.map(getCatalogItemById)
-        .filter(Boolean)
-        .map(
-          (item) => `
-            <label>
-              <input type="checkbox" value="${escapeHtml(item.id)}" data-rough-tearout />
-              ${escapeHtml(item.label)}
-            </label>
-          `
-        )
-        .join("");
+    function getRoughGroupForItem(item) {
+      if (!item) {
+        return "accessory";
+      }
+
+      if (item.bucket === "doors") {
+        return "accessory";
+      }
+
+      if (item.bucket === "permits") {
+        return "accessory";
+      }
+
+      if (item.category === "Plumbing & Fixtures") {
+        return "plumbing";
+      }
+
+      if (item.bucket === "labor") {
+        return "rebuild";
+      }
+
+      return "product";
     }
 
-    function getCheckedRoughIds(selector) {
-      return Array.from(document.querySelectorAll(selector))
-        .filter((input) => input.checked)
-        .map((input) => input.value);
+    function getRoughGroup(item) {
+      return ROUGH_GROUP_LABELS[item.group] ? item.group : getRoughGroupForItem(item);
+    }
+
+    function addRoughCatalogLine(items, itemId, group, options = {}) {
+      const line = createEstimateLineFromCatalog(
+        itemId,
+        options.variantId || null,
+        options.quantity || 1,
+        options.labelSuffix || ""
+      );
+
+      if (!line) {
+        return;
+      }
+
+      line.group = group;
+      line.engineReason = options.reason || "";
+      items.push(line);
+    }
+
+    function addRoughCustomLine(items, label, bucket, amountCents, group, description = "") {
+      if (!amountCents) {
+        return;
+      }
+
+      const line = createCustomEstimateLine(label, bucket, amountCents, description);
+      line.group = group;
+      line.engineReason = description;
+      items.push(line);
+    }
+
+    function roughChecked(id) {
+      return Boolean(document.getElementById(id)?.checked);
+    }
+
+    function roughValue(id) {
+      return document.getElementById(id)?.value || "";
+    }
+
+    function getRoughConditionSnapshot() {
+      const onePieceWithCeiling = roughChecked("roughOnePieceWithCeiling");
+      const onePiece = roughChecked("roughOnePieceFiberglass") || onePieceWithCeiling;
+      const fixtureRemovalSelected =
+        roughChecked("roughFiberglassTub") ||
+        roughChecked("roughCastTub") ||
+        roughChecked("roughSteelTub") ||
+        roughChecked("roughExistingShowerBase") ||
+        onePiece;
+      const wallRemovalSelected =
+        roughChecked("roughFiberglassWalls") ||
+        roughChecked("roughTileWalls") ||
+        roughChecked("roughMudWalls");
+
+      return {
+        jobType: roughState.jobType,
+        layout: roughState.layout,
+        existingTubStays: roughChecked("roughExistingTubStays") && !fixtureRemovalSelected,
+        fiberglassTub: roughChecked("roughFiberglassTub") && !onePiece,
+        castTub: roughChecked("roughCastTub") && !onePiece,
+        steelTub: roughChecked("roughSteelTub") && !onePiece,
+        existingShowerBase: roughChecked("roughExistingShowerBase") && !onePiece,
+        onePieceFiberglass: onePiece,
+        onePieceWithCeiling,
+        existingBfLiner: roughChecked("roughExistingBfLiner"),
+        noWallTearout: roughChecked("roughNoWallTearout") && !wallRemovalSelected,
+        fiberglassWalls: roughChecked("roughFiberglassWalls") && !onePiece,
+        tileWalls: roughChecked("roughTileWalls") && !roughChecked("roughMudWalls"),
+        mudWalls: roughChecked("roughMudWalls"),
+        specialBaseRemoval: roughChecked("roughSpecialBaseRemoval"),
+        removeExistingDoor: roughChecked("roughRemoveExistingDoor")
+      };
+    }
+
+    function addConditionTearOutLines(items, conditions) {
+      if (conditions.onePieceFiberglass) {
+        addRoughCatalogLine(items, conditions.onePieceWithCeiling ? "labor-remove-fg-1-piece-ceiling" : "labor-remove-fg-1-piece", "tearout", {
+          reason: "One-piece fiberglass unit selected; separate fiberglass tub/base/wall removal is suppressed."
+        });
+      } else {
+        if (conditions.castTub || conditions.steelTub) {
+          addRoughCatalogLine(items, "labor-remove-cast-steel-tub", "tearout");
+        } else if (conditions.fiberglassTub && !conditions.existingTubStays) {
+          addRoughCatalogLine(items, "labor-remove-fiberglass-base", "tearout", {
+            labelSuffix: "Fiberglass tub"
+          });
+        }
+
+        if (conditions.existingShowerBase || conditions.specialBaseRemoval) {
+          const specialBase =
+            conditions.specialBaseRemoval ||
+            conditions.layout === "neo-angle" ||
+            conditions.layout === "curved";
+          addRoughCatalogLine(
+            items,
+            specialBase ? "labor-jackhammer-tile-base" : "labor-remove-fiberglass-base",
+            "tearout",
+            {
+              reason: specialBase
+                ? "Special base tear-out overrides standard fiberglass base removal."
+                : ""
+            }
+          );
+        }
+
+        if (conditions.mudWalls) {
+          addRoughCatalogLine(items, "labor-mud-wall-removal", "tearout", {
+            reason: "Mud wall removal all 3 walls selected; per-wall tile removal is suppressed."
+          });
+        } else {
+          if (conditions.fiberglassWalls) {
+            addRoughCatalogLine(items, "labor-remove-3pc-wall-system", "tearout");
+          }
+
+          if (conditions.tileWalls) {
+            addRoughCatalogLine(items, "labor-remove-tile-wall", "tearout", {
+              quantity: 3,
+              labelSuffix: "All 3 walls"
+            });
+          }
+        }
+      }
+
+      if (conditions.existingBfLiner) {
+        addRoughCatalogLine(items, "labor-remove-existing-bf-liner", "tearout");
+      }
+
+      if (conditions.removeExistingDoor) {
+        addRoughCatalogLine(items, "labor-remove-shower-door", "tearout");
+      }
+    }
+
+    function addCheckedRoughSection(items, group) {
+      document.querySelectorAll(`[data-rough-add="${group}"]:checked`).forEach((input) => {
+        addRoughCatalogLine(items, input.value, group);
+      });
     }
 
     function buildRoughEstimateItems() {
       const items = [];
-      const unitId = document.getElementById("roughUnit").value;
-      const wallId = document.getElementById("roughWall").value;
-      const doorSelected = document.getElementById("roughDoors").checked;
-      const doorType = document.getElementById("roughDoorType").value;
+      const conditions = getRoughConditionSnapshot();
+      const primaryProduct = roughValue("roughPrimaryProduct");
+      const wallProduct = roughValue("roughWallProduct");
+      const wallPattern = roughValue("roughWallPattern");
+      const doorProduct = roughValue("roughDoorProduct");
+      const ceilingProduct = roughValue("roughCeilingProduct");
 
-      [unitId, ROUGH_ITEM_IDS.drain].forEach((itemId) => {
-        const line = createEstimateLineFromCatalog(itemId, null, 1, itemId === ROUGH_ITEM_IDS.drain ? document.getElementById("roughDrainFinish").value : "");
-        if (line) {
-          items.push(line);
-        }
-      });
+      if (primaryProduct) {
+        addRoughCatalogLine(items, primaryProduct, "product");
 
-      if (roughState.jobType === "tub" && document.getElementById("roughFormedFront").value === "yes") {
-        const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.formedFront);
-        if (line) {
-          items.push(line);
+        if (ROUGH_BASE_PRODUCT_IDS.has(primaryProduct)) {
+          addRoughCatalogLine(items, ROUGH_ITEM_IDS.drain, "product", {
+            labelSuffix: roughValue("roughDrainFinish")
+          });
         }
       }
 
-      if (roughState.route === "tearout") {
-        getCheckedRoughIds("[data-rough-tearout]").forEach((itemId) => {
-          const line = createEstimateLineFromCatalog(itemId);
-          if (line) {
-            items.push(line);
-          }
-        });
+      if (primaryProduct === "tub-liner" && roughValue("roughFormedFront") === "yes") {
+        addRoughCatalogLine(items, ROUGH_ITEM_IDS.formedFront, "product");
       }
 
-      if (wallId) {
-        [wallId, ROUGH_ITEM_IDS.wallPrep].forEach((itemId) => {
-          const line = createEstimateLineFromCatalog(itemId);
-          if (line) {
-            items.push(line);
-          }
-        });
+      if (ROUGH_WALL_PATH_JOBS.has(conditions.jobType) && wallProduct) {
+        addRoughCatalogLine(items, wallProduct, "product");
 
-        const wallPattern = document.getElementById("roughWallPattern").value;
         if (wallPattern) {
-          const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.tilePattern, null, 1, wallPattern);
-          if (line) {
-            items.push(line);
-          }
+          addRoughCatalogLine(items, ROUGH_ITEM_IDS.tilePattern, "product", {
+            labelSuffix: wallPattern
+          });
         }
       }
 
-      if (document.getElementById("roughCurtainRod").checked) {
-        const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.curtainRod);
-        if (line) {
-          items.push(line);
-        }
+      if (ceilingProduct) {
+        addRoughCatalogLine(items, ceilingProduct, "product");
       }
 
-      if (document.getElementById("roughShowerRod").checked) {
-        const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.showerRod);
-        if (line) {
-          items.push(line);
-        }
+      if (doorProduct === "custom") {
+        addRoughCustomLine(
+          items,
+          "Custom Door",
+          "doors",
+          amountToCents(roughValue("roughCustomDoorPrice")),
+          "accessory",
+          "Call Erin for all custom door pricing."
+        );
+      } else if (doorProduct) {
+        addRoughCatalogLine(items, doorProduct, "accessory");
       }
 
-      if (doorSelected && doorType === "bf") {
-        const line = createEstimateLineFromCatalog(roughState.jobType === "tub" ? ROUGH_ITEM_IDS.tubDoor : ROUGH_ITEM_IDS.showerDoor);
-        if (line) {
-          items.push(line);
-        }
-      }
-
-      if (doorSelected && doorType === "custom") {
-        const customDoorCents = amountToCents(document.getElementById("roughCustomDoorPrice").value);
-        if (customDoorCents) {
-          items.push(createCustomEstimateLine("Custom Door", "doors", customDoorCents, "Call Erin for all custom door pricing."));
-        }
-      }
-
-      [
-        ["roughFixtures", "roughFixtureItem"],
-        ["roughSafety", "roughSafetyItem"],
-        ["roughLabor", "roughLaborItem"]
-      ].forEach(([checkboxId, selectId]) => {
-        if (document.getElementById(checkboxId).checked) {
-          const line = createEstimateLineFromCatalog(document.getElementById(selectId).value);
-          if (line) {
-            items.push(line);
-          }
-        }
-      });
+      addConditionTearOutLines(items, conditions);
+      addCheckedRoughSection(items, "rebuild");
+      addCheckedRoughSection(items, "plumbing");
+      addCheckedRoughSection(items, "accessory");
 
       return items.filter(Boolean).concat(state.roughAddOns);
     }
 
+    function getRoughGroupedTotals(items) {
+      const groups = Object.keys(ROUGH_GROUP_LABELS).reduce((totals, group) => {
+        totals[group] = 0;
+        return totals;
+      }, {});
+
+      items.forEach((item) => {
+        const group = getRoughGroup(item);
+        groups[group] += item.totalCents;
+      });
+
+      const subtotal = Object.values(groups).reduce((sum, value) => sum + value, 0);
+      return {
+        groups,
+        subtotal,
+        total: subtotal
+      };
+    }
+
     function renderRoughControls() {
-      const unitIds = ROUGH_UNITS[roughState.jobType][roughState.route];
-      setSelectFromItems("roughUnit", unitIds);
-      setSelectFromItems("roughWall", ROUGH_WALL_IDS, true);
+      const productIds = ROUGH_PRODUCT_PATHS[roughState.jobType] || [];
+      const hasPrimaryProduct = productIds.length > 0;
+      const needsWalls = ROUGH_WALL_PATH_JOBS.has(roughState.jobType);
 
-      const fixtureIds = catalogItems
-        .filter((item) => item.category === "Plumbing & Fixtures" && item.bucket === "bf")
-        .map((item) => item.id);
-      const safetyIds = catalogItems
-        .filter((item) => /seat|safety|bar/i.test(`${item.label} ${item.category}`))
-        .map((item) => item.id);
-      const laborIds = catalogItems
-        .filter((item) => item.category === "Labor & Prep" || item.bucket === "labor")
-        .map((item) => item.id);
+      setSelectFromItems("roughPrimaryProduct", productIds, !hasPrimaryProduct, "No tub/base product");
+      setSelectFromItems("roughWallProduct", ROUGH_WALL_IDS, true, "No walls");
+      setSelectFromItems("roughDoorProduct", ROUGH_DOOR_IDS, true, "No door", [
+        { value: "custom", label: "Custom Door - Call Erin" }
+      ]);
+      setSelectFromItems("roughCeilingProduct", ROUGH_CEILING_IDS, true, "No ceiling panel");
 
-      setSelectFromItems("roughFixtureItem", fixtureIds);
-      setSelectFromItems("roughSafetyItem", safetyIds);
-      setSelectFromItems("roughLaborItem", laborIds);
+      const wallSelect = document.getElementById("roughWallProduct");
+      if (needsWalls && roughState.jobType !== "custom" && !wallSelect.value) {
+        wallSelect.value = ROUGH_WALL_IDS.find((itemId) => getCatalogItemById(itemId)) || "";
+      }
 
-      document.getElementById("tearoutStep").hidden = roughState.route !== "tearout";
-      document.getElementById("formedFrontField").hidden = roughState.jobType !== "tub";
-      document.getElementById("roughWallPatternField").hidden = !document.getElementById("roughWall").value;
-      document.getElementById("roughDoorTypeField").hidden = !document.getElementById("roughDoors").checked;
-      document.getElementById("roughCustomDoorField").hidden =
-        !document.getElementById("roughDoors").checked || document.getElementById("roughDoorType").value !== "custom";
-      document.getElementById("roughFixtureField").hidden = !document.getElementById("roughFixtures").checked;
-      document.getElementById("roughSafetyField").hidden = !document.getElementById("roughSafety").checked;
-      document.getElementById("roughLaborField").hidden = !document.getElementById("roughLabor").checked;
+      const primaryProduct = roughValue("roughPrimaryProduct");
+      const wallProduct = roughValue("roughWallProduct");
+      const doorProduct = roughValue("roughDoorProduct");
+
+      document.getElementById("roughPrimaryProductField").hidden = !hasPrimaryProduct;
+      document.getElementById("roughFormedFrontField").hidden =
+        !ROUGH_TUB_JOBS.has(roughState.jobType) || primaryProduct !== "tub-liner";
+      document.getElementById("roughDrainFinishField").hidden =
+        !primaryProduct || !ROUGH_BASE_PRODUCT_IDS.has(primaryProduct);
+      document.getElementById("roughWallProductField").hidden = !needsWalls;
+      document.getElementById("roughWallPatternField").hidden = !needsWalls || !wallProduct;
+      document.getElementById("roughCustomDoorField").hidden = doorProduct !== "custom";
     }
 
     function renderRoughPreview() {
       const previewItems = buildRoughEstimateItems();
-      const totalCents = previewItems.reduce((sum, item) => sum + item.totalCents, 0);
-      document.getElementById("roughEstimatePreview").innerHTML = previewItems.length
-        ? previewItems
-            .map(
-              (item) => `
-                <article class="rough-row">
-                  <h4>${escapeHtml(item.label)}</h4>
-                  <p>${escapeHtml(BUCKET_LABELS[item.bucket])} | ${formatCurrencyFromCents(item.totalCents)}</p>
-                </article>
-              `
-            )
-            .join("") +
-          `<article class="rough-row"><h4>Rough Total</h4><p>${formatCurrencyFromCents(totalCents)}</p></article>`
-        : emptyState("Choose job options to build a rough estimate.");
+      const roughTotals = getRoughGroupedTotals(previewItems);
+
+      if (!previewItems.length) {
+        document.getElementById("roughEstimatePreview").innerHTML = emptyState("Choose job conditions to build an exact estimate.");
+        return;
+      }
+
+      const groupRows = Object.entries(ROUGH_GROUP_LABELS)
+        .map(([group, label]) => `
+          <article class="rough-row">
+            <h4>${escapeHtml(label)}</h4>
+            <p>${formatCurrencyFromCents(roughTotals.groups[group])}</p>
+          </article>
+        `)
+        .join("");
+
+      const lineRows = previewItems
+        .map(
+          (item) => `
+            <article class="rough-row">
+              <h4>${escapeHtml(item.label)}</h4>
+              <p>${escapeHtml(ROUGH_GROUP_LABELS[getRoughGroup(item)])} | ${escapeHtml(BUCKET_LABELS[item.bucket])} | Qty ${escapeHtml(item.quantity)} | ${formatCurrencyFromCents(item.totalCents)}</p>
+              ${item.engineReason ? `<p>${escapeHtml(item.engineReason)}</p>` : ""}
+            </article>
+          `
+        )
+        .join("");
+
+      document.getElementById("roughEstimatePreview").innerHTML =
+        groupRows +
+        `<article class="rough-row"><h4>Estimated Subtotal</h4><p>${formatCurrencyFromCents(roughTotals.subtotal)}</p></article>` +
+        `<article class="rough-row"><h4>Estimated Total</h4><p>${formatCurrencyFromCents(roughTotals.total)}</p></article>` +
+        lineRows;
     }
 
     function buildRoughEstimate() {
       state.estimateItems = buildRoughEstimateItems();
-      state.estimateMessage = "Rough estimate built.";
+      state.estimateMessage = "Exact estimate built.";
       render();
     }
 
     function loadRoughEstimateIntoPricing() {
       state.estimateItems = buildRoughEstimateItems();
-      state.estimateMessage = "Rough estimate loaded into pricing.";
+      state.estimateMessage = "Exact estimate loaded into pricing.";
       applyEstimateToCalculator();
       document.getElementById("calculatorTool").scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -2692,9 +2997,10 @@
         return;
       }
 
+      line.group = getRoughGroupForItem(item);
       state.roughAddOns.unshift(line);
       state.estimateItems = buildRoughEstimateItems();
-      state.estimateMessage = `${item.label} added to rough estimate.`;
+      state.estimateMessage = `${item.label} added to exact estimate.`;
       render();
     }
 
@@ -2719,6 +3025,8 @@
         category: "Custom",
         variantLabel: "Custom line item",
         description: "",
+        group: getRoughGroupForItem({ bucket, category: "Custom" }),
+        engineReason: "",
         quantity,
         unitCents: amount,
         totalCents
@@ -2728,7 +3036,7 @@
       document.getElementById("customAmount").value = "";
       document.getElementById("customQuantity").value = "1";
       state.estimateItems = buildRoughEstimateItems();
-      state.estimateMessage = `${label} added to rough estimate.`;
+      state.estimateMessage = `${label} added to exact estimate.`;
       render();
     }
 
@@ -2755,7 +3063,7 @@
     function clearEstimate() {
       state.estimateItems = [];
       state.roughAddOns = [];
-      state.estimateMessage = "Rough estimate cleared.";
+      state.estimateMessage = "Exact estimate cleared.";
       render();
     }
 
@@ -2879,8 +3187,63 @@
       render();
     }
 
+    function syncConditionExclusivity(changedId) {
+      const fixtureRemovalIds = [
+        "roughFiberglassTub",
+        "roughCastTub",
+        "roughSteelTub",
+        "roughExistingShowerBase",
+        "roughOnePieceFiberglass",
+        "roughOnePieceWithCeiling"
+      ];
+      const wallRemovalIds = ["roughFiberglassWalls", "roughTileWalls", "roughMudWalls"];
+
+      if (changedId === "roughExistingTubStays" && roughChecked("roughExistingTubStays")) {
+        fixtureRemovalIds.forEach((id) => {
+          document.getElementById(id).checked = false;
+        });
+      }
+
+      if (fixtureRemovalIds.includes(changedId) && roughChecked(changedId)) {
+        document.getElementById("roughExistingTubStays").checked = false;
+      }
+
+      if (changedId === "roughOnePieceFiberglass" && roughChecked("roughOnePieceFiberglass")) {
+        ["roughFiberglassTub", "roughExistingShowerBase", "roughFiberglassWalls", "roughOnePieceWithCeiling"].forEach((id) => {
+          document.getElementById(id).checked = false;
+        });
+      }
+
+      if (changedId === "roughOnePieceWithCeiling" && roughChecked("roughOnePieceWithCeiling")) {
+        ["roughFiberglassTub", "roughExistingShowerBase", "roughFiberglassWalls", "roughOnePieceFiberglass"].forEach((id) => {
+          document.getElementById(id).checked = false;
+        });
+      }
+
+      if (!fixtureRemovalIds.some((id) => roughChecked(id))) {
+        document.getElementById("roughExistingTubStays").checked = true;
+      }
+
+      if (changedId === "roughNoWallTearout" && roughChecked("roughNoWallTearout")) {
+        wallRemovalIds.forEach((id) => {
+          document.getElementById(id).checked = false;
+        });
+      }
+
+      if (wallRemovalIds.includes(changedId) && roughChecked(changedId)) {
+        document.getElementById("roughNoWallTearout").checked = false;
+      }
+
+      if (changedId === "roughMudWalls" && roughChecked("roughMudWalls")) {
+        document.getElementById("roughTileWalls").checked = false;
+      }
+
+      if (!wallRemovalIds.some((id) => roughChecked(id))) {
+        document.getElementById("roughNoWallTearout").checked = true;
+      }
+    }
+
     initializeCommissionControls();
-    renderRoughTearoutList();
     refreshCatalogPicker();
     applyStoredState();
     refreshCatalogPicker();
@@ -2921,7 +3284,7 @@
       document.getElementById("guideCategory").value = button.dataset.guideCategory;
       render();
     });
-    document.querySelectorAll("[data-rough-group]").forEach((group) => {
+    document.querySelectorAll("[data-condition-group]").forEach((group) => {
       group.addEventListener("click", (event) => {
         const button = event.target.closest(".choice-button");
         if (!button) {
@@ -2930,32 +3293,55 @@
 
         group.querySelectorAll(".choice-button").forEach((choice) => choice.classList.remove("active"));
         button.classList.add("active");
-        roughState[group.dataset.roughGroup] = button.dataset.value;
+        roughState[group.dataset.conditionGroup] = button.dataset.value;
         render();
       });
     });
     [
-      "roughUnit",
-      "roughFormedFront",
+      "roughExistingTubStays",
+      "roughFiberglassTub",
+      "roughCastTub",
+      "roughSteelTub",
+      "roughExistingShowerBase",
+      "roughOnePieceFiberglass",
+      "roughOnePieceWithCeiling",
+      "roughExistingBfLiner",
+      "roughNoWallTearout",
+      "roughFiberglassWalls",
+      "roughTileWalls",
+      "roughMudWalls",
+      "roughSpecialBaseRemoval",
+      "roughRemoveExistingDoor",
+      "roughPrimaryProduct",
       "roughDrainFinish",
-      "roughWall",
+      "roughFormedFront",
+      "roughWallProduct",
       "roughWallPattern",
-      "roughCurtainRod",
-      "roughShowerRod",
-      "roughDoors",
-      "roughDoorType",
+      "roughDoorProduct",
       "roughCustomDoorPrice",
-      "roughFixtures",
-      "roughSafety",
-      "roughLabor",
-      "roughFixtureItem",
-      "roughSafetyItem",
-      "roughLaborItem"
+      "roughCeilingProduct"
     ].forEach((id) => {
-      document.getElementById(id).addEventListener("input", render);
-      document.getElementById(id).addEventListener("change", render);
+      const element = document.getElementById(id);
+      if (!element) {
+        return;
+      }
+
+      element.addEventListener("input", () => {
+        if (element.type === "checkbox") {
+          syncConditionExclusivity(id);
+        }
+        render();
+      });
+      element.addEventListener("change", () => {
+        if (element.type === "checkbox") {
+          syncConditionExclusivity(id);
+        }
+        render();
+      });
     });
-    document.getElementById("roughTearoutList").addEventListener("change", render);
+    document.querySelectorAll("[data-rough-add]").forEach((input) => {
+      input.addEventListener("change", render);
+    });
     document.getElementById("buildRoughEstimateButton").addEventListener("click", buildRoughEstimate);
     document.getElementById("loadRoughEstimateButton").addEventListener("click", loadRoughEstimateIntoPricing);
     document.getElementById("addCatalogItemButton").addEventListener("click", addCatalogItem);
