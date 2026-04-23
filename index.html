@@ -2066,6 +2066,18 @@
       );
     }
 
+    function getMethodCostPercent(method) {
+      return roundToCents(Number(method?.costPercent) || 0);
+    }
+
+    function buildTransactionCostPercent(discountPercent = 0, financePercent = 0, paymentMethodPercent = 0) {
+      return roundToCents(
+        (Number(discountPercent) || 0) +
+        (Number(financePercent) || 0) +
+        (Number(paymentMethodPercent) || 0)
+      );
+    }
+
     function buildPrimaryCashRateContext(grossCents, finalCents, discountCents) {
       const depositCents = calculateCashDeposit(finalCents);
       const cardCostCents = calculateSplitPaymentCost(
@@ -2102,14 +2114,24 @@
       financeCostCents = 0,
       cardCostCents = 0,
       tierGrossCents,
-      tierTransactionCostsCents
+      tierTransactionCostsCents,
+      tierTransactionCostPercent
     }) {
       const gross = clampCents(grossCents);
       const commissionable = clampCents(commissionableCents);
       const transactionCostsCents = clampCents(discountCents + financeCostCents + cardCostCents);
       const rateGrossCents = clampCents(tierGrossCents ?? gross);
-      const rateTransactionCostsCents = clampCents(tierTransactionCostsCents ?? transactionCostsCents);
-      const transactionCostPercent = rateGrossCents ? roundToCents((rateTransactionCostsCents / rateGrossCents) * 100) : 0;
+      const explicitTierPercent = Number.isFinite(Number(tierTransactionCostPercent))
+        ? roundToCents(Number(tierTransactionCostPercent))
+        : null;
+      const rateTransactionCostsCents = explicitTierPercent !== null && rateGrossCents
+        ? clampCents(rateGrossCents * (explicitTierPercent / 100))
+        : clampCents(tierTransactionCostsCents ?? transactionCostsCents);
+      const transactionCostPercent = explicitTierPercent !== null
+        ? explicitTierPercent
+        : rateGrossCents
+          ? roundToCents((rateTransactionCostsCents / rateGrossCents) * 100)
+          : 0;
       const tier = getCommissionTier(transactionCostPercent, getCommissionSaleType().id);
       const commissionBaseCents = clampCents(commissionable * 0.85);
 
@@ -2131,19 +2153,25 @@
           const paymentLabel = plan.kind === "deferred" ? "Payoff target" : "Monthly";
           const timeline = plan.kind === "deferred" ? `${plan.months} months` : `Est. ${result.months} months`;
           const merchantCostCents = clampCents(balanceCents * (plan.transactionCostPct / 100));
-          const rateBalanceCents = clampCents(context.rateBalanceCents ?? balanceCents);
-          const rateFinanceCostCents = clampCents(rateBalanceCents * (plan.transactionCostPct / 100));
           const cardCostCents = calculatePaymentCost(context.depositCents || 0, context.depositMethod);
           const tierDiscountCents = clampCents(context.tierDiscountCents ?? context.discountCents ?? 0);
+          const paymentMethodCostPercent = getMethodCostPercent(context.depositMethod);
+          const tierDiscountPercent = roundToCents(Number(context.tierDiscountPercent ?? context.discountPercent ?? 0) || 0);
+          const totalTransactionCostPercent = buildTransactionCostPercent(
+            tierDiscountPercent,
+            plan.transactionCostPct,
+            paymentMethodCostPercent
+          );
           const commission = context.grossCents
             ? calculateCardCommission({
                 grossCents: context.grossCents,
                 commissionableCents: context.commissionableCents,
                 discountCents: context.discountCents,
-                financeCostCents: rateFinanceCostCents,
+                financeCostCents: merchantCostCents,
                 cardCostCents,
                 tierGrossCents: context.tierGrossCents,
-                tierTransactionCostsCents: clampCents(tierDiscountCents + rateFinanceCostCents + cardCostCents)
+                tierTransactionCostsCents: clampCents(tierDiscountCents + merchantCostCents + cardCostCents),
+                tierTransactionCostPercent: totalTransactionCostPercent
               })
             : null;
 
@@ -2354,6 +2382,8 @@
             tierGrossCents: inputs.bf,
             commissionableCents: financeDiscount.finalCents,
             discountCents: financeDiscount.discountCents,
+            discountPercent: percent,
+            tierDiscountPercent: percent,
             depositCents: financeDeposit,
             depositMethod,
             rateBalanceCents: financeBalance
@@ -2377,6 +2407,8 @@
             tierGrossCents: inputs.bf,
             commissionableCents: inputs.bf,
             discountCents: 0,
+            discountPercent: 0,
+            tierDiscountPercent: 0,
             depositCents: plan960Deposit,
             depositMethod,
             rateBalanceCents: plan960Balance
@@ -2548,6 +2580,8 @@
             commissionableCents: financeDiscount.finalCents + financeWains.finalCents + inputs.doors + inputs.labor,
             discountCents: financeDiscountTotal,
             tierDiscountCents: financeDiscount.discountCents,
+            discountPercent: percent,
+            tierDiscountPercent: percent,
             depositCents: bfDeposit,
             depositMethod,
             rateBalanceCents: bfBalance
@@ -2575,6 +2609,8 @@
             tierGrossCents: inputs.bf,
             commissionableCents: inputs.bf + inputs.wainscoting + inputs.doors + inputs.labor,
             discountCents: 0,
+            discountPercent: 0,
+            tierDiscountPercent: 0,
             depositCents: plan960BfDeposit,
             depositMethod,
             rateBalanceCents: plan960BfBalance
@@ -2711,11 +2747,13 @@
                 " = Wainscoting total " +
                 formatCurrencyFromCents(financeDiscount.finalCents),
               financeItems: featuredFinancePlanItems(financeBalance, {
-                grossCents: inputs.wainscoting,
-                tierGrossCents: inputs.wainscoting,
+                grossCents: inputs.bf || inputs.wainscoting,
+                tierGrossCents: inputs.bf || inputs.wainscoting,
                 commissionableCents: financeDiscount.finalCents,
                 discountCents: financeDiscount.discountCents,
                 tierDiscountCents: financeDiscount.discountCents,
+                discountPercent: percent,
+                tierDiscountPercent: percent,
                 depositCents: financeDeposit,
                 depositMethod,
                 rateBalanceCents: financeBalance
