@@ -747,7 +747,7 @@ const PRICE_LIST_DATA = [
     id: "labor-remove-shower-door",
     category: "Labor & Prep",
     label: "Remove and Dispose Shower Door",
-    bucket: "labor",
+    bucket: "bf",
     description: "Shower door removal only.",
     variants: [
       { id: "standard", label: "Standard", price: 450 }

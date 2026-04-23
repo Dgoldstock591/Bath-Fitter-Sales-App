@@ -872,7 +872,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=228"></script>
+  <script src="price-list-data.js?v=301"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -3683,7 +3683,9 @@
       addWallRemovalLines(items, snapshot);
 
       if (snapshot.removeExistingDoor) {
-        addRoughCatalogLine(items, "labor-remove-shower-door", "tearout");
+        addRoughCatalogLine(items, "labor-remove-shower-door", "tearout", {
+          bucketOverride: "bf"
+        });
       }
 
       addRebuildAndPrepLines(items, snapshot);
