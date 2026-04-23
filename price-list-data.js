@@ -140,6 +140,30 @@ const PRICE_LIST_DATA = [
     ]
   },
   {
+    id: "threshold-base-neo-angle",
+    category: "Tubs & Bases",
+    label: "6 Inch Threshold Neo-Angle Base 36 or 38",
+    bucket: "bf",
+    description: "Neo-angle 36 or 38 inch base from the 2/11/2026 price list.",
+    variants: [
+      { id: "white", label: "White", price: 3000 },
+      { id: "pearl", label: "Pearl", price: 3100 },
+      { id: "marbles", label: "Marbles", price: 3200 }
+    ]
+  },
+  {
+    id: "threshold-base-curved-front",
+    category: "Tubs & Bases",
+    label: "6 Inch Threshold Curved Front Base",
+    bucket: "bf",
+    description: "Curved front base in 32, 36, or 40 inch sizes.",
+    variants: [
+      { id: "white", label: "White", price: 3000 },
+      { id: "pearl", label: "Pearl", price: 3100 },
+      { id: "marbles", label: "Marbles", price: 3200 }
+    ]
+  },
+  {
     id: "flat-floor-base",
     category: "Tubs & Bases",
     label: "Flat Floor Base",
@@ -149,6 +173,16 @@ const PRICE_LIST_DATA = [
       { id: "white", label: "White", price: 3000 },
       { id: "pearl", label: "Pearl", price: 3100 },
       { id: "marbles", label: "Marbles", price: 3200 }
+    ]
+  },
+  {
+    id: "flat-floor-1x1-tile-pattern",
+    category: "Tubs & Bases",
+    label: "Flat Floor 1 x 1 Tile Pattern Base",
+    bucket: "bf",
+    description: "Flat floor 1 x 1 tile pattern base, white only.",
+    variants: [
+      { id: "white", label: "White", price: 3000 }
     ]
   },
   {
@@ -262,16 +296,35 @@ const PRICE_LIST_DATA = [
     category: "Walls & Accessories",
     label: "Additional for All Tile Patterns",
     bucket: "bf",
-    description: "Tile pattern upcharge.",
+    description: "Tile pattern upcharge for Palermo, Napoli, Padova, Rimini, Milano, Savona, Torino, Roma, Genova, Verona, subway, textured, mosaic, and other tile wall patterns.",
     variants: [
-      { id: "standard", label: "Standard", price: 900 }
+      { id: "standard", label: "Standard Tile Pattern Upgrade", price: 900 },
+      { id: "torino", label: "Torino", price: 900 },
+      { id: "napoli", label: "Napoli", price: 900 },
+      { id: "palermo", label: "Palermo", price: 900 },
+      { id: "padova", label: "Padova", price: 900 },
+      { id: "milano", label: "Milano", price: 900 },
+      { id: "roma", label: "Roma", price: 900 },
+      { id: "savona", label: "Savona", price: 900 },
+      { id: "rimini", label: "Rimini", price: 900 },
+      { id: "genova", label: "Genova", price: 900 },
+      { id: "verona", label: "Verona", price: 900 },
+      { id: "tile-12x12", label: "12 x 12 Tile Pattern", price: 900 },
+      { id: "subway-3x6", label: "3 x 6 Subway Style", price: 900 },
+      { id: "diamond-6x6", label: "6 x 6 Diamond Tile Pattern", price: 900 },
+      { id: "tile-4x4", label: "4 x 4 Tile Pattern", price: 900 },
+      { id: "tile-6x6", label: "6 x 6 Tile Pattern", price: 900 },
+      { id: "tile-10x10-design", label: "10 x 10 Tile Pattern with Design", price: 900 },
+      { id: "textured-6x22", label: "6 x 22 Textured Tile Pattern", price: 900 },
+      { id: "textured-13x13-inserts", label: "13 x 13 Textured Tile Pattern with 4 x 4 Inserts", price: 900 },
+      { id: "mosaic", label: "Mosaic Tile Pattern", price: 900 }
     ]
   },
   {
     id: "wainscot-6x6",
-    category: "Walls & Accessories",
+    category: "Wainscoting",
     label: "Wainscoting 6x6 Pattern",
-    bucket: "bf",
+    bucket: "wainscoting",
     description: "50 x 145 wainscoting.",
     variants: [
       { id: "white", label: "White", price: 2900 },
@@ -281,14 +334,24 @@ const PRICE_LIST_DATA = [
   },
   {
     id: "wainscot-beadboard",
-    category: "Walls & Accessories",
+    category: "Wainscoting",
     label: "Wainscoting Bead Board",
-    bucket: "bf",
+    bucket: "wainscoting",
     description: "54 x 145 bead board wainscoting.",
     variants: [
       { id: "white", label: "White", price: 3000 },
       { id: "pearl", label: "Pearl", price: 3100 },
       { id: "marbles", label: "Marbles", price: 3200 }
+    ]
+  },
+  {
+    id: "wainscot-savona",
+    category: "Wainscoting",
+    label: "Wainscoting Savona 54 x 132 7/8",
+    bucket: "wainscoting",
+    description: "Savona wainscoting, white only.",
+    variants: [
+      { id: "white", label: "White", price: 3000 }
     ]
   },
   {

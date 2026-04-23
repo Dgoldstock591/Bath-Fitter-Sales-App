@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.25</title>
+  <title>Bath Fitter Sales Tool V2.26</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -860,7 +860,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=225"></script>
+  <script src="price-list-data.js?v=226"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -873,10 +873,10 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.25</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.26</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
-        Quote BF, cumulative totals, deposits, and financing from one screen.
+        Quote BF, wainscoting, cumulative totals, deposits, and financing from one screen.
       </p>
     </header>
 
@@ -918,6 +918,10 @@
             <div class="input-card">
               <label for="bf">Bath Fitter EOI Total</label>
               <input type="number" id="bf" min="0" step="0.01" inputmode="decimal" placeholder="8815" />
+            </div>
+            <div class="input-card">
+              <label for="wainscoting">Wainscoting EOI Total</label>
+              <input type="number" id="wainscoting" min="0" step="0.01" inputmode="decimal" placeholder="3000" />
             </div>
             <div class="input-card">
               <label for="doors">Door EOI Total</label>
@@ -1015,6 +1019,15 @@
             </div>
           </div>
           <div class="pricing-guide-list" id="pricingGuideList"></div>
+          <div class="section-block">
+            <h3>Matrix Reference</h3>
+            <p>Quick wall and base size lookup from the product matrix.</p>
+            <div class="choice-row" id="matrixTabs">
+              <button class="choice-button active" type="button" data-matrix-tab="wall">Wall Matrix</button>
+              <button class="choice-button" type="button" data-matrix-tab="base">Base Matrix</button>
+            </div>
+            <div class="pricing-guide-list" id="pricingMatrixList"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -1036,6 +1049,8 @@
             <div class="choice-row" data-condition-group="jobType">
               <button class="choice-button" type="button" data-value="tub-liner">Tub liner</button>
               <button class="choice-button active" type="button" data-value="tub-liner-walls">Tub liner + walls</button>
+              <button class="choice-button" type="button" data-value="freestanding-tub">Freestanding tub</button>
+              <button class="choice-button" type="button" data-value="freestanding-tub-walls">Freestanding tub + walls</button>
               <button class="choice-button" type="button" data-value="shower-base-walls">Shower base + walls</button>
               <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
               <button class="choice-button" type="button" data-value="shower-replacement">Shower replacement</button>
@@ -1112,17 +1127,34 @@
               <label for="roughWallProduct">Wall Product</label>
               <select id="roughWallProduct"></select>
             </div>
+            <div class="form-field" id="roughWainscotingProductField">
+              <label for="roughWainscotingProduct">Wainscoting Product</label>
+              <select id="roughWainscotingProduct"></select>
+            </div>
             <div class="form-field" id="roughWallPatternField">
-              <label for="roughWallPattern">Wall Pattern</label>
+              <label for="roughWallPattern">Wall Pattern / Style</label>
               <select id="roughWallPattern">
                 <option value="">Flat / no pattern upgrade</option>
                 <option value="Tile Pattern Upgrade">Tile Pattern Upgrade</option>
+                <option value="Torino">Torino</option>
                 <option value="Palermo">Palermo</option>
                 <option value="Napoli">Napoli</option>
                 <option value="Padova">Padova</option>
+                <option value="Roma">Roma</option>
                 <option value="Rimini">Rimini</option>
                 <option value="Milano">Milano</option>
                 <option value="Savona">Savona</option>
+                <option value="Genova">Genova</option>
+                <option value="Verona">Verona</option>
+                <option value="12 x 12 Tile Pattern">12 x 12 Tile Pattern</option>
+                <option value="3 x 6 Subway Style">3 x 6 Subway Style</option>
+                <option value="6 x 6 Diamond Tile Pattern">6 x 6 Diamond Tile Pattern</option>
+                <option value="4 x 4 Tile Pattern">4 x 4 Tile Pattern</option>
+                <option value="6 x 6 Tile Pattern">6 x 6 Tile Pattern</option>
+                <option value="10 x 10 Tile Pattern with Design">10 x 10 Tile Pattern with Design</option>
+                <option value="6 x 22 Textured Tile Pattern">6 x 22 Textured Tile Pattern</option>
+                <option value="13 x 13 Textured Tile Pattern with 4 x 4 Inserts">13 x 13 Textured Tile Pattern with 4 x 4 Inserts</option>
+                <option value="Mosaic Tile Pattern">Mosaic Tile Pattern</option>
               </select>
             </div>
             <div class="form-field" id="roughDoorProductField">
@@ -1242,6 +1274,7 @@
                   <label for="customBucket">Pricing Bucket</label>
                   <select id="customBucket">
                     <option value="bf">Bath Fitter</option>
+                    <option value="wainscoting">Wainscoting</option>
                     <option value="doors">Doors</option>
                     <option value="labor">Labor</option>
                     <option value="permits">Permits</option>
@@ -1290,6 +1323,7 @@
       cash: 50,
       finance: 30
     };
+    const WAINSCOTING_MAX_DISCOUNT_PERCENT = 20;
     const DISCOUNT_LEVELS = [23, 22, 21, 20, 19, 18, 15, 13, 11, 10, 8];
     const FINANCE_DISCOUNT_LEVELS = [13, 15, 18];
     const FEATURED_FINANCE_PLAN_IDS = ["965", "925", "924", "922"];
@@ -1304,6 +1338,7 @@
     ];
     const BUCKET_LABELS = {
       bf: "Bath Fitter",
+      wainscoting: "Wainscoting",
       doors: "Doors",
       labor: "Labor",
       permits: "Permits"
@@ -1349,7 +1384,7 @@
       { id: "992", label: "992 | 9.99% for 28 months", costPercent: 6.2 }
     ];
 
-    const inputIds = ["bf", "doors", "labor", "permits"];
+    const inputIds = ["bf", "wainscoting", "doors", "labor", "permits"];
     const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
     const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
     const catalogItems = Array.isArray(PRICE_LIST_DATA) ? PRICE_LIST_DATA : [];
@@ -1359,7 +1394,8 @@
       roughAddOns: [],
       estimateMessage: "",
       internalSettingsVisible: false,
-      expandedCommissionCards: {}
+      expandedCommissionCards: {},
+      activeMatrix: "wall"
     };
     const roughState = {
       jobType: "tub-liner-walls",
@@ -1367,6 +1403,7 @@
     };
     const ROUGH_GROUP_LABELS = {
       product: "Product Total",
+      wainscoting: "Wainscoting Total",
       tearout: "Tear-Out Total",
       rebuild: "Rebuild / Prep Total",
       plumbing: "Plumbing / Fixture Total",
@@ -1380,24 +1417,39 @@
     const ROUGH_PRODUCT_PATHS = {
       "tub-liner": ["tub-liner"],
       "tub-liner-walls": ["tub-liner"],
-      "shower-base-walls": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
-      "tub-to-shower": ["threshold-base-fs-6", "threshold-base-fs-3", "flat-floor-base", "flat-floor-handicap", "ez-roll-in"],
-      "shower-replacement": ["threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
-      "base-only": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
+      "freestanding-tub": ["fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"],
+      "freestanding-tub-walls": ["fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"],
+      "shower-base-walls": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
+      "tub-to-shower": ["threshold-base-fs-6", "threshold-base-fs-3", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in"],
+      "shower-replacement": ["threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
+      "base-only": ["threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"],
       "walls-only": [],
-      custom: ["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]
+      custom: ["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]
     };
-    const ROUGH_WALL_PATH_JOBS = new Set(["tub-liner-walls", "shower-base-walls", "tub-to-shower", "shower-replacement", "walls-only", "custom"]);
-    const ROUGH_TUB_JOBS = new Set(["tub-liner", "tub-liner-walls"]);
-    const ROUGH_BASE_PRODUCT_IDS = new Set(["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]);
+    const ROUGH_WALL_PATH_JOBS = new Set(["tub-liner-walls", "freestanding-tub-walls", "shower-base-walls", "tub-to-shower", "shower-replacement", "walls-only", "custom"]);
+    const ROUGH_TUB_JOBS = new Set(["tub-liner", "tub-liner-walls", "freestanding-tub", "freestanding-tub-walls"]);
+    const ROUGH_BASE_PRODUCT_IDS = new Set(["tub-liner", "threshold-base-6", "threshold-base-fs-3", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "flat-floor-1x1-tile-pattern", "flat-floor-handicap", "ez-roll-in", "xl-fs-base", "fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]);
+    const ROUGH_LAYOUT_PRODUCT_PREFERENCES = {
+      "neo-angle": "threshold-base-neo-angle",
+      curved: "threshold-base-curved-front",
+      freestanding: "threshold-base-fs-6",
+      "barrier-free": "ez-roll-in"
+    };
+    const ROUGH_LAYOUT_AUTO_PRODUCTS = new Set(["", "threshold-base-6", "threshold-base-fs-6", "threshold-base-neo-angle", "threshold-base-curved-front", "flat-floor-base", "ez-roll-in"]);
     const ROUGH_WALL_IDS = [
       "wall-flat-84x132",
       "wall-flat-84x156",
       "wall-flat-90x132",
       "wall-flat-90x156",
       "wall-flat-90x192",
+      "extensions-flat-2x11",
+      "extensions-flat-2x13",
+      "tile-extension-1x11"
+    ];
+    const ROUGH_WAINSCOTING_IDS = [
       "wainscot-6x6",
-      "wainscot-beadboard"
+      "wainscot-beadboard",
+      "wainscot-savona"
     ];
     const ROUGH_CEILING_IDS = [
       "ceiling-flat-3x5",
@@ -1425,6 +1477,47 @@
       "latitude-shower-shield-29",
       "latitude-shower-shield-38-44"
     ];
+    const PRODUCT_MATRICES = {
+      wall: [
+        { group: "Torino", label: "5 x 11", details: "White only", notes: "Usable area: 5 x 11" },
+        { group: "Torino", label: "6 x 10", details: "White, Pearl, White Marble", notes: "Usable area: 6 x 10" },
+        { group: "Torino", label: "7 x 11", details: "All colors", notes: "Usable area: 7 x 11" },
+        { group: "Torino", label: "7.5 x 11", details: "All colors", notes: "Usable area: 7.5 x 11" },
+        { group: "Torino", label: "7.5 x 13", details: "All colors", notes: "Usable area: 7.5 x 13" },
+        { group: "Torino", label: "7.5 x 16", details: "All colors", notes: "Usable area: 7.5 x 16" },
+        { group: "Napoli", label: "7 x 11", details: "All colors", notes: "Usable area: 83 5/8 x 131. Extension: 12 x 131" },
+        { group: "Palermo", label: "7 x 11", details: "All colors", notes: "Usable area: 84 5/8 x 131. Extension: 12 x 131" },
+        { group: "Palermo", label: "7 x 13", details: "All colors", notes: "Usable area: 83 9/16 x 155 1/4" },
+        { group: "Palermo", label: "7.5 x 11", details: "All colors", notes: "Usable area: 90 x 132" },
+        { group: "Padova", label: "7 x 11", details: "All colors", notes: "Usable area: 83 1/2 x 129 1/2. Extension: 20 x 129 1/2" },
+        { group: "Padova", label: "7.5 x 11", details: "All colors", notes: "Usable area: 90 x 132" },
+        { group: "Milano", label: "7 x 11", details: "All colors", notes: "Usable area: 82 3/4 x 130 1/2. Extension: 23 3/4 x 130 1/2" },
+        { group: "Roma", label: "7 x 11", details: "All colors", notes: "Usable area: 83 3/8 x 131 1/4. Extension: 15 3/4 x 131 1/8" },
+        { group: "Savona", label: "7.5 x 11", details: "All colors", notes: "Usable area: 90 x 132. Extension: 15 3/4 x 131 1/8" },
+        { group: "Savona", label: "7.5 x 13", details: "All colors", notes: "Usable area: 88 7/8 x 154 1/4" },
+        { group: "Rimini", label: "7 x 11", details: "All colors", notes: "Usable area: 83 3/8 x 131 1/4. Extension: 19 1/2 x 131" },
+        { group: "Genova", label: "7.5 x 11", details: "All colors", notes: "Usable area: 88 7/8 x 131 1/2. No wall extensions available" },
+        { group: "Genova", label: "7.5 x 13", details: "All colors", notes: "Usable area: 88 5/8 x 153 5/8. No wall extensions available" },
+        { group: "Verona", label: "7.5 x 11", details: "All colors", notes: "Usable area: 88 7/8 x 129. No wall extensions available" },
+        { group: "Verona", label: "7.5 x 13", details: "All colors", notes: "Usable area: 89 3/8 x 154 1/8. No wall extensions available" },
+        { group: "Wainscoting", label: "Bead Board 56 x 146", details: "All colors", notes: "Usable area: 56 x 145 3/4" },
+        { group: "Wainscoting", label: "6 x 6 Tile Pattern 50 x 145", details: "All colors", notes: "For wainscoting only" }
+      ],
+      base: [
+        { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "28 x 28", details: "Center drain", notes: "" },
+        { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "30 x 30", details: "Left, center, or right drain", notes: "" },
+        { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "32 x 32 / 34 / 36 / 42", details: "Center or left, center, right by size", notes: "Confirm exact drain configuration in matrix before EOI" },
+        { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "48 x 48", details: "Center drain", notes: "Allow 2-3 week install" },
+        { group: "Freestanding Base with Pan and 3 Inch Low Threshold", label: "32 / 34 / 36", details: "Left, center, or right drain by size", notes: "Some sizes ordered from Tennessee or require 2-3 week install" },
+        { group: "Freestanding Base with Pan and 3 Inch Low Threshold", label: "33 / 33 3/4", details: "Left or right drain", notes: "Close-to-threshold condition may apply" },
+        { group: "Neo-Angle Bases", label: "36 x 36", details: "Neo-angle", notes: "" },
+        { group: "Neo-Angle Bases", label: "38 x 38", details: "Neo-angle", notes: "" },
+        { group: "Neo-Angle Bases", label: "40 x 40", details: "Neo-angle", notes: "Bath Fitter doors not available for this size; Century doors only" },
+        { group: "Curved Shower Bases", label: "32 x 32", details: "Curved front", notes: "" },
+        { group: "Curved Shower Bases", label: "36 x 36", details: "Curved front", notes: "" },
+        { group: "Curved Shower Bases", label: "40 x 40", details: "Curved front", notes: "" }
+      ]
+    };
 
     function roundToCents(value) {
       return Math.round((value + Number.EPSILON) * 100) / 100;
@@ -1503,6 +1596,14 @@
         discountCents,
         finalCents: Math.max(0, safeAmount - discountCents)
       };
+    }
+
+    function getWainscotingDiscountPercent(percent) {
+      return Math.min(Number(percent) || 0, WAINSCOTING_MAX_DISCOUNT_PERCENT);
+    }
+
+    function findWainscotingDiscount(amountCents, percent) {
+      return findCleanDiscount(amountCents, getWainscotingDiscountPercent(percent));
     }
 
     function calcFinance(balanceCents, apr, months) {
@@ -1635,6 +1736,7 @@
     function readInputs() {
       return {
         bf: amountToCents(document.getElementById("bf").value),
+        wainscoting: amountToCents(document.getElementById("wainscoting").value),
         doors: amountToCents(document.getElementById("doors").value),
         labor: amountToCents(document.getElementById("labor").value),
         permits: amountToCents(document.getElementById("permits").value)
@@ -1644,6 +1746,7 @@
     function getCurrentInputSnapshot() {
       return {
         bf: document.getElementById("bf").value,
+        wainscoting: document.getElementById("wainscoting").value,
         doors: document.getElementById("doors").value,
         labor: document.getElementById("labor").value,
         permits: document.getElementById("permits").value
@@ -1728,10 +1831,11 @@
 
     function renderSummary(inputs) {
       const addOns = inputs.doors + inputs.labor + inputs.permits;
-      const total = inputs.bf + addOns;
+      const total = inputs.bf + inputs.wainscoting + addOns;
 
       document.getElementById("summaryStrip").innerHTML = [
         { label: "BF", value: inputs.bf },
+        { label: "Wainscoting", value: inputs.wainscoting },
         { label: "Add-Ons", value: addOns },
         { label: "Job Total", value: total }
       ]
@@ -1789,6 +1893,7 @@
           const rateBalanceCents = clampCents(context.rateBalanceCents ?? balanceCents);
           const rateFinanceCostCents = clampCents(rateBalanceCents * (plan.transactionCostPct / 100));
           const cardCostCents = calculatePaymentCost(context.depositCents || 0, context.depositMethod);
+          const tierDiscountCents = clampCents(context.tierDiscountCents ?? context.discountCents ?? 0);
           const commission = context.grossCents
             ? calculateCardCommission({
                 grossCents: context.grossCents,
@@ -1797,7 +1902,7 @@
                 financeCostCents: rateFinanceCostCents,
                 cardCostCents,
                 tierGrossCents: context.tierGrossCents,
-                tierTransactionCostsCents: clampCents((context.discountCents || 0) + rateFinanceCostCents + cardCostCents)
+                tierTransactionCostsCents: clampCents(tierDiscountCents + rateFinanceCostCents + cardCostCents)
               })
             : null;
 
@@ -2077,21 +2182,30 @@
         return emptyState("Enter BF total.");
       }
 
-      const addOns = inputs.doors + inputs.labor + inputs.permits;
+      const nonDiscountableAddOns = inputs.doors + inputs.labor + inputs.permits;
+      const addOns = inputs.wainscoting + nonDiscountableAddOns;
       if (!addOns) {
-        return emptyState("Add doors, labor, or permit.");
+        return emptyState("Add wainscoting, doors, labor, or permit.");
       }
 
       const grossTotal = inputs.bf + addOns;
       const paymentMethod = getCommissionPaymentMethod();
       const depositMethod = getCommissionDepositMethod();
 
-      function cumulativeMathLine(discountCents, discountedBathFitterCents, cumulativeTotalCents) {
+      function cumulativeMathLine(bfDiscountCents, discountedBathFitterCents, wainsDiscountCents, discountedWainscotingCents, cumulativeTotalCents) {
         const parts = [
           "BF subtotal " + formatCurrencyFromCents(inputs.bf),
-          "- discount " + formatCurrencyFromCents(discountCents),
+          "- discount " + formatCurrencyFromCents(bfDiscountCents),
           "= BF total " + formatCurrencyFromCents(discountedBathFitterCents)
         ];
+
+        if (inputs.wainscoting) {
+          parts.push(
+            "+ Wainscoting subtotal " + formatCurrencyFromCents(inputs.wainscoting),
+            "- discount " + formatCurrencyFromCents(wainsDiscountCents),
+            "= Wainscoting total " + formatCurrencyFromCents(discountedWainscotingCents)
+          );
+        }
 
         if (inputs.doors) {
           parts.push("+ Doors " + formatCurrencyFromCents(inputs.doors));
@@ -2109,10 +2223,11 @@
         return parts.join(" ");
       }
 
-      function cumulativeDeposit(discountedBathFitterCents, dealType) {
+      function cumulativeDeposit(discountedBathFitterCents, discountedWainscotingCents, dealType) {
         const depositCalculator = dealType === "cash" ? calculateCashDeposit : calculateFinanceDeposit;
         return (
           depositCalculator(discountedBathFitterCents) +
+          depositCalculator(discountedWainscotingCents) +
           depositCalculator(inputs.doors) +
           depositCalculator(inputs.labor) +
           inputs.permits
@@ -2121,37 +2236,41 @@
 
       const cumulativeCards = DISCOUNT_LEVELS.map((percent) => {
         const discount = findCleanDiscount(inputs.bf, percent);
-        const total = discount.finalCents + addOns;
+        const wainsDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
+        const total = discount.finalCents + wainsDiscount.finalCents + nonDiscountableAddOns;
+        const totalDiscount = discount.discountCents + wainsDiscount.discountCents;
         const commission = calculateCardCommission({
           grossCents: grossTotal,
-          commissionableCents: discount.finalCents + inputs.doors + inputs.labor,
-          discountCents: discount.discountCents,
+          commissionableCents: discount.finalCents + wainsDiscount.finalCents + inputs.doors + inputs.labor,
+          discountCents: totalDiscount,
           cardCostCents: calculatePaymentCost(total, paymentMethod),
           tierGrossCents: inputs.bf,
           tierTransactionCostsCents: clampCents(discount.discountCents + calculatePaymentCost(discount.finalCents, paymentMethod))
         });
 
         return scenarioCardMarkup({
-          title: percent + "% Discount on Bath Fitter",
+          title: percent + "% Discount on Bath Fitter" + (inputs.wainscoting && percent > WAINSCOTING_MAX_DISCOUNT_PERCENT ? " / Wains 20% Cap" : ""),
           badge: "Cash / Check / Charge | 50% Deposit",
           note: "",
           subtotalCents: grossTotal,
-          discountCents: discount.discountCents,
+          discountCents: totalDiscount,
           totalCents: total,
-          depositCents: cumulativeDeposit(discount.finalCents, "cash"),
-          mathLine: cumulativeMathLine(discount.discountCents, discount.finalCents, total),
+          depositCents: cumulativeDeposit(discount.finalCents, wainsDiscount.finalCents, "cash"),
+          mathLine: cumulativeMathLine(discount.discountCents, discount.finalCents, wainsDiscount.discountCents, wainsDiscount.finalCents, total),
           commissionCents: commission.commissionCents,
           commissionRate: commission.commissionRate
         });
       });
 
       const special = findCleanDiscount(inputs.bf, 25);
-      const specialTotal = special.finalCents + addOns;
-      const specialDeposit = cumulativeDeposit(special.finalCents, "cash");
+      const specialWains = findWainscotingDiscount(inputs.wainscoting, 25);
+      const specialTotal = special.finalCents + specialWains.finalCents + nonDiscountableAddOns;
+      const specialDiscount = special.discountCents + specialWains.discountCents;
+      const specialDeposit = cumulativeDeposit(special.finalCents, specialWains.finalCents, "cash");
       const specialCommission = calculateCardCommission({
         grossCents: grossTotal,
-        commissionableCents: special.finalCents + inputs.doors + inputs.labor,
-        discountCents: special.discountCents,
+        commissionableCents: special.finalCents + specialWains.finalCents + inputs.doors + inputs.labor,
+        discountCents: specialDiscount,
         cardCostCents: calculatePaymentCost(specialTotal, paymentMethod),
         tierGrossCents: inputs.bf,
         tierTransactionCostsCents: clampCents(special.discountCents + calculatePaymentCost(special.finalCents, paymentMethod))
@@ -2160,13 +2279,13 @@
       const specialCards = [
         scenarioCardMarkup({
           title: "25% Special Discount",
-          badge: "Veterans Deals / Managers Specials | 50% Deposit",
+          badge: inputs.wainscoting ? "Veterans Deals / Managers Specials | Wains 20% Cap | 50% Deposit" : "Veterans Deals / Managers Specials | 50% Deposit",
           note: "",
           subtotalCents: grossTotal,
-          discountCents: special.discountCents,
+          discountCents: specialDiscount,
           totalCents: specialTotal,
           depositCents: specialDeposit,
-          mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialTotal),
+          mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialWains.discountCents, specialWains.finalCents, specialTotal),
           commissionCents: specialCommission.commissionCents,
           commissionRate: specialCommission.commissionRate
         })
@@ -2174,8 +2293,10 @@
 
       const financingCards = FINANCE_DISCOUNT_LEVELS.map((percent) => {
         const financeDiscount = findCleanDiscount(inputs.bf, percent);
-        const financeTotal = financeDiscount.finalCents + addOns;
-        const financeDeposit = cumulativeDeposit(financeDiscount.finalCents, "finance");
+        const financeWains = findWainscotingDiscount(inputs.wainscoting, percent);
+        const financeTotal = financeDiscount.finalCents + financeWains.finalCents + nonDiscountableAddOns;
+        const financeDiscountTotal = financeDiscount.discountCents + financeWains.discountCents;
+        const financeDeposit = cumulativeDeposit(financeDiscount.finalCents, financeWains.finalCents, "finance");
         const financeBalance = Math.max(0, financeTotal - financeDeposit);
         const bfDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
         const bfBalance = Math.max(0, financeDiscount.finalCents - bfDeposit);
@@ -2185,15 +2306,16 @@
           badge: `Cumulative Finance | ${percent}% Discount | 30% Deposit`,
           note: "",
           subtotalCents: grossTotal,
-          discountCents: financeDiscount.discountCents,
+          discountCents: financeDiscountTotal,
           totalCents: financeTotal,
           depositCents: financeDeposit,
-          mathLine: cumulativeMathLine(financeDiscount.discountCents, financeDiscount.finalCents, financeTotal),
+          mathLine: cumulativeMathLine(financeDiscount.discountCents, financeDiscount.finalCents, financeWains.discountCents, financeWains.finalCents, financeTotal),
           financeItems: featuredFinancePlanItems(financeBalance, {
             grossCents: grossTotal,
             tierGrossCents: inputs.bf,
-            commissionableCents: financeDiscount.finalCents + inputs.doors + inputs.labor,
-            discountCents: financeDiscount.discountCents,
+            commissionableCents: financeDiscount.finalCents + financeWains.finalCents + inputs.doors + inputs.labor,
+            discountCents: financeDiscountTotal,
+            tierDiscountCents: financeDiscount.discountCents,
             depositCents: bfDeposit,
             depositMethod,
             rateBalanceCents: bfBalance
@@ -2201,8 +2323,8 @@
         });
       });
 
-      const plan960Total = inputs.bf + addOns;
-      const plan960Deposit = cumulativeDeposit(inputs.bf, "finance");
+      const plan960Total = inputs.bf + inputs.wainscoting + nonDiscountableAddOns;
+      const plan960Deposit = cumulativeDeposit(inputs.bf, inputs.wainscoting, "finance");
       const plan960Balance = Math.max(0, plan960Total - plan960Deposit);
       const plan960BfDeposit = calculateFinanceDeposit(inputs.bf);
       const plan960BfBalance = Math.max(0, inputs.bf - plan960BfDeposit);
@@ -2215,11 +2337,11 @@
           discountCents: 0,
           totalCents: plan960Total,
           depositCents: plan960Deposit,
-          mathLine: cumulativeMathLine(0, inputs.bf, plan960Total),
+          mathLine: cumulativeMathLine(0, inputs.bf, 0, inputs.wainscoting, plan960Total),
           financeItems: featuredFinancePlanItems(plan960Balance, {
             grossCents: grossTotal,
             tierGrossCents: inputs.bf,
-            commissionableCents: inputs.bf + inputs.doors + inputs.labor,
+            commissionableCents: inputs.bf + inputs.wainscoting + inputs.doors + inputs.labor,
             discountCents: 0,
             depositCents: plan960BfDeposit,
             depositMethod,
@@ -2256,7 +2378,123 @@
 
     function buildOtherContractsTab(inputs) {
       const cards = [];
+      const wainscotingCards = [];
       const paymentMethod = getCommissionPaymentMethod();
+      const depositMethod = getCommissionDepositMethod();
+
+      if (inputs.wainscoting) {
+        const noDiscountCommission = calculateCardCommission({
+          grossCents: inputs.wainscoting,
+          commissionableCents: inputs.wainscoting,
+          cardCostCents: calculatePaymentCost(inputs.wainscoting, paymentMethod)
+        });
+        wainscotingCards.push(
+          scenarioCardMarkup({
+            title: "Wainscoting EOI - No Discount",
+            badge: "Separate EOI | 50% Deposit",
+            note: "",
+            subtotalCents: inputs.wainscoting,
+            discountCents: 0,
+            totalCents: inputs.wainscoting,
+            depositCents: calculateCashDeposit(inputs.wainscoting),
+            commissionCents: noDiscountCommission.commissionCents,
+            commissionRate: noDiscountCommission.commissionRate
+          })
+        );
+
+        DISCOUNT_LEVELS.forEach((percent) => {
+          const wainsDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
+          const effectivePercent = getWainscotingDiscountPercent(percent);
+          const commission = calculateCardCommission({
+            grossCents: inputs.wainscoting,
+            commissionableCents: wainsDiscount.finalCents,
+            discountCents: wainsDiscount.discountCents,
+            cardCostCents: calculatePaymentCost(wainsDiscount.finalCents, paymentMethod)
+          });
+          wainscotingCards.push(
+            scenarioCardMarkup({
+              title: `${percent}% BF Discount / ${effectivePercent}% Wains Discount`,
+              badge: effectivePercent < percent ? "Wains capped at 20% | 50% Deposit" : "Wains matches BF discount | 50% Deposit",
+              note: "",
+              subtotalCents: inputs.wainscoting,
+              discountCents: wainsDiscount.discountCents,
+              totalCents: wainsDiscount.finalCents,
+              depositCents: calculateCashDeposit(wainsDiscount.finalCents),
+              mathLine:
+                "Wainscoting subtotal " +
+                formatCurrencyFromCents(inputs.wainscoting) +
+                " - discount " +
+                formatCurrencyFromCents(wainsDiscount.discountCents) +
+                " = Wainscoting total " +
+                formatCurrencyFromCents(wainsDiscount.finalCents),
+              commissionCents: commission.commissionCents,
+              commissionRate: commission.commissionRate
+            })
+          );
+        });
+
+        const specialWainsDiscount = findWainscotingDiscount(inputs.wainscoting, 25);
+        const specialWainsCommission = calculateCardCommission({
+          grossCents: inputs.wainscoting,
+          commissionableCents: specialWainsDiscount.finalCents,
+          discountCents: specialWainsDiscount.discountCents,
+          cardCostCents: calculatePaymentCost(specialWainsDiscount.finalCents, paymentMethod)
+        });
+        wainscotingCards.push(
+          scenarioCardMarkup({
+            title: "25% BF Special / 20% Wains Discount",
+            badge: "Veterans Deals / Managers Specials | Wains capped at 20% | 50% Deposit",
+            note: "",
+            subtotalCents: inputs.wainscoting,
+            discountCents: specialWainsDiscount.discountCents,
+            totalCents: specialWainsDiscount.finalCents,
+            depositCents: calculateCashDeposit(specialWainsDiscount.finalCents),
+            mathLine:
+              "Wainscoting subtotal " +
+              formatCurrencyFromCents(inputs.wainscoting) +
+              " - discount " +
+              formatCurrencyFromCents(specialWainsDiscount.discountCents) +
+              " = Wainscoting total " +
+              formatCurrencyFromCents(specialWainsDiscount.finalCents),
+            commissionCents: specialWainsCommission.commissionCents,
+            commissionRate: specialWainsCommission.commissionRate
+          })
+        );
+
+        FINANCE_DISCOUNT_LEVELS.forEach((percent) => {
+          const financeDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
+          const financeDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
+          const financeBalance = Math.max(0, financeDiscount.finalCents - financeDeposit);
+          wainscotingCards.push(
+            scenarioCardMarkup({
+              title: `${percent}% Wains Financing`,
+              badge: `Finance | ${percent}% Discount | 30% Deposit`,
+              note: "",
+              subtotalCents: inputs.wainscoting,
+              discountCents: financeDiscount.discountCents,
+              totalCents: financeDiscount.finalCents,
+              depositCents: financeDeposit,
+              mathLine:
+                "Wainscoting subtotal " +
+                formatCurrencyFromCents(inputs.wainscoting) +
+                " - discount " +
+                formatCurrencyFromCents(financeDiscount.discountCents) +
+                " = Wainscoting total " +
+                formatCurrencyFromCents(financeDiscount.finalCents),
+              financeItems: featuredFinancePlanItems(financeBalance, {
+                grossCents: inputs.wainscoting,
+                tierGrossCents: inputs.wainscoting,
+                commissionableCents: financeDiscount.finalCents,
+                discountCents: financeDiscount.discountCents,
+                tierDiscountCents: financeDiscount.discountCents,
+                depositCents: financeDeposit,
+                depositMethod,
+                rateBalanceCents: financeBalance
+              })
+            })
+          );
+        });
+      }
 
       if (inputs.doors) {
         const doorsCommission = calculateCardCommission({
@@ -2316,14 +2554,13 @@
         );
       }
 
-      if (!cards.length) {
-        return emptyState("Enter doors, labor, or permit totals.");
+      if (!cards.length && !wainscotingCards.length) {
+        return emptyState("Enter wainscoting, doors, labor, or permit totals.");
       }
 
-      return sectionMarkup(
-        "Standalone Contracts",
-        "",
-        cards
+      return (
+        (wainscotingCards.length ? sectionMarkup("Wainscoting EOI", "", wainscotingCards) : "") +
+        (cards.length ? sectionMarkup("Standalone Contracts", "", cards) : "")
       );
     }
 
@@ -2331,11 +2568,14 @@
       return state.estimateItems.reduce(
         (totals, item) => {
           const totalCents = clampCents(item.totalCents);
+          if (typeof totals[item.bucket] !== "number") {
+            totals[item.bucket] = 0;
+          }
           totals[item.bucket] += totalCents;
           totals.grand += totalCents;
           return totals;
         },
-        { bf: 0, doors: 0, labor: 0, permits: 0, grand: 0 }
+        { bf: 0, wainscoting: 0, doors: 0, labor: 0, permits: 0, grand: 0 }
       );
     }
 
@@ -2344,6 +2584,7 @@
 
       document.getElementById("estimateSummaryStrip").innerHTML = [
         { label: "BF", value: totals.bf },
+        { label: "Wainscoting", value: totals.wainscoting },
         { label: "Doors", value: totals.doors },
         { label: "Labor", value: totals.labor },
         { label: "Permits", value: totals.permits },
@@ -2480,7 +2721,8 @@
 
       const filteredItems = catalogItems.filter((item) => {
         const categoryMatch = !categorySelect.value || itemMatchesCategory(item, categorySelect.value);
-        const searchable = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
+        const variantText = item.variants.map((variant) => variant.label).join(" ");
+        const searchable = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket], variantText]
           .join(" ")
           .toLowerCase();
         return categoryMatch && (!search || searchable.includes(search));
@@ -2503,6 +2745,36 @@
             })
             .join("")
         : emptyState("No matching price-list items.");
+    }
+
+    function renderProductMatrix() {
+      const matrixTabs = document.getElementById("matrixTabs");
+      const matrixList = document.getElementById("pricingMatrixList");
+      const search = document.getElementById("guideSearch").value.trim().toLowerCase();
+      const rows = PRODUCT_MATRICES[state.activeMatrix] || [];
+
+      matrixTabs.querySelectorAll("[data-matrix-tab]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.matrixTab === state.activeMatrix);
+      });
+
+      const filteredRows = rows.filter((row) => {
+        const haystack = [row.group, row.label, row.details, row.notes].join(" ").toLowerCase();
+        return !search || haystack.includes(search);
+      });
+
+      matrixList.innerHTML = filteredRows.length
+        ? filteredRows
+            .map(
+              (row) => `
+                <article class="guide-row">
+                  <h4>${escapeHtml(row.group)} | ${escapeHtml(row.label)}</h4>
+                  <p>${escapeHtml(row.details)}</p>
+                  ${row.notes ? `<p>${escapeHtml(row.notes)}</p>` : ""}
+                </article>
+              `
+            )
+            .join("")
+        : emptyState("No matching matrix rows.");
     }
 
     function setSelectFromItems(selectId, itemIds, includeNone = false, noneLabel = "None", extraOptions = []) {
@@ -2541,6 +2813,10 @@
 
       if (item.bucket === "doors") {
         return "accessory";
+      }
+
+      if (item.bucket === "wainscoting") {
+        return "wainscoting";
       }
 
       if (item.bucket === "permits") {
@@ -2701,6 +2977,7 @@
       const conditions = getRoughConditionSnapshot();
       const primaryProduct = roughValue("roughPrimaryProduct");
       const wallProduct = roughValue("roughWallProduct");
+      const wainscotingProduct = roughValue("roughWainscotingProduct");
       const wallPattern = roughValue("roughWallPattern");
       const doorProduct = roughValue("roughDoorProduct");
       const ceilingProduct = roughValue("roughCeilingProduct");
@@ -2727,6 +3004,10 @@
             labelSuffix: wallPattern
           });
         }
+      }
+
+      if (wainscotingProduct) {
+        addRoughCatalogLine(items, wainscotingProduct, "wainscoting");
       }
 
       if (ceilingProduct) {
@@ -2773,6 +3054,18 @@
       };
     }
 
+    function getRoughContractTotals(items) {
+      return items.reduce(
+        (totals, item) => {
+          const bucket = BUCKET_LABELS[item.bucket] ? item.bucket : "bf";
+          totals[bucket] += item.totalCents;
+          totals.grand += item.totalCents;
+          return totals;
+        },
+        { bf: 0, wainscoting: 0, doors: 0, labor: 0, permits: 0, grand: 0 }
+      );
+    }
+
     function renderRoughControls() {
       const productIds = ROUGH_PRODUCT_PATHS[roughState.jobType] || [];
       const hasPrimaryProduct = productIds.length > 0;
@@ -2780,10 +3073,17 @@
 
       setSelectFromItems("roughPrimaryProduct", productIds, !hasPrimaryProduct, "No tub/base product");
       setSelectFromItems("roughWallProduct", ROUGH_WALL_IDS, true, "No walls");
+      setSelectFromItems("roughWainscotingProduct", ROUGH_WAINSCOTING_IDS, true, "No wainscoting");
       setSelectFromItems("roughDoorProduct", ROUGH_DOOR_IDS, true, "No door", [
         { value: "custom", label: "Custom Door - Call Erin" }
       ]);
       setSelectFromItems("roughCeilingProduct", ROUGH_CEILING_IDS, true, "No ceiling panel");
+
+      const primarySelect = document.getElementById("roughPrimaryProduct");
+      const preferredProduct = ROUGH_LAYOUT_PRODUCT_PREFERENCES[roughState.layout];
+      if (preferredProduct && productIds.includes(preferredProduct) && ROUGH_LAYOUT_AUTO_PRODUCTS.has(primarySelect.value)) {
+        primarySelect.value = preferredProduct;
+      }
 
       const wallSelect = document.getElementById("roughWallProduct");
       if (needsWalls && roughState.jobType !== "custom" && !wallSelect.value) {
@@ -2807,17 +3107,24 @@
     function renderRoughPreview() {
       const previewItems = buildRoughEstimateItems();
       const roughTotals = getRoughGroupedTotals(previewItems);
+      const contractTotals = getRoughContractTotals(previewItems);
 
       if (!previewItems.length) {
         document.getElementById("roughEstimatePreview").innerHTML = emptyState("Choose job conditions to build an exact estimate.");
         return;
       }
 
-      const groupRows = Object.entries(ROUGH_GROUP_LABELS)
-        .map(([group, label]) => `
+      const contractRows = [
+        { label: "BF System EOI", value: contractTotals.bf },
+        { label: "Wainscoting EOI", value: contractTotals.wainscoting },
+        { label: "Doors EOI", value: contractTotals.doors },
+        { label: "Labor EOI", value: contractTotals.labor },
+        { label: "Permit EOI", value: contractTotals.permits }
+      ]
+        .map((row) => `
           <article class="rough-row">
-            <h4>${escapeHtml(label)}</h4>
-            <p>${formatCurrencyFromCents(roughTotals.groups[group])}</p>
+            <h4>${escapeHtml(row.label)}</h4>
+            <p>${formatCurrencyFromCents(row.value)}</p>
           </article>
         `)
         .join("");
@@ -2835,7 +3142,7 @@
         .join("");
 
       document.getElementById("roughEstimatePreview").innerHTML =
-        groupRows +
+        contractRows +
         `<article class="rough-row"><h4>Estimated Subtotal</h4><p>${formatCurrencyFromCents(roughTotals.subtotal)}</p></article>` +
         `<article class="rough-row"><h4>Estimated Total</h4><p>${formatCurrencyFromCents(roughTotals.total)}</p></article>` +
         lineRows;
@@ -2885,7 +3192,8 @@
 
       return catalogItems.filter((item) => {
         const matchesCategory = itemMatchesCategory(item, category);
-        const haystack = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
+        const variantText = item.variants.map((variant) => variant.label).join(" ");
+        const haystack = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket], variantText]
           .join(" ")
           .toLowerCase();
         const matchesSearch = !search || haystack.includes(search);
@@ -3051,6 +3359,7 @@
       const totals = getEstimateTotals();
 
       document.getElementById("bf").value = totals.bf ? formatInputAmount(totals.bf) : "";
+      document.getElementById("wainscoting").value = totals.wainscoting ? formatInputAmount(totals.wainscoting) : "";
       document.getElementById("doors").value = totals.doors ? formatInputAmount(totals.doors) : "";
       document.getElementById("labor").value = totals.labor ? formatInputAmount(totals.labor) : "";
       document.getElementById("permits").value = totals.permits ? formatInputAmount(totals.permits) : "";
@@ -3104,7 +3413,7 @@
     }
 
     function chooseDefaultTab(inputs) {
-      const hasAddOns = Boolean(inputs.doors || inputs.labor || inputs.permits);
+      const hasAddOns = Boolean(inputs.wainscoting || inputs.doors || inputs.labor || inputs.permits);
 
       if (inputs.bf && hasAddOns) {
         return "panelCumulative";
@@ -3122,7 +3431,7 @@
     }
 
     function ensureHelpfulActiveTab(inputs) {
-      const hasAddOns = Boolean(inputs.doors || inputs.labor || inputs.permits);
+      const hasAddOns = Boolean(inputs.wainscoting || inputs.doors || inputs.labor || inputs.permits);
       const activePanel = tabPanels.find((panel) => panel.classList.contains("active"));
 
       if (!activePanel) {
@@ -3147,6 +3456,7 @@
       renderEstimateSummary();
       renderEstimateList();
       renderPricingGuide();
+      renderProductMatrix();
       renderRoughControls();
       renderRoughPreview();
 
@@ -3284,6 +3594,15 @@
       document.getElementById("guideCategory").value = button.dataset.guideCategory;
       render();
     });
+    document.getElementById("matrixTabs").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-matrix-tab]");
+      if (!button) {
+        return;
+      }
+
+      state.activeMatrix = button.dataset.matrixTab;
+      render();
+    });
     document.querySelectorAll("[data-condition-group]").forEach((group) => {
       group.addEventListener("click", (event) => {
         const button = event.target.closest(".choice-button");
@@ -3316,6 +3635,7 @@
       "roughDrainFinish",
       "roughFormedFront",
       "roughWallProduct",
+      "roughWainscotingProduct",
       "roughWallPattern",
       "roughDoorProduct",
       "roughCustomDoorPrice",
