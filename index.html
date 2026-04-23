@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.16</title>
+  <title>Bath Fitter Sales Tool V2.17</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -87,6 +87,11 @@
       margin-bottom: 1.25rem;
     }
 
+    .tool-section[hidden],
+    .tool-landing[hidden] {
+      display: none;
+    }
+
     .landing-grid {
       display: grid;
       gap: 1rem;
@@ -122,6 +127,13 @@
     .landing-card strong {
       display: block;
       font-size: 1.22rem;
+    }
+
+    .tool-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+      grid-column: 1 / -1;
     }
 
     .panel {
@@ -754,7 +766,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.16</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.17</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, financing, and commission from one screen.
@@ -768,15 +780,15 @@
           <p>Choose the workflow you need in the field.</p>
         </div>
         <div class="landing-grid">
-          <a class="landing-card" href="#calculatorTool">
+          <a class="landing-card" href="#calculatorTool" data-open-tool="calculatorTool">
             <span>01</span>
             <strong>Calculator Tool</strong>
           </a>
-          <a class="landing-card" href="#pricingGuide">
+          <a class="landing-card" href="#pricingGuide" data-open-tool="pricingGuide">
             <span>02</span>
             <strong>Pricing Guide</strong>
           </a>
-          <a class="landing-card" href="#roughEstimator">
+          <a class="landing-card" href="#roughEstimator" data-open-tool="roughEstimator">
             <span>03</span>
             <strong>Rough Estimate Generator</strong>
           </a>
@@ -784,7 +796,10 @@
       </div>
     </section>
 
-    <main class="workspace tool-section" id="calculatorTool">
+    <main class="workspace tool-section" id="calculatorTool" hidden>
+      <div class="tool-bar">
+        <button class="button secondary" type="button" data-open-tool="home">Back to Toolkit</button>
+      </div>
       <section class="panel form-panel">
         <div class="panel-inner">
           <div class="panel-heading">
@@ -840,13 +855,17 @@
       </section>
     </main>
 
-    <section class="panel estimator-panel tool-section" id="pricingGuide">
+    <section class="panel estimator-panel tool-section" id="pricingGuide" hidden>
       <div class="panel-inner">
+        <div class="tool-bar">
+          <button class="button secondary" type="button" data-open-tool="home">Back to Toolkit</button>
+        </div>
         <div class="panel-heading">
           <h2>Pricing Guide</h2>
-          <p>Search the price list without building a quote.</p>
+          <p>Pick a category or search by keyword to pull up individual prices.</p>
         </div>
         <div class="pricing-guide-layout">
+          <div class="choice-row" id="guideTabs"></div>
           <div class="estimator-form-grid">
             <div class="form-field">
               <label for="guideCategory">Category</label>
@@ -862,8 +881,11 @@
       </div>
     </section>
 
-    <section class="panel estimator-panel tool-section" id="roughEstimator">
+    <section class="panel estimator-panel tool-section" id="roughEstimator" hidden>
       <div class="panel-inner">
+        <div class="tool-bar">
+          <button class="button secondary" type="button" data-open-tool="home">Back to Toolkit</button>
+        </div>
         <div class="panel-heading">
           <h2>Rough Estimate Generator</h2>
           <p>Build a fast field estimate, then drop the totals into pricing.</p>
@@ -2673,20 +2695,37 @@
       const categorySelect = document.getElementById("guideCategory");
       const searchInput = document.getElementById("guideSearch");
       const guideList = document.getElementById("pricingGuideList");
-      const currentCategory = categorySelect.value || "all";
-      const categories = getCatalogCategories();
+      const guideTabs = document.getElementById("guideTabs");
+      const currentCategory = categorySelect.value || "";
+      const categories = getCatalogCategories().filter((category) => category !== "all");
 
-      categorySelect.innerHTML = categories
+      categorySelect.innerHTML =
+        `<option value="">Choose Category</option>` +
+        categories
         .map((category) => {
-          const label = category === "all" ? "All Categories" : category;
-          return `<option value="${escapeHtml(category)}">${escapeHtml(label)}</option>`;
+          return `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`;
         })
         .join("");
-      categorySelect.value = categories.includes(currentCategory) ? currentCategory : "all";
+      categorySelect.value = categories.includes(currentCategory) ? currentCategory : "";
+
+      guideTabs.innerHTML = categories
+        .map(
+          (category) => `
+            <button class="choice-button ${category === categorySelect.value ? "active" : ""}" type="button" data-guide-category="${escapeHtml(category)}">
+              ${escapeHtml(category)}
+            </button>
+          `
+        )
+        .join("");
 
       const search = searchInput.value.trim().toLowerCase();
+      if (!search && !categorySelect.value) {
+        guideList.innerHTML = emptyState("Choose a category tab or search a keyword to pull up prices.");
+        return;
+      }
+
       const filteredItems = catalogItems.filter((item) => {
-        const categoryMatch = categorySelect.value === "all" || item.category === categorySelect.value;
+        const categoryMatch = !categorySelect.value || item.category === categorySelect.value;
         const searchable = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
           .join(" ")
           .toLowerCase();
@@ -3113,6 +3152,30 @@
       });
     }
 
+    function showTool(toolId) {
+      const home = document.getElementById("home");
+      const tools = Array.from(document.querySelectorAll(".tool-section"));
+      const showHome = !toolId || toolId === "home";
+
+      home.hidden = !showHome;
+      tools.forEach((tool) => {
+        tool.hidden = showHome || tool.id !== toolId;
+      });
+
+      const nextHash = showHome ? "#home" : `#${toolId}`;
+      if (window.location.hash !== nextHash) {
+        history.replaceState(null, "", nextHash);
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showInitialTool() {
+      const requestedTool = window.location.hash.replace("#", "");
+      const knownTools = ["calculatorTool", "pricingGuide", "roughEstimator"];
+      showTool(knownTools.includes(requestedTool) ? requestedTool : "home");
+    }
+
     function chooseDefaultTab(inputs) {
       const hasAddOns = Boolean(inputs.doors || inputs.labor || inputs.permits);
 
@@ -3195,6 +3258,13 @@
       document.getElementById(id).addEventListener("input", render);
     });
 
+    document.querySelectorAll("[data-open-tool]").forEach((control) => {
+      control.addEventListener("click", (event) => {
+        event.preventDefault();
+        showTool(control.dataset.openTool);
+      });
+    });
+
     document.getElementById("catalogCategory").addEventListener("change", refreshCatalogPicker);
     document.getElementById("catalogSearch").addEventListener("input", refreshCatalogPicker);
     document.getElementById("catalogItem").addEventListener("change", () => {
@@ -3205,6 +3275,15 @@
     document.getElementById("catalogQuantity").addEventListener("input", renderCatalogDetail);
     document.getElementById("guideCategory").addEventListener("change", render);
     document.getElementById("guideSearch").addEventListener("input", render);
+    document.getElementById("guideTabs").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-guide-category]");
+      if (!button) {
+        return;
+      }
+
+      document.getElementById("guideCategory").value = button.dataset.guideCategory;
+      render();
+    });
     document.querySelectorAll("[data-rough-group]").forEach((group) => {
       group.addEventListener("click", (event) => {
         const button = event.target.closest(".choice-button");
@@ -3262,6 +3341,7 @@
     document.getElementById("clearButton").addEventListener("click", clearInputs);
 
     render();
+    showInitialTool();
   </script>
 </body>
 </html>
