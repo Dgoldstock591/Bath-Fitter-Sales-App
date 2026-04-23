@@ -357,6 +357,46 @@ const PRICE_LIST_DATA = [
     ]
   },
   {
+    id: "corner-seat",
+    category: "Safety Seats",
+    label: "Corner Seat",
+    bucket: "bf",
+    description: "Bath Fitter corner seat, all colors. Confirm price from the current sheet.",
+    variants: [
+      { id: "confirm", label: "Confirm Price", price: 0 }
+    ]
+  },
+  {
+    id: "l-shape-corner-seat",
+    category: "Safety Seats",
+    label: "L-Shape Corner Seat 32 x 21",
+    bucket: "bf",
+    description: "All colors and brushed nickel only. Confirm price from the current sheet.",
+    variants: [
+      { id: "confirm", label: "Confirm Price", price: 0 }
+    ]
+  },
+  {
+    id: "fold-down-seat-18",
+    category: "Safety Seats",
+    label: "18 Inch Fold Down Seat with Blocking",
+    bucket: "bf",
+    description: "All colors with chrome, brushed nickel, matte black, or brushed gold support finish. Confirm price from the current sheet.",
+    variants: [
+      { id: "confirm", label: "Confirm Price", price: 0 }
+    ]
+  },
+  {
+    id: "fold-down-seat-28",
+    category: "Safety Seats",
+    label: "28 Inch Fold Down Seat with Blocking",
+    bucket: "bf",
+    description: "All colors with chrome, brushed nickel, matte black, or brushed gold support finish. Confirm price from the current sheet.",
+    variants: [
+      { id: "confirm", label: "Confirm Price", price: 0 }
+    ]
+  },
+  {
     id: "oxford-caddy-single",
     category: "Walls & Accessories",
     label: "Oxford Corner Caddy Single",
@@ -438,6 +478,56 @@ const PRICE_LIST_DATA = [
       { id: "white", label: "White", price: 265 },
       { id: "pearl", label: "Pearl", price: 265 },
       { id: "marbles", label: "Marbles", price: 265 }
+    ]
+  },
+  {
+    id: "shower-rod-curved-5",
+    category: "Curtain & Shower Rods",
+    label: "5 Foot Curved Shower Rod",
+    bucket: "bf",
+    description: "Chrome, brushed nickel, oil rubbed bronze, or matte black.",
+    variants: [
+      { id: "standard", label: "Standard", price: 275 }
+    ]
+  },
+  {
+    id: "shower-rod-curved-6",
+    category: "Curtain & Shower Rods",
+    label: "6 Foot Curved Shower Rod",
+    bucket: "bf",
+    description: "Chrome, brushed nickel, oil rubbed bronze, or matte black.",
+    variants: [
+      { id: "standard", label: "Standard", price: 275 }
+    ]
+  },
+  {
+    id: "shower-rod-fixed-5-5",
+    category: "Curtain & Shower Rods",
+    label: "5.5 Foot Fixed Shower Rod",
+    bucket: "bf",
+    description: "Chrome, brushed nickel, oil rubbed bronze, or matte black.",
+    variants: [
+      { id: "standard", label: "Standard", price: 275 }
+    ]
+  },
+  {
+    id: "shower-rod-fixed-6",
+    category: "Curtain & Shower Rods",
+    label: "6 Foot Fixed Shower Rod",
+    bucket: "bf",
+    description: "Chrome, brushed nickel, oil rubbed bronze, or matte black.",
+    variants: [
+      { id: "standard", label: "Standard", price: 300 }
+    ]
+  },
+  {
+    id: "curtain-rod-tension-5",
+    category: "Curtain & Shower Rods",
+    label: "5 Foot Tension Curtain Rod",
+    bucket: "bf",
+    description: "Chrome, pearl, brass, or nickel.",
+    variants: [
+      { id: "standard", label: "Standard", price: 85 }
     ]
   },
   {

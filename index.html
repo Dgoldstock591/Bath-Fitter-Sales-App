@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.15</title>
+  <title>Bath Fitter Sales Tool V2.16</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -80,6 +80,48 @@
     .workspace {
       display: grid;
       gap: 1.25rem;
+    }
+
+    .tool-landing,
+    .tool-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .landing-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .landing-card {
+      display: block;
+      padding: 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #f3fbf9 100%);
+      color: var(--text);
+      text-decoration: none;
+      box-shadow: 0 12px 22px rgba(14, 76, 64, 0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .landing-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 32px rgba(14, 76, 64, 0.12);
+    }
+
+    .landing-card span {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--accent-dark);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .landing-card strong {
+      display: block;
+      font-size: 1.22rem;
     }
 
     .panel {
@@ -530,6 +572,90 @@
       line-height: 1.5;
     }
 
+    .pricing-guide-layout {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .pricing-guide-list,
+    .rough-output-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .guide-row,
+    .rough-row {
+      padding: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fbfdfc;
+    }
+
+    .guide-row h4,
+    .rough-row h4 {
+      margin: 0 0 0.25rem;
+      font-size: 1rem;
+    }
+
+    .guide-row p,
+    .rough-row p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .rough-grid {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .rough-step {
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+    }
+
+    .rough-step h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1.02rem;
+    }
+
+    .choice-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .choice-button {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.68rem 0.9rem;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .choice-button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .rough-checklist {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .rough-checklist label {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+
     .panel-heading p:empty,
     .section-block > p:empty,
     .scenario-top p:empty,
@@ -561,7 +687,9 @@
       .summary-strip,
       .metrics,
       .estimate-summary-strip,
-      .estimator-form-grid {
+      .estimator-form-grid,
+      .landing-grid,
+      .rough-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
@@ -584,6 +712,10 @@
       .estimator-layout {
         grid-template-columns: minmax(360px, 420px) minmax(0, 1fr);
         align-items: start;
+      }
+
+      .landing-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
@@ -622,14 +754,37 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.15</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.16</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, financing, and commission from one screen.
       </p>
     </header>
 
-    <main class="workspace">
+    <section class="panel tool-landing" id="home">
+      <div class="panel-inner">
+        <div class="panel-heading">
+          <h2>Sales Toolkit</h2>
+          <p>Choose the workflow you need in the field.</p>
+        </div>
+        <div class="landing-grid">
+          <a class="landing-card" href="#calculatorTool">
+            <span>01</span>
+            <strong>Calculator Tool</strong>
+          </a>
+          <a class="landing-card" href="#pricingGuide">
+            <span>02</span>
+            <strong>Pricing Guide</strong>
+          </a>
+          <a class="landing-card" href="#roughEstimator">
+            <span>03</span>
+            <strong>Rough Estimate Generator</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <main class="workspace tool-section" id="calculatorTool">
       <section class="panel form-panel">
         <div class="panel-inner">
           <div class="panel-heading">
@@ -685,11 +840,134 @@
       </section>
     </main>
 
-    <section class="panel estimator-panel">
+    <section class="panel estimator-panel tool-section" id="pricingGuide">
       <div class="panel-inner">
         <div class="panel-heading">
-          <h2>Quote Builder</h2>
-          <p>Build the job, then drop the totals into pricing.</p>
+          <h2>Pricing Guide</h2>
+          <p>Search the price list without building a quote.</p>
+        </div>
+        <div class="pricing-guide-layout">
+          <div class="estimator-form-grid">
+            <div class="form-field">
+              <label for="guideCategory">Category</label>
+              <select id="guideCategory"></select>
+            </div>
+            <div class="form-field">
+              <label for="guideSearch">Search</label>
+              <input type="text" id="guideSearch" placeholder="Search rods, doors, labor, fixtures..." />
+            </div>
+          </div>
+          <div class="pricing-guide-list" id="pricingGuideList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel estimator-panel tool-section" id="roughEstimator">
+      <div class="panel-inner">
+        <div class="panel-heading">
+          <h2>Rough Estimate Generator</h2>
+          <p>Build a fast field estimate, then drop the totals into pricing.</p>
+        </div>
+
+        <div class="rough-grid">
+          <div class="rough-step">
+            <h3>1. Job Type</h3>
+            <div class="choice-row" data-rough-group="jobType">
+              <button class="choice-button active" type="button" data-value="tub">Tub</button>
+              <button class="choice-button" type="button" data-value="shower">Shower</button>
+            </div>
+          </div>
+          <div class="rough-step">
+            <h3>2. Install Route</h3>
+            <div class="choice-row" data-rough-group="route">
+              <button class="choice-button active" type="button" data-value="liner">Liner</button>
+              <button class="choice-button" type="button" data-value="tearout">Tear-Out</button>
+            </div>
+          </div>
+          <div class="rough-step">
+            <h3>3. Unit</h3>
+            <div class="form-field">
+              <label for="roughUnit">Finished Unit</label>
+              <select id="roughUnit"></select>
+            </div>
+            <div class="form-field" id="formedFrontField">
+              <label for="roughFormedFront">Formed Front</label>
+              <select id="roughFormedFront">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="roughDrainFinish">Drain Finish</label>
+              <select id="roughDrainFinish">
+                <option value="Chrome">Chrome</option>
+                <option value="Brushed Nickel">Brushed Nickel</option>
+                <option value="Stainless">Stainless</option>
+                <option value="Oil Rubbed Bronze">Oil Rubbed Bronze</option>
+                <option value="Matte Black">Matte Black</option>
+                <option value="Champagne Bronze">Champagne Bronze</option>
+              </select>
+            </div>
+          </div>
+          <div class="rough-step" id="tearoutStep">
+            <h3>Tear-Out Items</h3>
+            <div class="rough-checklist" id="roughTearoutList"></div>
+          </div>
+          <div class="rough-step">
+            <h3>Walls</h3>
+            <div class="form-field">
+              <label for="roughWall">Wall Product</label>
+              <select id="roughWall"></select>
+            </div>
+          </div>
+          <div class="rough-step">
+            <h3>Enclosure / Accessories</h3>
+            <div class="rough-checklist">
+              <label><input type="checkbox" id="roughCurtainRod" /> Curtain rod</label>
+              <label><input type="checkbox" id="roughShowerRod" /> Shower rod</label>
+              <label><input type="checkbox" id="roughDoors" /> Doors</label>
+            </div>
+            <div class="form-field" id="roughDoorTypeField">
+              <label for="roughDoorType">Door Type</label>
+              <select id="roughDoorType">
+                <option value="bf">Bath Fitter Door</option>
+                <option value="custom">Custom Door</option>
+              </select>
+            </div>
+            <div class="form-field" id="roughCustomDoorField">
+              <label for="roughCustomDoorPrice">Custom Door Price</label>
+              <input type="number" id="roughCustomDoorPrice" min="0" step="0.01" placeholder="0.00" />
+              <p class="estimator-detail">Call Erin for all custom door pricing.</p>
+            </div>
+          </div>
+          <div class="rough-step">
+            <h3>Fixtures / Safety / Labor</h3>
+            <div class="rough-checklist">
+              <label><input type="checkbox" id="roughFixtures" /> Fixtures</label>
+              <label><input type="checkbox" id="roughSafety" /> Safety items</label>
+              <label><input type="checkbox" id="roughLabor" /> Additional labor</label>
+            </div>
+            <div class="form-field" id="roughFixtureField">
+              <label for="roughFixtureItem">Fixture</label>
+              <select id="roughFixtureItem"></select>
+            </div>
+            <div class="form-field" id="roughSafetyField">
+              <label for="roughSafetyItem">Safety Item</label>
+              <select id="roughSafetyItem"></select>
+            </div>
+            <div class="form-field" id="roughLaborField">
+              <label for="roughLaborItem">Labor Item</label>
+              <select id="roughLaborItem"></select>
+            </div>
+          </div>
+          <div class="rough-step">
+            <h3>Rough Estimate Output</h3>
+            <div class="rough-output-list" id="roughEstimatePreview"></div>
+            <div class="actions">
+              <button class="button primary" id="buildRoughEstimateButton" type="button">Build Rough Estimate</button>
+              <button class="button secondary" id="loadRoughEstimateButton" type="button">Load Into Pricing</button>
+            </div>
+          </div>
         </div>
 
         <div class="estimator-layout">
@@ -847,6 +1125,15 @@
       cash: 50,
       finance: 30
     };
+    const DISCOUNT_LEVELS = [23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8];
+    const FEATURED_FINANCE_PLAN_IDS = ["965", "925", "924", "960", "922"];
+    const SYNCHRONY_PLANS = [
+      { id: "925", title: "No Interest if Paid in Full", alias: "24-Month Payoff", kind: "deferred", months: 24, minimumFactor: 0.025, transactionCostPct: 10.85 },
+      { id: "965", title: "Reduced APR", alias: "Flex Plan", kind: "fixedApr", apr: 11.99, paymentFactor: 0.0175, transactionCostPct: 3.85 },
+      { id: "924", title: "No Interest if Paid in Full", alias: "18-Month Payoff", kind: "deferred", months: 18, minimumFactor: 0.025, transactionCostPct: 7.7 },
+      { id: "960", title: "Reduced APR", alias: "Comfort Plan", kind: "fixedApr", apr: 3.99, paymentFactor: 0.0175, transactionCostPct: 16.35 },
+      { id: "922", title: "No Interest if Paid in Full", alias: "12-Month Payoff", kind: "deferred", months: 12, minimumFactor: 0.025, transactionCostPct: 6.95 }
+    ];
     const BUCKET_LABELS = {
       bf: "Bath Fitter",
       doors: "Doors",
@@ -884,11 +1171,35 @@
         note: "Cash / check / charge."
       },
       {
+        id: "cash-22",
+        label: "22% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 22,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-21",
+        label: "21% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 21,
+        note: "Cash / check / charge."
+      },
+      {
         id: "cash-20",
         label: "20% Discount on Bath Fitter",
         mode: "cash",
         type: "percent",
         percent: 20,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-19",
+        label: "19% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 19,
         note: "Cash / check / charge."
       },
       {
@@ -900,6 +1211,22 @@
         note: "Cash / check / charge."
       },
       {
+        id: "cash-17",
+        label: "17% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 17,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-16",
+        label: "16% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 16,
+        note: "Cash / check / charge."
+      },
+      {
         id: "cash-15",
         label: "15% Discount on Bath Fitter",
         mode: "cash",
@@ -908,11 +1235,59 @@
         note: "Cash / check / charge."
       },
       {
+        id: "cash-14",
+        label: "14% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 14,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-13",
+        label: "13% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 13,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-12",
+        label: "12% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 12,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-11",
+        label: "11% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 11,
+        note: "Cash / check / charge."
+      },
+      {
         id: "cash-10",
         label: "10% Discount on Bath Fitter",
         mode: "cash",
         type: "percent",
         percent: 10,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-9",
+        label: "9% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 9,
+        note: "Cash / check / charge."
+      },
+      {
+        id: "cash-8",
+        label: "8% Discount on Bath Fitter",
+        mode: "cash",
+        type: "percent",
+        percent: 8,
         note: "Cash / check / charge."
       },
       {
@@ -985,6 +1360,48 @@
       estimateItems: [],
       estimateMessage: ""
     };
+    const roughState = {
+      jobType: "tub",
+      route: "liner"
+    };
+    const ROUGH_ITEM_IDS = {
+      drain: "drain-kit",
+      formedFront: "tub-liner-formed-front",
+      wallPrep: "labor-wall-prep",
+      curtainRod: "curtain-rod-tension-5",
+      showerRod: "shower-rod-curved-5",
+      tubDoor: "elegance-tub-door-60",
+      showerDoor: "elegance-shower-door-60"
+    };
+    const ROUGH_UNITS = {
+      tub: {
+        liner: ["tub-liner"],
+        tearout: ["fs-empress-standard", "fs-empress-xl", "fs-garden-tub-40", "freestanding-a-front"]
+      },
+      shower: {
+        liner: ["threshold-base-6"],
+        tearout: ["threshold-base-fs-3", "threshold-base-fs-6", "flat-floor-base", "flat-floor-handicap", "ez-roll-in", "xl-fs-base"]
+      }
+    };
+    const ROUGH_TEAROUT_IDS = [
+      "labor-remove-cast-steel-tub",
+      "labor-remove-fg-1-piece",
+      "labor-remove-fiberglass-base",
+      "labor-remove-tile-wall",
+      "labor-remove-3pc-wall-system",
+      "labor-mud-wall-removal",
+      "labor-remove-existing-bf-liner",
+      "labor-remove-shower-door"
+    ];
+    const ROUGH_WALL_IDS = [
+      "wall-flat-84x132",
+      "wall-flat-84x156",
+      "wall-flat-90x132",
+      "wall-flat-90x156",
+      "wall-flat-90x192",
+      "wainscot-6x6",
+      "wainscot-beadboard"
+    ];
 
     function roundToCents(value) {
       return Math.round((value + Number.EPSILON) * 100) / 100;
@@ -1089,6 +1506,43 @@
       return { monthly, total, interest };
     }
 
+    function calculateSynchronyPlan(balanceCents, plan) {
+      const amount = centsToAmount(balanceCents);
+      if (!amount) {
+        return { payment: 0, months: plan.months || 0, totalPaid: 0, totalInterest: 0 };
+      }
+
+      if (plan.kind === "deferred") {
+        return {
+          payment: Math.ceil(amount / plan.months),
+          months: plan.months,
+          totalPaid: amount,
+          totalInterest: 0
+        };
+      }
+
+      const payment = Math.ceil(amount * plan.paymentFactor);
+      const monthlyRate = plan.apr / 100 / 12;
+      let balance = amount;
+      let totalPaid = 0;
+      let months = 0;
+
+      while (balance > 0.01 && months < 240) {
+        balance += balance * monthlyRate;
+        const due = Math.min(payment, balance);
+        balance -= due;
+        totalPaid += due;
+        months += 1;
+      }
+
+      return {
+        payment,
+        months,
+        totalPaid: roundToCents(totalPaid),
+        totalInterest: roundToCents(totalPaid - amount)
+      };
+    }
+
     function getGrossEoi(inputs) {
       return inputs.bf + inputs.doors + inputs.labor + inputs.permits;
     }
@@ -1186,6 +1640,7 @@
       const scenario = getCommissionScenario();
       const discount = getCommissionDiscount(inputs, scenario);
       const netEoiCents = discount.discountedBfCents + inputs.doors + inputs.labor + inputs.permits;
+      const commissionableEoiCents = discount.discountedBfCents + inputs.doors + inputs.labor;
 
       let depositCents;
       let cardCostCents = 0;
@@ -1214,7 +1669,7 @@
           ? roundToCents((transactionCostsCents / grossEoiCents) * 100)
           : 0;
         const tier = getCommissionTier(transactionCostPercent, saleType.id);
-        const commissionBaseCents = clampCents(netEoiCents * 0.85);
+        const commissionBaseCents = clampCents(commissionableEoiCents * 0.85);
         const commissionCents = clampCents(commissionBaseCents * (tier.rate / 100));
 
         return {
@@ -1222,6 +1677,7 @@
           scenario,
           grossEoiCents,
           netEoiCents,
+          commissionableEoiCents,
           discountCents: discount.discountCents,
           discountedBfCents: discount.discountedBfCents,
           depositCents,
@@ -1255,7 +1711,7 @@
         ? roundToCents((transactionCostsCents / grossEoiCents) * 100)
         : 0;
       const tier = getCommissionTier(transactionCostPercent, saleType.id);
-      const commissionBaseCents = clampCents(netEoiCents * 0.85);
+      const commissionBaseCents = clampCents(commissionableEoiCents * 0.85);
       const commissionCents = clampCents(commissionBaseCents * (tier.rate / 100));
 
       return {
@@ -1263,6 +1719,7 @@
         scenario,
         grossEoiCents,
         netEoiCents,
+        commissionableEoiCents,
         discountCents: discount.discountCents,
         discountedBfCents: discount.discountedBfCents,
         depositCents,
@@ -1336,7 +1793,7 @@
 
       summaryEl.innerHTML = [
         { label: "Gross EOI", value: estimate.grossEoiCents },
-        { label: "Net EOI", value: estimate.netEoiCents },
+        { label: "Commissionable EOI", value: estimate.commissionableEoiCents },
         { label: "85% Base", value: estimate.commissionBaseCents },
         { label: "Cost %", value: `${estimate.transactionCostPercent.toFixed(2)}%` },
         { label: "Rate", value: `${estimate.tier.rate.toFixed(2)}%` },
@@ -1376,9 +1833,17 @@
               : "")
         },
         {
+          title: "Commissionable Categories",
+          detail:
+            `BF ${formatCurrencyFromCents(estimate.discountedBfCents)}` +
+            ` | Doors ${formatCurrencyFromCents(inputs.doors)}` +
+            ` | Labor ${formatCurrencyFromCents(inputs.labor)}` +
+            ` | Permits $0 commission`
+        },
+        {
           title: "Commission Formula",
           detail:
-            `${formatCurrencyFromCents(estimate.netEoiCents)} x 85% = ${formatCurrencyFromCents(estimate.commissionBaseCents)}` +
+            `${formatCurrencyFromCents(estimate.commissionableEoiCents)} x 85% = ${formatCurrencyFromCents(estimate.commissionBaseCents)}` +
             `, then x ${estimate.tier.rate.toFixed(2)}% = ${formatCurrencyFromCents(estimate.commissionCents)}`
         }
       ]
@@ -1514,6 +1979,38 @@
         .join("");
     }
 
+    function calculateCardCommission({ grossCents, commissionableCents, discountCents = 0, financeCostCents = 0, cardCostCents = 0 }) {
+      const gross = clampCents(grossCents);
+      const commissionable = clampCents(commissionableCents);
+      const transactionCostsCents = clampCents(discountCents + financeCostCents + cardCostCents);
+      const transactionCostPercent = gross ? roundToCents((transactionCostsCents / gross) * 100) : 0;
+      const tier = getCommissionTier(transactionCostPercent, getCommissionSaleType().id);
+      const commissionBaseCents = clampCents(commissionable * 0.85);
+
+      return {
+        commissionCents: clampCents(commissionBaseCents * (tier.rate / 100)),
+        commissionRate: tier.rate
+      };
+    }
+
+    function featuredFinancePlanItems(balanceCents) {
+      return FEATURED_FINANCE_PLAN_IDS.map((planId) => SYNCHRONY_PLANS.find((plan) => plan.id === planId))
+        .filter(Boolean)
+        .map((plan) => {
+          const result = calculateSynchronyPlan(balanceCents, plan);
+          const paymentLabel = plan.kind === "deferred" ? "Payoff target" : "Monthly";
+          const timeline = plan.kind === "deferred" ? `${plan.months} months` : `Est. ${result.months} months`;
+          return {
+            label: `Plan ${plan.id} - ${plan.alias}`,
+            details:
+              `${paymentLabel}: ${formatCurrency(result.payment)}/mo` +
+              ` | ${timeline}` +
+              ` | Cost ${plan.transactionCostPct.toFixed(2)}%` +
+              ` | ${formatCurrencyFromCents(clampCents(balanceCents * (plan.transactionCostPct / 100)))}`
+          };
+        });
+    }
+
     function financeItemsMarkup(items) {
       if (!items.length) {
         return "";
@@ -1572,6 +2069,12 @@
               <span>Balance Due</span>
               <strong>${formatCurrencyFromCents(balanceCents)}</strong>
             </div>
+            ${typeof config.commissionCents === "number" ? `
+              <div class="metric">
+                <span>Commission</span>
+                <strong>${formatCurrencyFromCents(config.commissionCents)}${config.commissionRate ? ` @ ${config.commissionRate.toFixed(2)}%` : ""}</strong>
+              </div>
+            ` : ""}
           </div>
           ${financeItemsMarkup(config.financeItems || [])}
         </article>
@@ -1600,9 +2103,14 @@
       }
 
       const cashCards = [];
-      const cashDiscounts = [23, 20, 18, 15, 10];
+      const cashDiscounts = DISCOUNT_LEVELS;
 
       const coupon = createFlatDiscount(inputs.bf, 900);
+      const couponCommission = calculateCardCommission({
+        grossCents: inputs.bf,
+        commissionableCents: coupon.finalCents,
+        discountCents: coupon.discountCents
+      });
       cashCards.push(
         scenarioCardMarkup({
           title: "Coupon Discount",
@@ -1611,12 +2119,19 @@
           subtotalCents: inputs.bf,
           discountCents: coupon.discountCents,
           totalCents: coupon.finalCents,
-          depositCents: calculateCashDeposit(coupon.finalCents)
+          depositCents: calculateCashDeposit(coupon.finalCents),
+          commissionCents: couponCommission.commissionCents,
+          commissionRate: couponCommission.commissionRate
         })
       );
 
       cashDiscounts.forEach((percent) => {
         const plan = findCleanDiscount(inputs.bf, percent);
+        const commission = calculateCardCommission({
+          grossCents: inputs.bf,
+          commissionableCents: plan.finalCents,
+          discountCents: plan.discountCents
+        });
         cashCards.push(
           scenarioCardMarkup({
             title: percent + "% Discount",
@@ -1625,12 +2140,19 @@
             subtotalCents: inputs.bf,
             discountCents: plan.discountCents,
             totalCents: plan.finalCents,
-            depositCents: calculateCashDeposit(plan.finalCents)
+            depositCents: calculateCashDeposit(plan.finalCents),
+            commissionCents: commission.commissionCents,
+            commissionRate: commission.commissionRate
           })
         );
       });
 
       const special = findCleanDiscount(inputs.bf, 25);
+      const specialCommission = calculateCardCommission({
+        grossCents: inputs.bf,
+        commissionableCents: special.finalCents,
+        discountCents: special.discountCents
+      });
       const specialCards = [
         scenarioCardMarkup({
           title: "25% Special Discount",
@@ -1639,7 +2161,9 @@
           subtotalCents: inputs.bf,
           discountCents: special.discountCents,
           totalCents: special.finalCents,
-          depositCents: calculateCashDeposit(special.finalCents)
+          depositCents: calculateCashDeposit(special.finalCents),
+          commissionCents: specialCommission.commissionCents,
+          commissionRate: specialCommission.commissionRate
         })
       ];
 
@@ -1648,11 +2172,26 @@
       const standardBalance = Math.max(0, standard.finalCents - standardDeposit);
       const standard28 = calcFinance(standardBalance, 7.99, 28);
       const standard86 = calcFinance(standardBalance, 11.99, 86);
+      const selectedFinancePlan = getCommissionFinancePlan();
+      const standardFinanceCost = clampCents(standardBalance * (selectedFinancePlan.costPercent / 100));
+      const standardCommission = calculateCardCommission({
+        grossCents: inputs.bf,
+        commissionableCents: standard.finalCents,
+        discountCents: standard.discountCents,
+        financeCostCents: standardFinanceCost
+      });
 
       const emergency = findCleanDiscount(inputs.bf, 18);
       const emergencyDeposit = calculateFinanceDeposit(emergency.finalCents);
       const emergencyBalance = Math.max(0, emergency.finalCents - emergencyDeposit);
       const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
+      const emergencyFinanceCost = clampCents(emergencyBalance * (selectedFinancePlan.costPercent / 100));
+      const emergencyCommission = calculateCardCommission({
+        grossCents: inputs.bf,
+        commissionableCents: emergency.finalCents,
+        discountCents: emergency.discountCents,
+        financeCostCents: emergencyFinanceCost
+      });
 
       const financingCards = [
         scenarioCardMarkup({
@@ -1663,6 +2202,8 @@
           discountCents: standard.discountCents,
           totalCents: standard.finalCents,
           depositCents: standardDeposit,
+          commissionCents: standardCommission.commissionCents,
+          commissionRate: standardCommission.commissionRate,
           financeItems: [
             {
               label: "18 Months at 0%",
@@ -1692,7 +2233,7 @@
                 " | Interest: " +
                 formatCurrency(standard86.interest)
             }
-          ]
+          ].concat(featuredFinancePlanItems(standardBalance))
         }),
         scenarioCardMarkup({
           title: "Emergency 86-Month Financing",
@@ -1702,6 +2243,8 @@
           discountCents: emergency.discountCents,
           totalCents: emergency.finalCents,
           depositCents: emergencyDeposit,
+          commissionCents: emergencyCommission.commissionCents,
+          commissionRate: emergencyCommission.commissionRate,
           financeItems: [
             {
               label: "86 Months at 11.99%",
@@ -1713,7 +2256,7 @@
                 " | Interest: " +
                 formatCurrency(emergencyPlan.interest)
             }
-          ]
+          ].concat(featuredFinancePlanItems(emergencyBalance))
         })
       ];
 
@@ -1782,9 +2325,14 @@
         );
       }
 
-      const cumulativeCards = [23, 20, 18, 15, 10].map((percent) => {
+      const cumulativeCards = DISCOUNT_LEVELS.map((percent) => {
         const discount = findCleanDiscount(inputs.bf, percent);
         const total = discount.finalCents + addOns;
+        const commission = calculateCardCommission({
+          grossCents: grossTotal,
+          commissionableCents: discount.finalCents + inputs.doors + inputs.labor,
+          discountCents: discount.discountCents
+        });
 
         return scenarioCardMarkup({
           title: percent + "% Discount on Bath Fitter",
@@ -1794,13 +2342,20 @@
           discountCents: discount.discountCents,
           totalCents: total,
           depositCents: cumulativeDeposit(discount.finalCents, "cash"),
-          mathLine: cumulativeMathLine(discount.discountCents, discount.finalCents, total)
+          mathLine: cumulativeMathLine(discount.discountCents, discount.finalCents, total),
+          commissionCents: commission.commissionCents,
+          commissionRate: commission.commissionRate
         });
       });
 
       const special = findCleanDiscount(inputs.bf, 25);
       const specialTotal = special.finalCents + addOns;
       const specialDeposit = cumulativeDeposit(special.finalCents, "cash");
+      const specialCommission = calculateCardCommission({
+        grossCents: grossTotal,
+        commissionableCents: special.finalCents + inputs.doors + inputs.labor,
+        discountCents: special.discountCents
+      });
 
       const standard = findCleanDiscount(inputs.bf, 13);
       const standardTotal = standard.finalCents + addOns;
@@ -1808,12 +2363,27 @@
       const standardBalance = Math.max(0, standardTotal - standardDeposit);
       const standard28 = calcFinance(standardBalance, 7.99, 28);
       const standard86 = calcFinance(standardBalance, 11.99, 86);
+      const selectedFinancePlan = getCommissionFinancePlan();
+      const standardFinanceCost = clampCents(standardBalance * (selectedFinancePlan.costPercent / 100));
+      const standardCommission = calculateCardCommission({
+        grossCents: grossTotal,
+        commissionableCents: standard.finalCents + inputs.doors + inputs.labor,
+        discountCents: standard.discountCents,
+        financeCostCents: standardFinanceCost
+      });
 
       const emergency = findCleanDiscount(inputs.bf, 18);
       const emergencyTotal = emergency.finalCents + addOns;
       const emergencyDeposit = cumulativeDeposit(emergency.finalCents, "finance");
       const emergencyBalance = Math.max(0, emergencyTotal - emergencyDeposit);
       const emergencyPlan = calcFinance(emergencyBalance, 11.99, 86);
+      const emergencyFinanceCost = clampCents(emergencyBalance * (selectedFinancePlan.costPercent / 100));
+      const emergencyCommission = calculateCardCommission({
+        grossCents: grossTotal,
+        commissionableCents: emergency.finalCents + inputs.doors + inputs.labor,
+        discountCents: emergency.discountCents,
+        financeCostCents: emergencyFinanceCost
+      });
 
       const specialCards = [
         scenarioCardMarkup({
@@ -1824,7 +2394,9 @@
           discountCents: special.discountCents,
           totalCents: specialTotal,
           depositCents: specialDeposit,
-          mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialTotal)
+          mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialTotal),
+          commissionCents: specialCommission.commissionCents,
+          commissionRate: specialCommission.commissionRate
         })
       ];
 
@@ -1838,6 +2410,8 @@
           totalCents: standardTotal,
           depositCents: standardDeposit,
           mathLine: cumulativeMathLine(standard.discountCents, standard.finalCents, standardTotal),
+          commissionCents: standardCommission.commissionCents,
+          commissionRate: standardCommission.commissionRate,
           financeItems: [
             {
               label: "28 Months at 7.99%",
@@ -1859,7 +2433,7 @@
                 " | Interest: " +
                 formatCurrency(standard86.interest)
             }
-          ]
+          ].concat(featuredFinancePlanItems(standardBalance))
         }),
         scenarioCardMarkup({
           title: "Emergency 86-Month Financing",
@@ -1870,6 +2444,8 @@
           totalCents: emergencyTotal,
           depositCents: emergencyDeposit,
           mathLine: cumulativeMathLine(emergency.discountCents, emergency.finalCents, emergencyTotal),
+          commissionCents: emergencyCommission.commissionCents,
+          commissionRate: emergencyCommission.commissionRate,
           financeItems: [
             {
               label: "86 Months at 11.99%",
@@ -1881,7 +2457,7 @@
                 " | Interest: " +
                 formatCurrency(emergencyPlan.interest)
             }
-          ]
+          ].concat(featuredFinancePlanItems(emergencyBalance))
         })
       ];
 
@@ -1909,6 +2485,10 @@
       const cards = [];
 
       if (inputs.doors) {
+        const doorsCommission = calculateCardCommission({
+          grossCents: inputs.doors,
+          commissionableCents: inputs.doors
+        });
         cards.push(
           scenarioCardMarkup({
             title: "Doors Contract",
@@ -1917,12 +2497,18 @@
             subtotalCents: inputs.doors,
             discountCents: 0,
             totalCents: inputs.doors,
-            depositCents: calculateCashDeposit(inputs.doors)
+            depositCents: calculateCashDeposit(inputs.doors),
+            commissionCents: doorsCommission.commissionCents,
+            commissionRate: doorsCommission.commissionRate
           })
         );
       }
 
       if (inputs.labor) {
+        const laborCommission = calculateCardCommission({
+          grossCents: inputs.labor,
+          commissionableCents: inputs.labor
+        });
         cards.push(
           scenarioCardMarkup({
             title: "Labor Contract",
@@ -1931,7 +2517,9 @@
             subtotalCents: inputs.labor,
             discountCents: 0,
             totalCents: inputs.labor,
-            depositCents: calculateCashDeposit(inputs.labor)
+            depositCents: calculateCashDeposit(inputs.labor),
+            commissionCents: laborCommission.commissionCents,
+            commissionRate: laborCommission.commissionRate
           })
         );
       }
@@ -1945,7 +2533,9 @@
             subtotalCents: inputs.permits,
             discountCents: 0,
             totalCents: inputs.permits,
-            depositCents: inputs.permits
+            depositCents: inputs.permits,
+            commissionCents: 0,
+            commissionRate: 0
           })
         );
       }
@@ -2026,6 +2616,279 @@
 
       document.getElementById("estimateStatus").textContent =
         state.estimateMessage || "";
+    }
+
+    function getCatalogItemById(itemId) {
+      return catalogItems.find((item) => item.id === itemId) || null;
+    }
+
+    function getCatalogVariant(item, variantId) {
+      if (!item) {
+        return null;
+      }
+
+      return item.variants.find((variant) => variant.id === variantId) || item.variants[0] || null;
+    }
+
+    function createEstimateLineFromCatalog(itemId, variantId, quantity = 1, labelSuffix = "") {
+      const item = getCatalogItemById(itemId);
+      const variant = getCatalogVariant(item, variantId);
+      if (!item || !variant) {
+        return null;
+      }
+
+      const safeQuantity = Math.max(1, Number(quantity) || 1);
+      const unitCents = dollarsToCents(variant.price);
+
+      return {
+        id: `estimate-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        source: "catalog",
+        label: labelSuffix ? `${item.label} - ${labelSuffix}` : item.label,
+        bucket: item.bucket,
+        category: item.category,
+        variantLabel: variant.label,
+        description: item.description,
+        quantity: safeQuantity,
+        unitCents,
+        totalCents: clampCents(unitCents * safeQuantity)
+      };
+    }
+
+    function createCustomEstimateLine(label, bucket, amountCents, description = "") {
+      return {
+        id: `estimate-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        source: "custom",
+        label,
+        bucket,
+        category: "Custom",
+        variantLabel: "Custom line item",
+        description,
+        quantity: 1,
+        unitCents: clampCents(amountCents),
+        totalCents: clampCents(amountCents)
+      };
+    }
+
+    function renderPricingGuide() {
+      const categorySelect = document.getElementById("guideCategory");
+      const searchInput = document.getElementById("guideSearch");
+      const guideList = document.getElementById("pricingGuideList");
+      const currentCategory = categorySelect.value || "all";
+      const categories = getCatalogCategories();
+
+      categorySelect.innerHTML = categories
+        .map((category) => {
+          const label = category === "all" ? "All Categories" : category;
+          return `<option value="${escapeHtml(category)}">${escapeHtml(label)}</option>`;
+        })
+        .join("");
+      categorySelect.value = categories.includes(currentCategory) ? currentCategory : "all";
+
+      const search = searchInput.value.trim().toLowerCase();
+      const filteredItems = catalogItems.filter((item) => {
+        const categoryMatch = categorySelect.value === "all" || item.category === categorySelect.value;
+        const searchable = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket]]
+          .join(" ")
+          .toLowerCase();
+        return categoryMatch && (!search || searchable.includes(search));
+      });
+
+      guideList.innerHTML = filteredItems.length
+        ? filteredItems
+            .map((item) => {
+              const priceText = item.variants
+                .map((variant) => `${variant.label}: ${formatCurrency(variant.price)}`)
+                .join(" | ");
+              return `
+                <article class="guide-row">
+                  <h4>${escapeHtml(item.label)}</h4>
+                  <p>${escapeHtml(item.category)} | ${escapeHtml(BUCKET_LABELS[item.bucket])}</p>
+                  <p>${escapeHtml(priceText)}</p>
+                  ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+                </article>
+              `;
+            })
+            .join("")
+        : emptyState("No matching price-list items.");
+    }
+
+    function setSelectFromItems(selectId, itemIds, includeNone = false) {
+      const select = document.getElementById(selectId);
+      const currentValue = select.value;
+      const options = itemIds.map(getCatalogItemById).filter(Boolean);
+      select.innerHTML =
+        (includeNone ? `<option value="">None</option>` : "") +
+        options
+          .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`)
+          .join("");
+      select.value = options.some((item) => item.id === currentValue) || (includeNone && currentValue === "")
+        ? currentValue
+        : includeNone
+          ? ""
+          : options[0]?.id || "";
+    }
+
+    function renderRoughTearoutList() {
+      document.getElementById("roughTearoutList").innerHTML = ROUGH_TEAROUT_IDS.map(getCatalogItemById)
+        .filter(Boolean)
+        .map(
+          (item) => `
+            <label>
+              <input type="checkbox" value="${escapeHtml(item.id)}" data-rough-tearout />
+              ${escapeHtml(item.label)}
+            </label>
+          `
+        )
+        .join("");
+    }
+
+    function getCheckedRoughIds(selector) {
+      return Array.from(document.querySelectorAll(selector))
+        .filter((input) => input.checked)
+        .map((input) => input.value);
+    }
+
+    function buildRoughEstimateItems() {
+      const items = [];
+      const unitId = document.getElementById("roughUnit").value;
+      const wallId = document.getElementById("roughWall").value;
+      const doorSelected = document.getElementById("roughDoors").checked;
+      const doorType = document.getElementById("roughDoorType").value;
+
+      [unitId, ROUGH_ITEM_IDS.drain].forEach((itemId) => {
+        const line = createEstimateLineFromCatalog(itemId, null, 1, itemId === ROUGH_ITEM_IDS.drain ? document.getElementById("roughDrainFinish").value : "");
+        if (line) {
+          items.push(line);
+        }
+      });
+
+      if (roughState.jobType === "tub" && document.getElementById("roughFormedFront").value === "yes") {
+        const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.formedFront);
+        if (line) {
+          items.push(line);
+        }
+      }
+
+      if (roughState.route === "tearout") {
+        getCheckedRoughIds("[data-rough-tearout]").forEach((itemId) => {
+          const line = createEstimateLineFromCatalog(itemId);
+          if (line) {
+            items.push(line);
+          }
+        });
+      }
+
+      if (wallId) {
+        [wallId, ROUGH_ITEM_IDS.wallPrep].forEach((itemId) => {
+          const line = createEstimateLineFromCatalog(itemId);
+          if (line) {
+            items.push(line);
+          }
+        });
+      }
+
+      if (document.getElementById("roughCurtainRod").checked) {
+        const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.curtainRod);
+        if (line) {
+          items.push(line);
+        }
+      }
+
+      if (document.getElementById("roughShowerRod").checked) {
+        const line = createEstimateLineFromCatalog(ROUGH_ITEM_IDS.showerRod);
+        if (line) {
+          items.push(line);
+        }
+      }
+
+      if (doorSelected && doorType === "bf") {
+        const line = createEstimateLineFromCatalog(roughState.jobType === "tub" ? ROUGH_ITEM_IDS.tubDoor : ROUGH_ITEM_IDS.showerDoor);
+        if (line) {
+          items.push(line);
+        }
+      }
+
+      if (doorSelected && doorType === "custom") {
+        const customDoorCents = amountToCents(document.getElementById("roughCustomDoorPrice").value);
+        if (customDoorCents) {
+          items.push(createCustomEstimateLine("Custom Door", "doors", customDoorCents, "Call Erin for all custom door pricing."));
+        }
+      }
+
+      [
+        ["roughFixtures", "roughFixtureItem"],
+        ["roughSafety", "roughSafetyItem"],
+        ["roughLabor", "roughLaborItem"]
+      ].forEach(([checkboxId, selectId]) => {
+        if (document.getElementById(checkboxId).checked) {
+          const line = createEstimateLineFromCatalog(document.getElementById(selectId).value);
+          if (line) {
+            items.push(line);
+          }
+        }
+      });
+
+      return items.filter(Boolean);
+    }
+
+    function renderRoughControls() {
+      const unitIds = ROUGH_UNITS[roughState.jobType][roughState.route];
+      setSelectFromItems("roughUnit", unitIds);
+      setSelectFromItems("roughWall", ROUGH_WALL_IDS, true);
+
+      const fixtureIds = catalogItems
+        .filter((item) => item.category === "Plumbing & Fixtures" && item.bucket === "bf")
+        .map((item) => item.id);
+      const safetyIds = catalogItems
+        .filter((item) => /seat|safety|bar/i.test(`${item.label} ${item.category}`))
+        .map((item) => item.id);
+      const laborIds = catalogItems
+        .filter((item) => item.category === "Labor & Prep" || item.bucket === "labor")
+        .map((item) => item.id);
+
+      setSelectFromItems("roughFixtureItem", fixtureIds);
+      setSelectFromItems("roughSafetyItem", safetyIds);
+      setSelectFromItems("roughLaborItem", laborIds);
+
+      document.getElementById("tearoutStep").hidden = roughState.route !== "tearout";
+      document.getElementById("formedFrontField").hidden = roughState.jobType !== "tub";
+      document.getElementById("roughDoorTypeField").hidden = !document.getElementById("roughDoors").checked;
+      document.getElementById("roughCustomDoorField").hidden =
+        !document.getElementById("roughDoors").checked || document.getElementById("roughDoorType").value !== "custom";
+      document.getElementById("roughFixtureField").hidden = !document.getElementById("roughFixtures").checked;
+      document.getElementById("roughSafetyField").hidden = !document.getElementById("roughSafety").checked;
+      document.getElementById("roughLaborField").hidden = !document.getElementById("roughLabor").checked;
+    }
+
+    function renderRoughPreview() {
+      const previewItems = buildRoughEstimateItems();
+      const totalCents = previewItems.reduce((sum, item) => sum + item.totalCents, 0);
+      document.getElementById("roughEstimatePreview").innerHTML = previewItems.length
+        ? previewItems
+            .map(
+              (item) => `
+                <article class="rough-row">
+                  <h4>${escapeHtml(item.label)}</h4>
+                  <p>${escapeHtml(BUCKET_LABELS[item.bucket])} | ${formatCurrencyFromCents(item.totalCents)}</p>
+                </article>
+              `
+            )
+            .join("") +
+          `<article class="rough-row"><h4>Rough Total</h4><p>${formatCurrencyFromCents(totalCents)}</p></article>`
+        : emptyState("Choose job options to build a rough estimate.");
+    }
+
+    function buildRoughEstimate() {
+      state.estimateItems = buildRoughEstimateItems();
+      state.estimateMessage = "Rough estimate built.";
+      render();
+    }
+
+    function loadRoughEstimateIntoPricing() {
+      state.estimateItems = buildRoughEstimateItems();
+      state.estimateMessage = "Rough estimate loaded into pricing.";
+      applyEstimateToCalculator();
+      document.getElementById("calculatorTool").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function getCatalogCategories() {
@@ -2294,6 +3157,9 @@
       renderEstimateSummary();
       renderEstimateList();
       renderCommission(inputs);
+      renderPricingGuide();
+      renderRoughControls();
+      renderRoughPreview();
 
       document.getElementById("panelContract").innerHTML = buildContractTab(inputs);
       document.getElementById("panelCumulative").innerHTML = buildCumulativeTab(inputs);
@@ -2314,6 +3180,7 @@
     }
 
     initializeCommissionControls();
+    renderRoughTearoutList();
     refreshCatalogPicker();
     applyStoredState();
     refreshCatalogPicker();
@@ -2336,6 +3203,44 @@
     });
     document.getElementById("catalogVariant").addEventListener("change", renderCatalogDetail);
     document.getElementById("catalogQuantity").addEventListener("input", renderCatalogDetail);
+    document.getElementById("guideCategory").addEventListener("change", render);
+    document.getElementById("guideSearch").addEventListener("input", render);
+    document.querySelectorAll("[data-rough-group]").forEach((group) => {
+      group.addEventListener("click", (event) => {
+        const button = event.target.closest(".choice-button");
+        if (!button) {
+          return;
+        }
+
+        group.querySelectorAll(".choice-button").forEach((choice) => choice.classList.remove("active"));
+        button.classList.add("active");
+        roughState[group.dataset.roughGroup] = button.dataset.value;
+        render();
+      });
+    });
+    [
+      "roughUnit",
+      "roughFormedFront",
+      "roughDrainFinish",
+      "roughWall",
+      "roughCurtainRod",
+      "roughShowerRod",
+      "roughDoors",
+      "roughDoorType",
+      "roughCustomDoorPrice",
+      "roughFixtures",
+      "roughSafety",
+      "roughLabor",
+      "roughFixtureItem",
+      "roughSafetyItem",
+      "roughLaborItem"
+    ].forEach((id) => {
+      document.getElementById(id).addEventListener("input", render);
+      document.getElementById(id).addEventListener("change", render);
+    });
+    document.getElementById("roughTearoutList").addEventListener("change", render);
+    document.getElementById("buildRoughEstimateButton").addEventListener("click", buildRoughEstimate);
+    document.getElementById("loadRoughEstimateButton").addEventListener("click", loadRoughEstimateIntoPricing);
     document.getElementById("addCatalogItemButton").addEventListener("click", addCatalogItem);
     document.getElementById("addCustomItemButton").addEventListener("click", addCustomItem);
     document.getElementById("applyEstimateButton").addEventListener("click", applyEstimateToCalculator);
