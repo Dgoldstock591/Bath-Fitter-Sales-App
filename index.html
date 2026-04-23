@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.30</title>
+  <title>Bath Fitter Sales Tool V3.0</title>
   <link rel="icon" href="icon-192.png" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -885,7 +885,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-          <p class="eyebrow">Bath Fitter sales tool | V2.30</p>
+          <p class="eyebrow">Bath Fitter sales tool | V3.0</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, wainscoting, cumulative totals, deposits, and financing from one screen.
@@ -1176,6 +1176,10 @@
               <label for="roughWainscotingProduct">Wainscoting Product</label>
               <select id="roughWainscotingProduct"></select>
             </div>
+            <div class="form-field" id="roughWainscotingQuantityField" hidden>
+              <label for="roughWainscotingQuantity">Wainscoting Sheets</label>
+              <input type="number" id="roughWainscotingQuantity" min="1" step="1" value="1" inputmode="numeric" />
+            </div>
             <div class="form-field" id="roughWallPatternField">
               <label for="roughWallPattern">Wall Pattern / Style</label>
               <select id="roughWallPattern">
@@ -1219,7 +1223,7 @@
 
           <div class="rough-step">
             <h3>5. Rebuild / Prep</h3>
-            <p class="estimator-detail">Wall prep is added automatically whenever wet-area walls, wainscoting, or wall disturbance are involved.</p>
+            <p class="estimator-detail">Wall prep auto-charges whenever wet-area walls, wainscoting, or wall disturbance are involved. Other rebuild/prep items stay labor except wall repair.</p>
             <div class="form-field" id="roughWallRepairCountField">
               <label for="roughWallRepairCount">Wall Repair Needed</label>
               <select id="roughWallRepairCount">
@@ -3102,6 +3106,9 @@
       }
 
       line.group = group;
+      if (options.bucketOverride && BUCKET_LABELS[options.bucketOverride]) {
+        line.bucket = options.bucketOverride;
+      }
       line.engineReason = options.reason || "";
       items.push(line);
     }
@@ -3257,6 +3264,7 @@
         formedFront: roughValue("roughFormedFront"),
         wallProduct: roughValue("roughWallProduct"),
         wainscotingProduct: roughValue("roughWainscotingProduct"),
+        wainscotingQuantity: roughIntValue("roughWainscotingQuantity", 1),
         wallPattern: roughValue("roughWallPattern"),
         doorProduct: roughValue("roughDoorProduct"),
         customDoorPrice: amountToCents(roughValue("roughCustomDoorPrice")),
@@ -3316,6 +3324,7 @@
       const effectiveWallCondition =
         raw.existingFixture === "one-piece-fiberglass" || !includeWetWalls ? "staying" : raw.wallCondition;
       const tileWallCount = effectiveWallCondition === "tile" ? Math.max(1, raw.tileWallCount) : 0;
+      const wainscotingQuantity = raw.wainscotingProduct ? Math.max(1, raw.wainscotingQuantity) : 0;
       const wallRepairCount = Math.max(0, raw.wallRepairCount);
       const extraSheetrockCount = Math.max(0, raw.extraSheetrockCount);
       const showWetAreaScope = raw.route !== "wains-only";
@@ -3367,6 +3376,7 @@
         valveEnabled,
         wallCondition: effectiveWallCondition,
         tileWallCount,
+        wainscotingQuantity,
         wallRepairCount,
         extraSheetrockCount,
         primaryProductIds,
@@ -3380,6 +3390,18 @@
       };
     }
 
+    function getIncludedWallScopeBucket(snapshot) {
+      if (snapshot.includeWetWalls) {
+        return "bf";
+      }
+
+      if (snapshot.wainscotingQuantity) {
+        return "wainscoting";
+      }
+
+      return "labor";
+    }
+
     function addMainFixtureRemovalLine(items, snapshot) {
       if (!snapshot.removeMainFixture) {
         return;
@@ -3389,11 +3411,13 @@
         case "cast-tub":
         case "steel-tub":
           addRoughCatalogLine(items, "labor-remove-cast-steel-tub", "tearout", {
+            bucketOverride: "bf",
             reason: "Main fixture tear-out shifts the job into a replacement route."
           });
           break;
         case "fiberglass-tub":
           addRoughCatalogLine(items, "labor-remove-fiberglass-base", "tearout", {
+            bucketOverride: "bf",
             labelSuffix: "Fiberglass tub",
             reason: "Tub removal blocks the liner path and forces a replacement route."
           });
@@ -3404,6 +3428,7 @@
             snapshot.layout === "neo-angle" || snapshot.layout === "curved" ? "labor-jackhammer-tile-base" : "labor-remove-fiberglass-base",
             "tearout",
             {
+              bucketOverride: snapshot.layout === "neo-angle" || snapshot.layout === "curved" ? "" : "bf",
               reason:
                 snapshot.layout === "neo-angle" || snapshot.layout === "curved"
                   ? "Neo-angle and curved tear-out override standard base demo for the same footprint."
@@ -3417,6 +3442,7 @@
             snapshot.onePieceWithCeiling ? "labor-remove-fg-1-piece-ceiling" : "labor-remove-fg-1-piece",
             "tearout",
             {
+              bucketOverride: "bf",
               reason: "One-piece fiberglass removal replaces separate tub/base and wall demo."
             }
           );
@@ -3440,7 +3466,9 @@
       }
 
       if (snapshot.wallCondition === "fiberglass") {
-        addRoughCatalogLine(items, "labor-remove-3pc-wall-system", "tearout");
+        addRoughCatalogLine(items, "labor-remove-3pc-wall-system", "tearout", {
+          bucketOverride: "bf"
+        });
         return;
       }
 
@@ -3465,8 +3493,11 @@
     }
 
     function addRebuildAndPrepLines(items, snapshot) {
+      const includedWallScopeBucket = getIncludedWallScopeBucket(snapshot);
+
       if (snapshot.wallPrepNeeded) {
         addRoughCatalogLine(items, ROUGH_ITEM_IDS.wallPrep, "rebuild", {
+          bucketOverride: includedWallScopeBucket !== "labor" ? includedWallScopeBucket : "",
           reason: "Wall prep applies whenever wet-area walls, wainscoting, or wall disturbance are involved."
         });
       }
@@ -3474,7 +3505,8 @@
       if (snapshot.wallRepairCount) {
         addRoughCatalogLine(items, ROUGH_ITEM_IDS.wallRepair, "rebuild", {
           quantity: snapshot.wallRepairCount,
-          labelSuffix: `${snapshot.wallRepairCount} wall${snapshot.wallRepairCount === 1 ? "" : "s"}`
+          labelSuffix: `${snapshot.wallRepairCount} wall${snapshot.wallRepairCount === 1 ? "" : "s"}`,
+          bucketOverride: includedWallScopeBucket !== "labor" ? includedWallScopeBucket : ""
         });
       }
 
@@ -3579,7 +3611,9 @@
       }
 
       if (snapshot.wainscotingProduct) {
-        addRoughCatalogLine(items, snapshot.wainscotingProduct, "accessory");
+        addRoughCatalogLine(items, snapshot.wainscotingProduct, "product", {
+          quantity: snapshot.wainscotingQuantity || 1
+        });
       }
 
       if (snapshot.ceilingProduct && snapshot.showWetAreaScope) {
@@ -3730,6 +3764,11 @@
         snapshot = getRoughEngineState();
       }
 
+      if (!snapshot.wainscotingProduct) {
+        document.getElementById("roughWainscotingQuantity").value = "1";
+        snapshot = getRoughEngineState();
+      }
+
       if (!snapshot.showWetAreaScope) {
         document.getElementById("roughDoorProduct").value = "";
         document.getElementById("roughCeilingProduct").value = "";
@@ -3755,6 +3794,7 @@
       document.getElementById("roughWallProductField").hidden = !snapshot.includeWetWalls;
       document.getElementById("roughWallPatternField").hidden = !snapshot.includeWetWalls || !snapshot.wallProduct;
       document.getElementById("roughWainscotingProductField").hidden = false;
+      document.getElementById("roughWainscotingQuantityField").hidden = !snapshot.wainscotingProduct;
       document.getElementById("roughDoorProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughCustomDoorField").hidden = roughValue("roughDoorProduct") !== "custom";
       document.getElementById("roughCeilingProductField").hidden = !snapshot.showWetAreaScope;
@@ -4254,6 +4294,7 @@
       "roughFormedFront",
       "roughWallProduct",
       "roughWainscotingProduct",
+      "roughWainscotingQuantity",
       "roughWallPattern",
       "roughDoorProduct",
       "roughCustomDoorPrice",
