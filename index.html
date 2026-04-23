@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.19</title>
+  <title>Bath Fitter Sales Tool V2.20</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -272,8 +272,7 @@
       background: linear-gradient(180deg, #ffffff 0%, #f5fbfa 100%);
     }
 
-    .internal-panel[hidden],
-    .commission-preview-panel[hidden] {
+    .internal-panel[hidden] {
       display: none;
     }
 
@@ -807,7 +806,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.19</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.20</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, cumulative totals, deposits, and financing from one screen.
@@ -879,10 +878,6 @@
                 <p></p>
                 <div class="estimator-form-grid">
                   <div class="form-field">
-                    <label for="commissionSalesType">Sale Type</label>
-                    <select id="commissionSalesType"></select>
-                  </div>
-                  <div class="form-field">
                     <label for="commissionScenario">Pricing Scenario</label>
                     <select id="commissionScenario"></select>
                   </div>
@@ -917,15 +912,7 @@
               </div>
 
               <div class="actions">
-                <button class="button secondary" id="commissionPreviewToggleButton" type="button" aria-expanded="false" aria-controls="commissionPreviewPanel">View Commission Preview</button>
-              </div>
-
-              <div class="estimate-card commission-preview-panel" id="commissionPreviewPanel" hidden>
-                <h3>Commission Preview</h3>
-                <p></p>
-                <div class="estimate-summary-strip" id="commissionSummaryStrip"></div>
-                <div class="estimate-line-list" id="commissionBreakdown"></div>
-                <p class="estimator-detail" id="commissionStatus"></p>
+                <button class="button secondary" id="commissionCardsToggleButton" type="button" aria-pressed="false">Show Commission In Pricing Cards</button>
               </div>
             </div>
           </div>
@@ -1204,10 +1191,7 @@
       labor: "Labor",
       permits: "Permits"
     };
-    const COMMISSION_SALE_TYPES = [
-      { id: "standard", label: "In-Home / Standard Outside Sale" },
-      { id: "virtual", label: "Virtual Sale" }
-    ];
+    const COMMISSION_SALE_TYPE = { id: "standard", label: "In-Home / Standard Outside Sale" };
     const COMMISSION_PAYMENT_METHODS = [
       { id: "cash-check", label: "Cash / Check", costPercent: 0 },
       { id: "credit-card", label: "Credit Card", costPercent: 2 }
@@ -1424,7 +1408,7 @@
       estimateItems: [],
       estimateMessage: "",
       internalSettingsVisible: false,
-      commissionPreviewVisible: false
+      commissionCardsVisible: false
     };
     const roughState = {
       jobType: "tub",
@@ -1619,8 +1603,7 @@
     }
 
     function getCommissionSaleType() {
-      const id = document.getElementById("commissionSalesType").value;
-      return COMMISSION_SALE_TYPES.find((saleType) => saleType.id === id) || COMMISSION_SALE_TYPES[0];
+      return COMMISSION_SALE_TYPE;
     }
 
     function getCommissionPaymentMethod() {
@@ -1667,19 +1650,6 @@
 
     function getCommissionTier(transactionCostPercent, saleTypeId) {
       const roundedPercent = roundToCents(transactionCostPercent);
-
-      if (saleTypeId === "virtual") {
-        if (roundedPercent <= 12) {
-          return { label: "0.00% - 12.00%", rate: 7 };
-        }
-        if (roundedPercent <= 20) {
-          return { label: "12.01% - 20.00%", rate: 6 };
-        }
-        if (roundedPercent <= 25) {
-          return { label: "20.01% - 25.00%", rate: 5 };
-        }
-        return { label: "> 25.00%", rate: 0 };
-      }
 
       if (roundedPercent <= 12) {
         return { label: "0.00% - 12.00%", rate: 9 };
@@ -1803,7 +1773,6 @@
 
     function getCommissionInputSnapshot() {
       return {
-        salesType: document.getElementById("commissionSalesType").value,
         scenario: document.getElementById("commissionScenario").value,
         paymentMethod: document.getElementById("commissionPaymentMethod").value,
         depositMethod: document.getElementById("commissionDepositMethod").value,
@@ -1825,7 +1794,6 @@
     }
 
     function initializeCommissionControls() {
-      setSelectOptions("commissionSalesType", COMMISSION_SALE_TYPES, "standard");
       setSelectOptions("commissionScenario", COMMISSION_SCENARIOS, "finance-13");
       setSelectOptions("commissionPaymentMethod", COMMISSION_PAYMENT_METHODS, "cash-check");
       setSelectOptions("commissionDepositMethod", COMMISSION_PAYMENT_METHODS, "cash-check");
@@ -1842,92 +1810,6 @@
       document.getElementById("commissionCashFields").hidden = scenario.mode !== "cash";
       document.getElementById("commissionFinanceFields").hidden = scenario.mode !== "finance";
       document.getElementById("commissionScenarioDetail").textContent = scenario.note;
-    }
-
-    function renderCommission(inputs) {
-      const summaryEl = document.getElementById("commissionSummaryStrip");
-      const breakdownEl = document.getElementById("commissionBreakdown");
-      const statusEl = document.getElementById("commissionStatus");
-      const estimate = calculateCommissionEstimate(inputs);
-
-      if (!estimate) {
-        summaryEl.innerHTML = "";
-        breakdownEl.innerHTML = emptyState("Enter pricing totals to see commission.");
-        statusEl.textContent = "";
-        return;
-      }
-
-      summaryEl.innerHTML = [
-        { label: "Gross EOI", value: estimate.grossEoiCents },
-        { label: "Commissionable EOI", value: estimate.commissionableEoiCents },
-        { label: "85% Base", value: estimate.commissionBaseCents },
-        { label: "Cost %", value: `${estimate.transactionCostPercent.toFixed(2)}%` },
-        { label: "Rate", value: `${estimate.tier.rate.toFixed(2)}%` },
-        { label: "Commission", value: formatCurrencyFromCents(estimate.commissionCents) }
-      ]
-        .map((item) => {
-          const valueMarkup = typeof item.value === "number" ? formatCurrencyFromCents(item.value) : item.value;
-          return `
-            <div class="estimate-summary-chip">
-              <span>${escapeHtml(item.label)}</span>
-              <strong>${escapeHtml(valueMarkup)}</strong>
-            </div>
-          `;
-        })
-        .join("");
-
-      breakdownEl.innerHTML = [
-        {
-          title: "Commission Tier",
-          detail: `${estimate.saleType.label} | ${estimate.tier.label} | ${estimate.tier.rate.toFixed(2)}%`
-        },
-        {
-          title: "Transaction Cost Breakdown",
-          detail:
-            `Discount ${formatCurrencyFromCents(estimate.discountCents)}` +
-            ` | Card ${formatCurrencyFromCents(estimate.cardCostCents)}` +
-            ` | Finance ${formatCurrencyFromCents(estimate.financeCostCents)}` +
-            ` | Total ${formatCurrencyFromCents(estimate.transactionCostsCents)}`
-        },
-        {
-          title: "Payment Structure",
-          detail:
-            `${estimate.paymentLabel}` +
-            ` | Deposit ${formatCurrencyFromCents(estimate.depositCents)}` +
-            (estimate.scenario.mode === "finance"
-              ? ` | Financed balance ${formatCurrencyFromCents(estimate.financedBalanceCents)}`
-              : "")
-        },
-        {
-          title: "Commissionable Categories",
-          detail:
-            `BF ${formatCurrencyFromCents(estimate.discountedBfCents)}` +
-            ` | Doors ${formatCurrencyFromCents(inputs.doors)}` +
-            ` | Labor ${formatCurrencyFromCents(inputs.labor)}` +
-            ` | Permits $0 commission`
-        },
-        {
-          title: "Commission Formula",
-          detail:
-            `${formatCurrencyFromCents(estimate.commissionableEoiCents)} x 85% = ${formatCurrencyFromCents(estimate.commissionBaseCents)}` +
-            `, then x ${estimate.tier.rate.toFixed(2)}% = ${formatCurrencyFromCents(estimate.commissionCents)}`
-        }
-      ]
-        .map(
-          (item) => `
-            <article class="estimate-line">
-              <div class="estimate-line-top">
-                <div>
-                  <h4>${escapeHtml(item.title)}</h4>
-                  <p>${escapeHtml(item.detail)}</p>
-                </div>
-              </div>
-            </article>
-          `
-        )
-        .join("");
-
-      statusEl.textContent = "";
     }
 
     function escapeHtml(value) {
@@ -1972,9 +1854,6 @@
         }
 
         if (parsed?.commission) {
-          if (parsed.commission.salesType) {
-            document.getElementById("commissionSalesType").value = parsed.commission.salesType;
-          }
           if (parsed.commission.scenario) {
             document.getElementById("commissionScenario").value = parsed.commission.scenario;
           }
@@ -2142,9 +2021,9 @@
               <span>Balance Due</span>
               <strong>${formatCurrencyFromCents(balanceCents)}</strong>
             </div>
-            ${state.commissionPreviewVisible && typeof config.commissionCents === "number" ? `
+            ${state.commissionCardsVisible && typeof config.commissionCents === "number" ? `
               <div class="metric">
-                <span>Commission</span>
+                <span>Commission Earned</span>
                 <strong>${formatCurrencyFromCents(config.commissionCents)}${config.commissionRate ? ` @ ${config.commissionRate.toFixed(2)}%` : ""}</strong>
               </div>
             ` : ""}
@@ -3287,7 +3166,6 @@
       renderSummary(inputs);
       renderEstimateSummary();
       renderEstimateList();
-      renderCommission(inputs);
       renderPricingGuide();
       renderRoughControls();
       renderRoughPreview();
@@ -3313,20 +3191,18 @@
     function syncInternalPanels() {
       const internalButton = document.getElementById("internalToggleButton");
       const internalPanel = document.getElementById("internalSettings");
-      const previewButton = document.getElementById("commissionPreviewToggleButton");
-      const previewPanel = document.getElementById("commissionPreviewPanel");
+      const cardsButton = document.getElementById("commissionCardsToggleButton");
 
       if (!state.internalSettingsVisible) {
-        state.commissionPreviewVisible = false;
+        state.commissionCardsVisible = false;
       }
 
       internalPanel.hidden = !state.internalSettingsVisible;
       internalButton.setAttribute("aria-expanded", String(state.internalSettingsVisible));
       internalButton.textContent = state.internalSettingsVisible ? "Hide Internal Settings" : "Internal Settings";
 
-      previewPanel.hidden = !state.commissionPreviewVisible;
-      previewButton.setAttribute("aria-expanded", String(state.commissionPreviewVisible));
-      previewButton.textContent = state.commissionPreviewVisible ? "Hide Commission Preview" : "View Commission Preview";
+      cardsButton.setAttribute("aria-pressed", String(state.commissionCardsVisible));
+      cardsButton.textContent = state.commissionCardsVisible ? "Hide Commission In Pricing Cards" : "Show Commission In Pricing Cards";
     }
 
     function toggleInternalSettings() {
@@ -3334,8 +3210,8 @@
       render();
     }
 
-    function toggleCommissionPreview() {
-      state.commissionPreviewVisible = !state.commissionPreviewVisible;
+    function toggleCommissionCards() {
+      state.commissionCardsVisible = !state.commissionCardsVisible;
       render();
     }
 
@@ -3421,13 +3297,12 @@
     document.getElementById("addCustomItemButton").addEventListener("click", addCustomItem);
     document.getElementById("applyEstimateButton").addEventListener("click", applyEstimateToCalculator);
     document.getElementById("clearEstimateButton").addEventListener("click", clearEstimate);
-    document.getElementById("commissionSalesType").addEventListener("change", render);
     document.getElementById("commissionScenario").addEventListener("change", render);
     document.getElementById("commissionPaymentMethod").addEventListener("change", render);
     document.getElementById("commissionDepositMethod").addEventListener("change", render);
     document.getElementById("commissionFinancePlan").addEventListener("change", render);
     document.getElementById("internalToggleButton").addEventListener("click", toggleInternalSettings);
-    document.getElementById("commissionPreviewToggleButton").addEventListener("click", toggleCommissionPreview);
+    document.getElementById("commissionCardsToggleButton").addEventListener("click", toggleCommissionCards);
 
     document.getElementById("estimateList").addEventListener("click", (event) => {
       const removeButton = event.target.closest("[data-remove-estimate]");
