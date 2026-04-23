@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.18</title>
+  <title>Bath Fitter Sales Tool V2.19</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
@@ -239,6 +239,47 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
+    }
+
+    .internal-tools {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .internal-tools-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .internal-tools-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .internal-panel {
+      display: grid;
+      gap: 0.9rem;
+      margin-top: 0.9rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #f5fbfa 100%);
+    }
+
+    .internal-panel[hidden],
+    .commission-preview-panel[hidden] {
+      display: none;
+    }
+
+    .internal-panel .builder-card,
+    .internal-panel .estimate-card {
+      box-shadow: none;
     }
 
     .button {
@@ -766,10 +807,10 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.18</p>
+      <p class="eyebrow">Bath Fitter sales tool | V2.19</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
-        Quote BF, cumulative totals, deposits, financing, and commission from one screen.
+        Quote BF, cumulative totals, deposits, and financing from one screen.
       </p>
     </header>
 
@@ -823,6 +864,69 @@
             <div class="input-card">
               <label for="permits">Permit EOI Total</label>
               <input type="number" id="permits" min="0" step="0.01" inputmode="decimal" placeholder="450" />
+            </div>
+          </div>
+
+          <div class="internal-tools">
+            <div class="internal-tools-header">
+              <button class="button secondary" id="internalToggleButton" type="button" aria-expanded="false" aria-controls="internalSettings">Internal Settings</button>
+              <p>Hidden by default for customer-facing use.</p>
+            </div>
+
+            <div class="internal-panel" id="internalSettings" hidden>
+              <div class="builder-card">
+                <h3>Payment / Commission Setup</h3>
+                <p></p>
+                <div class="estimator-form-grid">
+                  <div class="form-field">
+                    <label for="commissionSalesType">Sale Type</label>
+                    <select id="commissionSalesType"></select>
+                  </div>
+                  <div class="form-field">
+                    <label for="commissionScenario">Pricing Scenario</label>
+                    <select id="commissionScenario"></select>
+                  </div>
+                </div>
+                <p class="estimator-detail" id="commissionScenarioDetail"></p>
+              </div>
+
+              <div class="builder-card" id="commissionCashFields">
+                <h3>Cash / Check / Charge Setup</h3>
+                <p></p>
+                <div class="estimator-form-grid">
+                  <div class="form-field">
+                    <label for="commissionPaymentMethod">Final Payment Method</label>
+                    <select id="commissionPaymentMethod"></select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="builder-card" id="commissionFinanceFields" hidden>
+                <h3>Financing Setup</h3>
+                <p></p>
+                <div class="estimator-form-grid">
+                  <div class="form-field">
+                    <label for="commissionDepositMethod">Deposit Method</label>
+                    <select id="commissionDepositMethod"></select>
+                  </div>
+                  <div class="form-field">
+                    <label for="commissionFinancePlan">Financing Plan</label>
+                    <select id="commissionFinancePlan"></select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="button secondary" id="commissionPreviewToggleButton" type="button" aria-expanded="false" aria-controls="commissionPreviewPanel">View Commission Preview</button>
+              </div>
+
+              <div class="estimate-card commission-preview-panel" id="commissionPreviewPanel" hidden>
+                <h3>Commission Preview</h3>
+                <p></p>
+                <div class="estimate-summary-strip" id="commissionSummaryStrip"></div>
+                <div class="estimate-line-list" id="commissionBreakdown"></div>
+                <p class="estimator-detail" id="commissionStatus"></p>
+              </div>
             </div>
           </div>
 
@@ -1072,68 +1176,6 @@
       </div>
     </section>
 
-    <section class="panel estimator-panel">
-      <div class="panel-inner">
-        <div class="panel-heading">
-          <h2>Commission</h2>
-          <p></p>
-        </div>
-
-        <div class="estimator-layout">
-          <div class="builder-stack">
-            <div class="builder-card">
-              <h3>Deal Setup</h3>
-              <p></p>
-              <div class="estimator-form-grid">
-                <div class="form-field">
-                  <label for="commissionSalesType">Sale Type</label>
-                  <select id="commissionSalesType"></select>
-                </div>
-                <div class="form-field">
-                  <label for="commissionScenario">Pricing Scenario</label>
-                  <select id="commissionScenario"></select>
-                </div>
-              </div>
-              <p class="estimator-detail" id="commissionScenarioDetail"></p>
-            </div>
-
-            <div class="builder-card" id="commissionCashFields">
-              <h3>Cash / Check / Charge Setup</h3>
-              <p></p>
-              <div class="estimator-form-grid">
-                <div class="form-field">
-                  <label for="commissionPaymentMethod">Final Payment Method</label>
-                  <select id="commissionPaymentMethod"></select>
-                </div>
-              </div>
-            </div>
-
-            <div class="builder-card" id="commissionFinanceFields" hidden>
-              <h3>Financing Setup</h3>
-              <p></p>
-              <div class="estimator-form-grid">
-                <div class="form-field">
-                  <label for="commissionDepositMethod">Deposit Method</label>
-                  <select id="commissionDepositMethod"></select>
-                </div>
-                <div class="form-field">
-                  <label for="commissionFinancePlan">Financing Plan</label>
-                  <select id="commissionFinancePlan"></select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="estimate-card">
-            <h3>Commission Preview</h3>
-            <p></p>
-            <div class="estimate-summary-strip" id="commissionSummaryStrip"></div>
-            <div class="estimate-line-list" id="commissionBreakdown"></div>
-            <p class="estimator-detail" id="commissionStatus"></p>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 
   <script>
@@ -1380,7 +1422,9 @@
 
     const state = {
       estimateItems: [],
-      estimateMessage: ""
+      estimateMessage: "",
+      internalSettingsVisible: false,
+      commissionPreviewVisible: false
     };
     const roughState = {
       jobType: "tub",
@@ -2098,7 +2142,7 @@
               <span>Balance Due</span>
               <strong>${formatCurrencyFromCents(balanceCents)}</strong>
             </div>
-            ${typeof config.commissionCents === "number" ? `
+            ${state.commissionPreviewVisible && typeof config.commissionCents === "number" ? `
               <div class="metric">
                 <span>Commission</span>
                 <strong>${formatCurrencyFromCents(config.commissionCents)}${config.commissionRate ? ` @ ${config.commissionRate.toFixed(2)}%` : ""}</strong>
@@ -3238,6 +3282,7 @@
 
     function render() {
       const inputs = readInputs();
+      syncInternalPanels();
       refreshCommissionControls();
       renderSummary(inputs);
       renderEstimateSummary();
@@ -3263,6 +3308,35 @@
       setActiveTab("panelCumulative");
       render();
       document.getElementById("bf").focus();
+    }
+
+    function syncInternalPanels() {
+      const internalButton = document.getElementById("internalToggleButton");
+      const internalPanel = document.getElementById("internalSettings");
+      const previewButton = document.getElementById("commissionPreviewToggleButton");
+      const previewPanel = document.getElementById("commissionPreviewPanel");
+
+      if (!state.internalSettingsVisible) {
+        state.commissionPreviewVisible = false;
+      }
+
+      internalPanel.hidden = !state.internalSettingsVisible;
+      internalButton.setAttribute("aria-expanded", String(state.internalSettingsVisible));
+      internalButton.textContent = state.internalSettingsVisible ? "Hide Internal Settings" : "Internal Settings";
+
+      previewPanel.hidden = !state.commissionPreviewVisible;
+      previewButton.setAttribute("aria-expanded", String(state.commissionPreviewVisible));
+      previewButton.textContent = state.commissionPreviewVisible ? "Hide Commission Preview" : "View Commission Preview";
+    }
+
+    function toggleInternalSettings() {
+      state.internalSettingsVisible = !state.internalSettingsVisible;
+      render();
+    }
+
+    function toggleCommissionPreview() {
+      state.commissionPreviewVisible = !state.commissionPreviewVisible;
+      render();
     }
 
     initializeCommissionControls();
@@ -3352,6 +3426,8 @@
     document.getElementById("commissionPaymentMethod").addEventListener("change", render);
     document.getElementById("commissionDepositMethod").addEventListener("change", render);
     document.getElementById("commissionFinancePlan").addEventListener("change", render);
+    document.getElementById("internalToggleButton").addEventListener("click", toggleInternalSettings);
+    document.getElementById("commissionPreviewToggleButton").addEventListener("click", toggleCommissionPreview);
 
     document.getElementById("estimateList").addEventListener("click", (event) => {
       const removeButton = event.target.closest("[data-remove-estimate]");
