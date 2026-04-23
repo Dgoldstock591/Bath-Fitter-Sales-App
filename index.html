@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool V2.28</title>
+  <title>Bath Fitter Sales Tool V2.29</title>
   <link rel="icon" href="icon-192.png" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -885,7 +885,7 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Bath Fitter sales tool | V2.28</p>
+          <p class="eyebrow">Bath Fitter sales tool | V2.29</p>
       <h1>Bath Fitter Sales Tool</h1>
       <p class="hero-copy">
         Quote BF, wainscoting, cumulative totals, deposits, and financing from one screen.
@@ -1032,11 +1032,22 @@
           </div>
           <div class="pricing-guide-list" id="pricingGuideList"></div>
           <div class="section-block">
-            <h3>Matrix Reference</h3>
-            <p>Quick wall and base size lookup from the product matrix.</p>
+            <h3>Matrix Guide</h3>
+            <p>Search wall, base, and wainscoting matrix sizes without dumping the whole product guide on screen.</p>
             <div class="choice-row" id="matrixTabs">
-              <button class="choice-button active" type="button" data-matrix-tab="wall">Wall Matrix</button>
+              <button class="choice-button active" type="button" data-matrix-tab="wall">Wet-Area Wall Matrix</button>
               <button class="choice-button" type="button" data-matrix-tab="base">Base Matrix</button>
+              <button class="choice-button" type="button" data-matrix-tab="wains">Wainscoting Matrix</button>
+            </div>
+            <div class="estimator-form-grid">
+              <div class="form-field">
+                <label for="matrixGroup">Matrix Group</label>
+                <select id="matrixGroup"></select>
+              </div>
+              <div class="form-field">
+                <label for="matrixSearch">Matrix Search</label>
+                <input type="text" id="matrixSearch" placeholder="Search Savona, 36 x 36, flat wall, EZ roll-in..." />
+              </div>
             </div>
             <div class="pricing-guide-list" id="pricingMatrixList"></div>
           </div>
@@ -1460,7 +1471,8 @@
       estimateMessage: "",
       internalSettingsVisible: false,
       expandedCommissionCards: {},
-      activeMatrix: "wall"
+      activeMatrix: "wall",
+      activeMatrixGroup: "all"
     };
     const roughState = {
       route: "tub-liner",
@@ -1648,6 +1660,14 @@
     ];
     const PRODUCT_MATRICES = {
       wall: [
+        { group: "Flat Walls", label: "84 x 132", details: "Flat wall panel", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "84 x 156", details: "Flat wall panel", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "90 x 132", details: "Flat wall panel", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "90 x 156", details: "Flat wall panel", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "90 x 192", details: "Flat wall panel", notes: "Wet-area wall package reference" },
+        { group: "Wall Extensions", label: "Flat Extension Approx 2 x 11", details: "Flat wall extension", notes: "Pairs with flat wall packages where needed" },
+        { group: "Wall Extensions", label: "Flat Extension Approx 2 x 13", details: "Flat wall extension", notes: "Pairs with flat wall packages where needed" },
+        { group: "Wall Extensions", label: "Tile Extension Approx 1 x 11", details: "Tile extension for Palermo, Napoli, Padova, Rimini, Milano, or Savona", notes: "Wet-area extension, not wainscoting" },
         { group: "Torino", label: "5 x 11", details: "White only", notes: "Usable area: 5 x 11" },
         { group: "Torino", label: "6 x 10", details: "White, Pearl, White Marble", notes: "Usable area: 6 x 10" },
         { group: "Torino", label: "7 x 11", details: "All colors", notes: "Usable area: 7 x 11" },
@@ -1668,11 +1688,10 @@
         { group: "Genova", label: "7.5 x 11", details: "All colors", notes: "Usable area: 88 7/8 x 131 1/2. No wall extensions available" },
         { group: "Genova", label: "7.5 x 13", details: "All colors", notes: "Usable area: 88 5/8 x 153 5/8. No wall extensions available" },
         { group: "Verona", label: "7.5 x 11", details: "All colors", notes: "Usable area: 88 7/8 x 129. No wall extensions available" },
-        { group: "Verona", label: "7.5 x 13", details: "All colors", notes: "Usable area: 89 3/8 x 154 1/8. No wall extensions available" },
-        { group: "Wainscoting", label: "Bead Board 56 x 146", details: "All colors", notes: "Usable area: 56 x 145 3/4" },
-        { group: "Wainscoting", label: "6 x 6 Tile Pattern 50 x 145", details: "All colors", notes: "For wainscoting only" }
+        { group: "Verona", label: "7.5 x 13", details: "All colors", notes: "Usable area: 89 3/8 x 154 1/8. No wall extensions available" }
       ],
       base: [
+        { group: "Molded Bases", label: "26 to 60", details: "6 inch threshold molded base", notes: "Rare molded-base route only; verify concrete / beveled condition before using base-only" },
         { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "28 x 28", details: "Center drain", notes: "" },
         { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "30 x 30", details: "Left, center, or right drain", notes: "" },
         { group: "Freestanding Base with Pan and 6 Inch Threshold", label: "32 x 32 / 34 / 36 / 42", details: "Center or left, center, right by size", notes: "Confirm exact drain configuration in matrix before EOI" },
@@ -1684,7 +1703,17 @@
         { group: "Neo-Angle Bases", label: "40 x 40", details: "Neo-angle", notes: "Bath Fitter doors not available for this size; Century doors only" },
         { group: "Curved Shower Bases", label: "32 x 32", details: "Curved front", notes: "" },
         { group: "Curved Shower Bases", label: "36 x 36", details: "Curved front", notes: "" },
-        { group: "Curved Shower Bases", label: "40 x 40", details: "Curved front", notes: "" }
+        { group: "Curved Shower Bases", label: "40 x 40", details: "Curved front", notes: "" },
+        { group: "Flat Floor / Barrier-Free", label: "Flat Floor Base", details: "Diamond or tub pattern", notes: "Walls required; not a normal base-only route" },
+        { group: "Flat Floor / Barrier-Free", label: "Flat Floor 1 x 1 Tile Pattern", details: "White only", notes: "Walls required; not a normal base-only route" },
+        { group: "Flat Floor / Barrier-Free", label: "Flat Floor Base with Molded Handicap Threshold", details: "Barrier-friendly threshold option", notes: "Walls required; not a normal base-only route" },
+        { group: "Flat Floor / Barrier-Free", label: "FS EZ Roll In Barrier Free", details: "Tub pattern honeycomb only", notes: "Walls required; barrier-free / roll-in route" },
+        { group: "XL Freestanding Bases", label: "42 x 60 or 48 x 60", details: "XL FS base", notes: "Listed as CD only on the price sheet" }
+      ],
+      wains: [
+        { group: "Wainscoting", label: "6 x 6 Pattern 50 x 145", details: "All colors", notes: "Outside wet area only; separate wainscoting EOI" },
+        { group: "Wainscoting", label: "Bead Board 56 x 146", details: "All colors", notes: "Outside wet area only; separate wainscoting EOI" },
+        { group: "Wainscoting", label: "Savona 54 x 132 7/8", details: "White only", notes: "Outside wet area only; separate wainscoting EOI" }
       ]
     };
 
@@ -2944,16 +2973,38 @@
     function renderProductMatrix() {
       const matrixTabs = document.getElementById("matrixTabs");
       const matrixList = document.getElementById("pricingMatrixList");
-      const search = document.getElementById("guideSearch").value.trim().toLowerCase();
+      const groupSelect = document.getElementById("matrixGroup");
+      const search = document.getElementById("matrixSearch").value.trim().toLowerCase();
       const rows = PRODUCT_MATRICES[state.activeMatrix] || [];
+      const groups = ["all"].concat(
+        rows.reduce((list, row) => {
+          if (!list.includes(row.group)) {
+            list.push(row.group);
+          }
+          return list;
+        }, [])
+      );
 
       matrixTabs.querySelectorAll("[data-matrix-tab]").forEach((button) => {
         button.classList.toggle("active", button.dataset.matrixTab === state.activeMatrix);
       });
 
+      if (!groups.includes(state.activeMatrixGroup)) {
+        state.activeMatrixGroup = "all";
+      }
+
+      groupSelect.innerHTML = groups
+        .map((group) => {
+          const label = group === "all" ? "All Groups" : group;
+          return `<option value="${escapeHtml(group)}">${escapeHtml(label)}</option>`;
+        })
+        .join("");
+      groupSelect.value = state.activeMatrixGroup;
+
       const filteredRows = rows.filter((row) => {
         const haystack = [row.group, row.label, row.details, row.notes].join(" ").toLowerCase();
-        return !search || haystack.includes(search);
+        const matchesGroup = state.activeMatrixGroup === "all" || row.group === state.activeMatrixGroup;
+        return matchesGroup && (!search || haystack.includes(search));
       });
 
       matrixList.innerHTML = filteredRows.length
@@ -4157,6 +4208,11 @@
     document.getElementById("catalogQuantity").addEventListener("input", renderCatalogDetail);
     document.getElementById("guideCategory").addEventListener("change", render);
     document.getElementById("guideSearch").addEventListener("input", render);
+    document.getElementById("matrixGroup").addEventListener("change", (event) => {
+      state.activeMatrixGroup = event.target.value || "all";
+      renderProductMatrix();
+    });
+    document.getElementById("matrixSearch").addEventListener("input", renderProductMatrix);
     document.getElementById("guideTabs").addEventListener("click", (event) => {
       const button = event.target.closest("[data-guide-category]");
       if (!button) {
@@ -4173,7 +4229,8 @@
       }
 
       state.activeMatrix = button.dataset.matrixTab;
-      render();
+      state.activeMatrixGroup = "all";
+      renderProductMatrix();
     });
     document.querySelectorAll("[data-condition-group]").forEach((group) => {
       group.addEventListener("click", (event) => {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "bf-sales-cache-v2-28";
+const CACHE_NAME = "bf-sales-cache-v2-29";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
