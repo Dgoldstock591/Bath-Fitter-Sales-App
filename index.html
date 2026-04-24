@@ -1656,7 +1656,7 @@
                   <div class="rough-checklist" id="roughOnePieceWithCeilingField" hidden>
                     <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece unit includes ceiling</label>
                   </div>
-                  <p class="estimator-detail" id="roughOnePieceRemovalNote" hidden>One-piece fiberglass units include the walls. The estimator removes the full unit as one demo path.</p>
+                  <p class="estimator-detail" id="roughOnePieceRemovalNote" hidden>One-piece fiberglass units include the walls. The estimator removes the full unit as one demo path, and that fiberglass tearout can still lead into freestanding tub products like Empress and Empress XL.</p>
                 </div>
 
                 <div class="rough-step-section">
@@ -3860,11 +3860,11 @@
         case "steel-tub":
           return "tub-liner";
         case "fiberglass-tub":
-          return "tub-to-tub";
+          return "tub-replacement";
         case "shower-base":
           return "shower-base";
         case "one-piece-fiberglass":
-          return "freestanding-base";
+          return "tub-replacement";
         case "bf-liner":
           return "tub-to-tub";
         case "concrete-tile-base":
