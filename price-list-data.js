@@ -424,9 +424,9 @@ const PRICE_LIST_DATA = [
     category: "Safety Seats",
     label: "Corner Seat",
     bucket: "bf",
-    description: "Bath Fitter corner seat, all colors. Confirm price from the current sheet.",
+    description: "Bath Fitter corner seat, all colors.",
     variants: [
-      { id: "confirm", label: "Confirm Price", price: 0 }
+      { id: "all-colors", label: "All Colors", price: 1500 }
     ]
   },
   {
@@ -434,9 +434,9 @@ const PRICE_LIST_DATA = [
     category: "Safety Seats",
     label: "L-Shape Corner Seat 32 x 21",
     bucket: "bf",
-    description: "All colors and brushed nickel only. Confirm price from the current sheet.",
+    description: "All colors and brushed nickel only.",
     variants: [
-      { id: "confirm", label: "Confirm Price", price: 0 }
+      { id: "all-colors-bn", label: "All Colors / Brushed Nickel Only", price: 2200 }
     ]
   },
   {
@@ -444,9 +444,9 @@ const PRICE_LIST_DATA = [
     category: "Safety Seats",
     label: "18 Inch Fold Down Seat with Blocking",
     bucket: "bf",
-    description: "All colors with chrome, brushed nickel, matte black, or brushed gold support finish. Confirm price from the current sheet.",
+    description: "All colors with chrome, brushed nickel, matte black, or brushed gold support finish.",
     variants: [
-      { id: "confirm", label: "Confirm Price", price: 0 }
+      { id: "all-colors-support", label: "All Colors / CH-BN-MB-CZ Support", price: 1800 }
     ]
   },
   {
@@ -454,9 +454,9 @@ const PRICE_LIST_DATA = [
     category: "Safety Seats",
     label: "28 Inch Fold Down Seat with Blocking",
     bucket: "bf",
-    description: "All colors with chrome, brushed nickel, matte black, or brushed gold support finish. Confirm price from the current sheet.",
+    description: "All colors with chrome, brushed nickel, matte black, or brushed gold support finish.",
     variants: [
-      { id: "confirm", label: "Confirm Price", price: 0 }
+      { id: "all-colors-support", label: "All Colors / CH-BN-MB-CZ Support", price: 1900 }
     ]
   },
   {
