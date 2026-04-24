@@ -910,6 +910,8 @@
     }
 
     .hero-badge {
+      display: inline-flex;
+      align-items: center;
       padding: 0.55rem 0.88rem;
       border-radius: 999px;
       border: 1px solid rgba(10, 108, 104, 0.18);
@@ -919,6 +921,14 @@
       font-weight: 800;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .hero-badge:hover {
+      transform: translateY(-1px);
+      background: #ffffff;
+      box-shadow: 0 10px 22px rgba(9, 41, 48, 0.08);
     }
 
     .landing-card {
@@ -1199,12 +1209,12 @@
           <img class="brand-logo" src="bath-fitter-logo.svg" alt="Bath Fitter" />
           <h1>Bath Fitter Sales Toolkit</h1>
           <p class="hero-copy">
-            Cleaner calculator math, quicker price lookup, and a field-ready exact estimator built for in-home reps.
+            Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
           <div class="hero-badges" aria-label="Core tools">
-            <span class="hero-badge">Calculator</span>
-            <span class="hero-badge">Pricing Guide</span>
-            <span class="hero-badge">Exact Estimator</span>
+            <a class="hero-badge" href="#calculatorTool" data-open-tool="calculatorTool">Calculator</a>
+            <a class="hero-badge" href="#pricingGuide" data-open-tool="pricingGuide">Pricing Guide</a>
+            <a class="hero-badge" href="#roughEstimator" data-open-tool="roughEstimator">Rough Estimate Generator</a>
           </div>
         </div>
       </div>
