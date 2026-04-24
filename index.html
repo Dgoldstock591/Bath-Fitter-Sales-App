@@ -4,23 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bath Fitter Sales Tool V3.0</title>
-  <link rel="icon" href="icon-192.png" />
+  <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
-      --bg-top: #dff4f0;
-      --bg-bottom: #f7f1e8;
+      --bg-top: #eef3f0;
+      --bg-bottom: #dfe9e5;
       --surface: #ffffff;
-      --surface-alt: #f6fbfa;
-      --border: #c9dfd8;
-      --border-strong: #8eb7ad;
-      --text: #153632;
-      --muted: #53706a;
-      --accent: #0d7a68;
-      --accent-dark: #08584d;
-      --accent-soft: #d3efe8;
-      --highlight: #d88e38;
-      --shadow: 0 18px 45px rgba(14, 76, 64, 0.12);
+      --surface-alt: #f6f8f7;
+      --border: #ccd8d4;
+      --border-strong: #7e9f9b;
+      --text: #18353b;
+      --muted: #5b6f73;
+      --accent: #06857e;
+      --accent-dark: #0a6c68;
+      --accent-soft: #d7ece8;
+      --highlight: #b89052;
+      --shadow: 0 22px 58px rgba(10, 41, 51, 0.14);
       --radius-lg: 24px;
       --radius-md: 18px;
       --radius-sm: 12px;
@@ -791,6 +791,373 @@
       background: #fff7f4;
     }
 
+    body {
+      position: relative;
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(184, 144, 82, 0.12), transparent 24%),
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.88), transparent 34%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(6, 133, 126, 0.035) 0%, transparent 26%),
+        repeating-linear-gradient(
+          135deg,
+          rgba(24, 53, 59, 0.02) 0,
+          rgba(24, 53, 59, 0.02) 1px,
+          transparent 1px,
+          transparent 18px
+        );
+      opacity: 0.8;
+    }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      padding-top: 1.1rem;
+    }
+
+    .hero {
+      margin-bottom: 1.25rem;
+      padding: 0;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      background:
+        radial-gradient(circle at top right, rgba(184, 144, 82, 0.18), transparent 26%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(243, 247, 246, 0.98) 54%, rgba(228, 237, 234, 0.98) 100%);
+      box-shadow: 0 28px 70px rgba(9, 41, 48, 0.16);
+      overflow: hidden;
+    }
+
+    .hero-grid::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--accent-dark) 0%, var(--accent) 60%, var(--highlight) 100%);
+    }
+
+    .hero-grid::after {
+      content: "";
+      position: absolute;
+      right: -5rem;
+      bottom: -6rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 50%;
+      background: rgba(6, 133, 126, 0.08);
+    }
+
+    .hero-copy-block,
+    .hero-callout {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      display: block;
+      width: min(430px, 100%);
+      height: auto;
+      filter: drop-shadow(0 18px 30px rgba(6, 60, 68, 0.14));
+    }
+
+    .eyebrow {
+      color: var(--accent-dark);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 0.98;
+      color: var(--text);
+    }
+
+    .hero-copy {
+      max-width: 38rem;
+      font-size: 1.04rem;
+      line-height: 1.65;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .hero-badge {
+      padding: 0.55rem 0.88rem;
+      border-radius: 999px;
+      border: 1px solid rgba(10, 108, 104, 0.18);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--accent-dark);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero-callout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      padding: 1.2rem;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(180deg, rgba(8, 65, 72, 0.98) 0%, rgba(10, 108, 104, 0.96) 100%);
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .hero-callout-label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .hero-callout > strong {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-callout > p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+    }
+
+    .hero-callout-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.2rem;
+    }
+
+    .hero-callout-card {
+      padding: 0.8rem 0.75rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .hero-callout-card span {
+      display: block;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-callout-card strong {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    .landing-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      padding: 1.25rem 1.15rem;
+      border: 1px solid rgba(10, 108, 104, 0.14);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 246, 244, 0.98) 100%);
+      box-shadow: 0 18px 36px rgba(9, 41, 48, 0.08);
+      overflow: hidden;
+    }
+
+    .landing-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--accent-dark) 0%, var(--accent) 70%, var(--highlight) 100%);
+    }
+
+    .landing-card span {
+      margin-bottom: 0;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+    }
+
+    .landing-card strong,
+    .panel-heading h2,
+    .section-block h3,
+    .builder-card h3,
+    .estimate-card h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: -0.02em;
+    }
+
+    .landing-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+      font-size: 0.95rem;
+    }
+
+    .landing-card small {
+      margin-top: auto;
+      color: var(--accent-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .tool-bar {
+      justify-content: flex-start;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.93);
+      border: 1px solid rgba(24, 70, 74, 0.12);
+      box-shadow: 0 22px 54px rgba(9, 41, 48, 0.12);
+    }
+
+    .panel-heading h2 {
+      font-size: 1.55rem;
+      color: var(--text);
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 64%, #14a098 100%);
+      box-shadow: 0 16px 28px rgba(10, 108, 104, 0.24);
+    }
+
+    .button.secondary,
+    .mini-button {
+      background: linear-gradient(180deg, #ffffff 0%, #f0f5f3 100%);
+      border-color: rgba(24, 70, 74, 0.14);
+      box-shadow: 0 10px 22px rgba(9, 41, 48, 0.05);
+    }
+
+    .tab-list {
+      padding: 0.35rem;
+      border-radius: 999px;
+      background: rgba(11, 95, 92, 0.08);
+    }
+
+    .tab-button {
+      background: transparent;
+      border-color: transparent;
+      color: var(--accent-dark);
+      font-weight: 800;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+      border-color: transparent;
+      box-shadow: 0 14px 24px rgba(10, 108, 104, 0.2);
+    }
+
+    .input-card,
+    .builder-card,
+    .estimate-card,
+    .scenario-card,
+    .guide-row,
+    .rough-row,
+    .rough-step,
+    .estimate-line,
+    .summary-chip,
+    .estimate-summary-chip,
+    .metric,
+    .finance-item,
+    .internal-panel {
+      border-color: rgba(24, 70, 74, 0.12);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(247, 249, 248, 0.98) 100%);
+      box-shadow: 0 16px 34px rgba(9, 41, 48, 0.06);
+    }
+
+    .input-card,
+    .builder-card,
+    .estimate-card,
+    .scenario-card,
+    .guide-row,
+    .rough-step,
+    .estimate-line,
+    .rough-row {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .input-card::before,
+    .builder-card::before,
+    .estimate-card::before,
+    .scenario-card::before,
+    .guide-row::before,
+    .rough-step::before,
+    .estimate-line::before,
+    .rough-row::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(10, 108, 104, 0.9) 0%, rgba(184, 144, 82, 0.9) 100%);
+      opacity: 0.9;
+    }
+
+    .metric.highlight {
+      background: linear-gradient(180deg, #0a6c68 0%, #075653 100%);
+      box-shadow: 0 16px 28px rgba(10, 108, 104, 0.22);
+    }
+
+    .math-line,
+    .estimator-detail {
+      background: linear-gradient(180deg, rgba(215, 236, 232, 0.6) 0%, rgba(245, 250, 248, 0.9) 100%);
+      border-color: rgba(10, 108, 104, 0.12);
+    }
+
+    .choice-button {
+      border-color: rgba(24, 70, 74, 0.12);
+      background: linear-gradient(180deg, #ffffff 0%, #f1f6f4 100%);
+      color: var(--accent-dark);
+      box-shadow: 0 8px 18px rgba(9, 41, 48, 0.04);
+    }
+
+    .choice-button.active {
+      background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+      box-shadow: 0 12px 24px rgba(10, 108, 104, 0.2);
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.92fr);
+        align-items: stretch;
+      }
+    }
+
     @media (min-width: 700px) {
       .input-grid,
       .summary-strip,
@@ -870,6 +1237,22 @@
       .rough-row p {
         overflow-wrap: anywhere;
       }
+
+      .hero-grid {
+        padding: 1rem;
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      .hero-callout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-logo {
+        width: min(330px, 100%);
+      }
     }
   </style>
   <script src="price-list-data.js?v=301"></script>
@@ -885,11 +1268,40 @@
 <body>
   <div class="page-shell">
     <header class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy-block">
           <p class="eyebrow">Bath Fitter sales tool | V3.0</p>
-      <h1>Bath Fitter Sales Tool</h1>
-      <p class="hero-copy">
-        Quote BF, wainscoting, cumulative totals, deposits, and financing from one screen.
-      </p>
+          <img class="brand-logo" src="bath-fitter-logo.svg" alt="Bath Fitter" />
+          <h1>Bath Fitter Sales Toolkit</h1>
+          <p class="hero-copy">
+            Cleaner calculator math, quicker price lookup, and a field-ready exact estimator built for in-home reps.
+          </p>
+          <div class="hero-badges" aria-label="Core tools">
+            <span class="hero-badge">Calculator</span>
+            <span class="hero-badge">Pricing Guide</span>
+            <span class="hero-badge">Exact Estimator</span>
+          </div>
+        </div>
+        <aside class="hero-callout" aria-label="Toolkit summary">
+          <span class="hero-callout-label">Built For In-Home Sales</span>
+          <strong>Fast pricing without the clutter</strong>
+          <p>Run BF system, wainscoting, labor, doors, financing, and commission in one polished workflow.</p>
+          <div class="hero-callout-grid">
+            <div class="hero-callout-card">
+              <span>01</span>
+              <strong>Calculator</strong>
+            </div>
+            <div class="hero-callout-card">
+              <span>02</span>
+              <strong>Guide</strong>
+            </div>
+            <div class="hero-callout-card">
+              <span>03</span>
+              <strong>Estimator</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
     </header>
 
     <section class="panel tool-landing" id="home">
@@ -902,14 +1314,20 @@
           <a class="landing-card" href="#calculatorTool" data-open-tool="calculatorTool">
             <span>01</span>
             <strong>Calculator Tool</strong>
+            <p>Run BF, wainscoting, cumulative total, financing, deposit, and commission math from one screen.</p>
+            <small>Open calculator</small>
           </a>
           <a class="landing-card" href="#pricingGuide" data-open-tool="pricingGuide">
             <span>02</span>
             <strong>Pricing Guide</strong>
+            <p>Search products, labor, accessories, and matrix sizes without dumping the full price sheet at once.</p>
+            <small>Open guide</small>
           </a>
           <a class="landing-card" href="#roughEstimator" data-open-tool="roughEstimator">
             <span>03</span>
             <strong>Rough Estimate Generator</strong>
+            <p>Build exact rep-only estimates with condition logic, bucket routing, and calculator handoff.</p>
+            <small>Open estimator</small>
           </a>
         </div>
       </div>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Bath Fitter icon</title>
+  <desc id="desc">Bath Fitter monogram icon in teal and white.</desc>
+  <rect width="512" height="512" rx="104" fill="#0A6C68"/>
+  <rect x="56" y="72" width="400" height="8" fill="#FFFFFF"/>
+  <rect x="88" y="120" width="336" height="6" fill="#CFE8E5"/>
+  <rect x="88" y="386" width="336" height="6" fill="#CFE8E5"/>
+  <rect x="56" y="432" width="400" height="8" fill="#FFFFFF"/>
+  <text x="118" y="236" fill="#FFFFFF" font-family="Georgia, 'Times New Roman', serif" font-size="168" font-weight="700">B</text>
+  <text x="138" y="368" fill="#FFFFFF" font-family="Georgia, 'Times New Roman', serif" font-size="168" font-weight="700">F</text>
+</svg>
