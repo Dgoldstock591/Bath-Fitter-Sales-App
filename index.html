@@ -2232,6 +2232,7 @@
       "extensions-flat-2x13",
       "tile-extension-1x11"
     ];
+    const ROUGH_DEFAULT_WALL_ID = "wall-flat-90x132";
     const ROUGH_WAINSCOTING_IDS = [
       "wainscot-6x6",
       "wainscot-beadboard",
@@ -4598,7 +4599,10 @@
       let snapshot = getRoughEngineState();
       const wallSelect = document.getElementById("roughWallProduct");
       if (snapshot.includeWetWalls && !wallSelect.value) {
-        wallSelect.value = ROUGH_WALL_IDS.find((itemId) => getCatalogItemById(itemId)) || "";
+        wallSelect.value =
+          (getCatalogItemById(ROUGH_DEFAULT_WALL_ID) ? ROUGH_DEFAULT_WALL_ID : "") ||
+          ROUGH_WALL_IDS.find((itemId) => getCatalogItemById(itemId)) ||
+          "";
         snapshot = getRoughEngineState();
       }
 
