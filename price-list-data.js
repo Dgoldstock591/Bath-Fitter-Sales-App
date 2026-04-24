@@ -296,10 +296,12 @@ const PRICE_LIST_DATA = [
     category: "Walls & Accessories",
     label: "Additional for All Tile Patterns",
     bucket: "bf",
-    description: "Tile pattern upcharge for Palermo, Napoli, Padova, Rimini, Milano, Savona, Torino, Roma, Genova, Verona, subway, textured, mosaic, and other tile wall patterns.",
+    description: "Tile pattern upcharge for Palermo, Napoli, Padova, Rimini, Milano, Savona, Torino, Roma, Genova, Verona, Lucca, Sorrento, subway, textured, mosaic, and other tile wall patterns.",
     variants: [
       { id: "standard", label: "Standard Tile Pattern Upgrade", price: 900 },
       { id: "torino", label: "Torino", price: 900 },
+      { id: "lucca", label: "Lucca", price: 900 },
+      { id: "sorrento", label: "Sorrento", price: 900 },
       { id: "napoli", label: "Napoli", price: 900 },
       { id: "palermo", label: "Palermo", price: 900 },
       { id: "padova", label: "Padova", price: 900 },

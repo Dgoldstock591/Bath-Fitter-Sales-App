@@ -1419,7 +1419,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=302"></script>
+  <script src="price-list-data.js?v=310"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1753,16 +1753,13 @@
                       <option value="Champagne Bronze">Champagne Bronze</option>
                     </select>
                   </div>
-                  <div class="form-field" id="roughWallProductField">
-                    <label for="roughWallProduct">Wall Product</label>
-                    <select id="roughWallProduct"></select>
-                  </div>
                   <div class="form-field" id="roughWallPatternField">
-                    <label for="roughWallPattern">Wall Pattern / Style</label>
+                    <label for="roughWallPattern">Wall Style</label>
                     <select id="roughWallPattern">
-                      <option value="">Flat / no pattern upgrade</option>
-                      <option value="Tile Pattern Upgrade">Tile Pattern Upgrade</option>
+                      <option value="">Flat</option>
                       <option value="Torino">Torino</option>
+                      <option value="Lucca">Lucca</option>
+                      <option value="Sorrento">Sorrento</option>
                       <option value="Palermo">Palermo</option>
                       <option value="Napoli">Napoli</option>
                       <option value="Padova">Padova</option>
@@ -1782,6 +1779,11 @@
                       <option value="13 x 13 Textured Tile Pattern with 4 x 4 Inserts">13 x 13 Textured Tile Pattern with 4 x 4 Inserts</option>
                       <option value="Mosaic Tile Pattern">Mosaic Tile Pattern</option>
                     </select>
+                  </div>
+                  <div class="form-field" id="roughWallProductField">
+                    <label for="roughWallProduct">Wall Size</label>
+                    <select id="roughWallProduct"></select>
+                    <p class="estimator-detail" id="roughWallSizeHelp"></p>
                   </div>
                   <div class="form-field" id="roughCeilingProductField">
                     <label for="roughCeilingProduct">Ceiling Panel</label>
@@ -2222,17 +2224,38 @@
       "flat-floor-handicap"
     ]);
     const ROUGH_ANY_TUB_OR_BASE_IDS = new Set(["tub-liner"].concat(ROUGH_CUSTOM_PRIMARY_IDS));
-    const ROUGH_WALL_IDS = [
+    const ROUGH_WALL_PANEL_IDS = [
       "wall-flat-84x132",
       "wall-flat-84x156",
       "wall-flat-90x132",
       "wall-flat-90x156",
-      "wall-flat-90x192",
-      "extensions-flat-2x11",
-      "extensions-flat-2x13",
-      "tile-extension-1x11"
+      "wall-flat-90x192"
     ];
     const ROUGH_DEFAULT_WALL_ID = "wall-flat-90x132";
+    const ROUGH_WALL_STYLE_SIZE_IDS = {
+      flat: ROUGH_WALL_PANEL_IDS,
+      Torino: ["wall-flat-84x132", "wall-flat-90x132", "wall-flat-90x156", "wall-flat-90x192"],
+      Lucca: ["wall-flat-90x132", "wall-flat-90x156"],
+      Sorrento: ["wall-flat-90x132", "wall-flat-90x156"],
+      Palermo: ["wall-flat-84x132", "wall-flat-84x156", "wall-flat-90x132"],
+      Napoli: ["wall-flat-84x132"],
+      Padova: ["wall-flat-84x132", "wall-flat-90x132"],
+      Roma: ["wall-flat-84x132"],
+      Rimini: ["wall-flat-84x132"],
+      Milano: ["wall-flat-84x132"],
+      Savona: ["wall-flat-90x132", "wall-flat-90x156"],
+      Genova: ["wall-flat-90x132", "wall-flat-90x156"],
+      Verona: ["wall-flat-90x132", "wall-flat-90x156"],
+      "12 x 12 Tile Pattern": ROUGH_WALL_PANEL_IDS,
+      "3 x 6 Subway Style": ROUGH_WALL_PANEL_IDS,
+      "6 x 6 Diamond Tile Pattern": ROUGH_WALL_PANEL_IDS,
+      "4 x 4 Tile Pattern": ROUGH_WALL_PANEL_IDS,
+      "6 x 6 Tile Pattern": ROUGH_WALL_PANEL_IDS,
+      "10 x 10 Tile Pattern with Design": ROUGH_WALL_PANEL_IDS,
+      "6 x 22 Textured Tile Pattern": ROUGH_WALL_PANEL_IDS,
+      "13 x 13 Textured Tile Pattern with 4 x 4 Inserts": ROUGH_WALL_PANEL_IDS,
+      "Mosaic Tile Pattern": ROUGH_WALL_PANEL_IDS
+    };
     const ROUGH_WAINSCOTING_IDS = [
       "wainscot-6x6",
       "wainscot-beadboard",
@@ -2329,6 +2352,10 @@
         { group: "Torino", label: "7.5 x 11", details: "All colors", notes: "Usable area: 7.5 x 11" },
         { group: "Torino", label: "7.5 x 13", details: "All colors", notes: "Usable area: 7.5 x 13" },
         { group: "Torino", label: "7.5 x 16", details: "All colors", notes: "Usable area: 7.5 x 16" },
+        { group: "Lucca", label: "7.5 x 11", details: "Available wall size", notes: "Mapped in the estimator to 90 x 132" },
+        { group: "Lucca", label: "7.5 x 13", details: "Available wall size", notes: "Mapped in the estimator to 90 x 156" },
+        { group: "Sorrento", label: "7.5 x 11", details: "Available wall size", notes: "Mapped in the estimator to 90 x 132" },
+        { group: "Sorrento", label: "7.5 x 13", details: "Available wall size", notes: "Mapped in the estimator to 90 x 156" },
         { group: "Napoli", label: "7 x 11", details: "All colors", notes: "Usable area: 83 5/8 x 131. Extension: 12 x 131" },
         { group: "Palermo", label: "7 x 11", details: "All colors", notes: "Usable area: 84 5/8 x 131. Extension: 12 x 131" },
         { group: "Palermo", label: "7 x 13", details: "All colors", notes: "Usable area: 83 9/16 x 155 1/4" },
@@ -3715,7 +3742,14 @@
         : emptyState("No matching matrix rows.");
     }
 
-    function setSelectFromItems(selectId, itemIds, includeNone = false, noneLabel = "None", extraOptions = []) {
+    function setSelectFromItems(
+      selectId,
+      itemIds,
+      includeNone = false,
+      noneLabel = "None",
+      extraOptions = [],
+      itemLabelFormatter = null
+    ) {
       const select = document.getElementById(selectId);
       if (!select) {
         return;
@@ -3734,7 +3768,10 @@
           .map((option) => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`)
           .join("") +
         options
-          .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`)
+          .map((item) => {
+            const label = itemLabelFormatter ? itemLabelFormatter(item) : item.label;
+            return `<option value="${escapeHtml(item.id)}">${escapeHtml(label)}</option>`;
+          })
           .join("");
 
       select.value = allowedValues.has(currentValue)
@@ -3896,7 +3933,7 @@
       const notes = document.getElementById("roughWizardNotes");
       const wallScopeLabel = snapshot.includeWetWalls
         ? snapshot.wallProduct
-          ? getCatalogItemById(snapshot.wallProduct)?.label || "Wet-area walls included"
+          ? `${snapshot.wallPattern || "Flat"} | ${getWallSizeLabel(snapshot.wallProduct) || "Wet-area walls included"}`
           : "Wet-area walls included"
         : snapshot.wainscotingQuantity
           ? `Wainscoting x${snapshot.wainscotingQuantity}`
@@ -4071,6 +4108,30 @@
       }
 
       return ROUGH_SHOWER_DOOR_IDS;
+    }
+
+    function getWallProductIdsForStyle(style) {
+      const sizeIds = ROUGH_WALL_STYLE_SIZE_IDS[style || "flat"] || ROUGH_WALL_PANEL_IDS;
+      return sizeIds.filter((itemId) => getCatalogItemById(itemId));
+    }
+
+    function getWallSizeLabel(itemOrId) {
+      const item = typeof itemOrId === "string" ? getCatalogItemById(itemOrId) : itemOrId;
+      return item?.label?.replace(/^Flat Wall\s+/i, "") || item?.label || "";
+    }
+
+    function getWallSizeHelpText(style, sizeIds) {
+      if (!sizeIds.length) {
+        return "";
+      }
+
+      const styleLabel = style || "Flat";
+      const sizeLabels = sizeIds
+        .map((itemId) => getWallSizeLabel(itemId))
+        .filter(Boolean)
+        .join(", ");
+
+      return `${styleLabel} available sizes: ${sizeLabels}`;
     }
 
     function getCurrentRoughSelections() {
@@ -4520,6 +4581,8 @@
       const onePieceRemovalNote = document.getElementById("roughOnePieceRemovalNote");
       const concreteField = document.getElementById("roughConcreteBeveledField");
       const baseOnlyField = document.getElementById("roughBaseOnlyField");
+      const wallStyleSelect = document.getElementById("roughWallPattern");
+      const wallSizeHelp = document.getElementById("roughWallSizeHelp");
 
       const allowedRoutes = getAllowedRoughRoutes(roughState.existingFixture);
       let suggestedRoute = getSuggestedRoughRoute(roughState.existingFixture);
@@ -4585,7 +4648,6 @@
       const primaryProductIds = getPrimaryProductsForRoute(roughState.route, roughState.layout);
       const hasPrimaryProduct = primaryProductIds.length > 0;
       setSelectFromItems("roughPrimaryProduct", primaryProductIds, !hasPrimaryProduct, "No tub/base product");
-      setSelectFromItems("roughWallProduct", ROUGH_WALL_IDS, true, "No walls");
       setSelectFromItems("roughWainscotingProduct", ROUGH_WAINSCOTING_IDS, true, "No wainscoting");
       setSelectFromItems("roughDoorProduct", getDoorOptionIds(roughState.route, roughState.layout), true, "No door", [
         { value: "custom", label: "Custom Door - Call Erin" }
@@ -4596,19 +4658,26 @@
       setSelectFromItems("roughCurtainRodProduct", ROUGH_CURTAIN_ROD_IDS, true, "No curtain rod");
       setSelectFromItems("roughShowerRodProduct", ROUGH_SHOWER_ROD_IDS, true, "No shower rod");
 
+      if (![...wallStyleSelect.options].some((option) => option.value === wallStyleSelect.value)) {
+        wallStyleSelect.value = "";
+      }
+
+      const wallSizeIds = getWallProductIdsForStyle(wallStyleSelect.value);
+      setSelectFromItems("roughWallProduct", wallSizeIds, true, "No walls", [], (item) => getWallSizeLabel(item));
+
       let snapshot = getRoughEngineState();
       const wallSelect = document.getElementById("roughWallProduct");
       if (snapshot.includeWetWalls && !wallSelect.value) {
         wallSelect.value =
-          (getCatalogItemById(ROUGH_DEFAULT_WALL_ID) ? ROUGH_DEFAULT_WALL_ID : "") ||
-          ROUGH_WALL_IDS.find((itemId) => getCatalogItemById(itemId)) ||
+          (wallSizeIds.includes(ROUGH_DEFAULT_WALL_ID) ? ROUGH_DEFAULT_WALL_ID : "") ||
+          wallSizeIds[0] ||
           "";
         snapshot = getRoughEngineState();
       }
 
       if (!snapshot.includeWetWalls) {
         wallSelect.value = "";
-        document.getElementById("roughWallPattern").value = "";
+        wallStyleSelect.value = "";
         snapshot = getRoughEngineState();
       }
 
@@ -4639,8 +4708,9 @@
         roughState.route !== "tub-liner" || snapshot.primaryProduct !== "tub-liner";
       document.getElementById("roughDrainFinishField").hidden =
         !snapshot.primaryProduct || !ROUGH_ANY_TUB_OR_BASE_IDS.has(snapshot.primaryProduct);
+      document.getElementById("roughWallPatternField").hidden = !snapshot.includeWetWalls;
       document.getElementById("roughWallProductField").hidden = !snapshot.includeWetWalls;
-      document.getElementById("roughWallPatternField").hidden = !snapshot.includeWetWalls || !snapshot.wallProduct;
+      wallSizeHelp.textContent = snapshot.includeWetWalls ? getWallSizeHelpText(snapshot.wallPattern, wallSizeIds) : "";
       document.getElementById("roughWainscotingProductField").hidden = false;
       document.getElementById("roughWainscotingQuantityField").hidden = !snapshot.wainscotingProduct;
       document.getElementById("roughDoorProductField").hidden = !snapshot.showWetAreaScope;
