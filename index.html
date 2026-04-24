@@ -1735,11 +1735,20 @@
                     <label for="roughPrimaryProduct">Tub / Base Product</label>
                     <select id="roughPrimaryProduct"></select>
                   </div>
+                  <div class="form-field" id="roughAcrylicColorField">
+                    <label for="roughAcrylicColor">Acrylic Color</label>
+                    <select id="roughAcrylicColor">
+                      <option value="white">White</option>
+                      <option value="pearl">Pearl</option>
+                      <option value="marbles">Marbles</option>
+                    </select>
+                    <p class="estimator-detail">Used anywhere the selected BF product supports matching acrylic. White-only items stay white.</p>
+                  </div>
                   <div class="form-field" id="roughFormedFrontField">
-                    <label for="roughFormedFront">Formed Front</label>
+                    <label for="roughFormedFront">Tub Liner Front</label>
                     <select id="roughFormedFront">
-                      <option value="no">No</option>
-                      <option value="yes">Yes</option>
+                      <option value="no">Standard Front</option>
+                      <option value="yes">Formed Front</option>
                     </select>
                   </div>
                   <div class="form-field" id="roughDrainFinishField">
@@ -2352,10 +2361,10 @@
         { group: "Torino", label: "7.5 x 11", details: "All colors", notes: "Usable area: 7.5 x 11" },
         { group: "Torino", label: "7.5 x 13", details: "All colors", notes: "Usable area: 7.5 x 13" },
         { group: "Torino", label: "7.5 x 16", details: "All colors", notes: "Usable area: 7.5 x 16" },
-        { group: "Lucca", label: "7.5 x 11", details: "Available wall size", notes: "Mapped in the estimator to 90 x 132" },
-        { group: "Lucca", label: "7.5 x 13", details: "Available wall size", notes: "Mapped in the estimator to 90 x 156" },
-        { group: "Sorrento", label: "7.5 x 11", details: "Available wall size", notes: "Mapped in the estimator to 90 x 132" },
-        { group: "Sorrento", label: "7.5 x 13", details: "Available wall size", notes: "Mapped in the estimator to 90 x 156" },
+        { group: "Lucca", label: "7.5 x 11", details: "Available wall size", notes: "Confirmed usable area: 90 x 132" },
+        { group: "Lucca", label: "7.5 x 13", details: "Available wall size", notes: "Confirmed usable area: 90 x 156" },
+        { group: "Sorrento", label: "7.5 x 11", details: "Available wall size", notes: "Confirmed usable area: 90 x 132" },
+        { group: "Sorrento", label: "7.5 x 13", details: "Available wall size", notes: "Confirmed usable area: 90 x 156" },
         { group: "Napoli", label: "7 x 11", details: "All colors", notes: "Usable area: 83 5/8 x 131. Extension: 12 x 131" },
         { group: "Palermo", label: "7 x 11", details: "All colors", notes: "Usable area: 84 5/8 x 131. Extension: 12 x 131" },
         { group: "Palermo", label: "7 x 13", details: "All colors", notes: "Usable area: 83 9/16 x 155 1/4" },
@@ -3590,6 +3599,31 @@
       return item.variants.find((variant) => variant.id === variantId) || item.variants[0] || null;
     }
 
+    function getPreferredAcrylicVariantId(itemId, acrylicColor) {
+      const item = getCatalogItemById(itemId);
+      if (!item?.variants?.length) {
+        return null;
+      }
+
+      const requestedColor = String(acrylicColor || "").trim().toLowerCase();
+      if (!requestedColor) {
+        return item.variants[0].id;
+      }
+
+      const exactMatch = item.variants.find((variant) => String(variant.id).toLowerCase() === requestedColor);
+      if (exactMatch) {
+        return exactMatch.id;
+      }
+
+      const matchTokens = requestedColor === "marbles" ? ["marbles", "marble"] : [requestedColor];
+      const labelMatch = item.variants.find((variant) => {
+        const haystack = `${variant.id} ${variant.label}`.toLowerCase();
+        return matchTokens.some((token) => haystack.includes(token));
+      });
+
+      return (labelMatch || item.variants[0]).id;
+    }
+
     function createEstimateLineFromCatalog(itemId, variantId, quantity = 1, labelSuffix = "") {
       const item = getCatalogItemById(itemId);
       const variant = getCatalogVariant(item, variantId);
@@ -3944,6 +3978,7 @@
       summaryStrip.innerHTML = [
         { label: "Existing", value: getChoiceLabel("existingFixture", snapshot.existingFixture) },
         { label: "Route", value: getChoiceLabel("route", snapshot.route) },
+        { label: "Acrylic", value: snapshot.acrylicColor ? `${snapshot.acrylicColor.charAt(0).toUpperCase()}${snapshot.acrylicColor.slice(1)}` : "White" },
         { label: "Wall Scope", value: wallScopeLabel },
         { label: "Estimated Total", value: formatCurrencyFromCents(roughTotals.total) }
       ]
@@ -4145,6 +4180,7 @@
         baseOnlyRequested: roughChecked("roughBaseOnlyException"),
         includeWetWalls: roughChecked("roughIncludeWetWalls"),
         primaryProduct: roughValue("roughPrimaryProduct"),
+        acrylicColor: roughValue("roughAcrylicColor") || "white",
         formedFront: roughValue("roughFormedFront"),
         wallProduct: roughValue("roughWallProduct"),
         wainscotingProduct: roughValue("roughWainscotingProduct"),
@@ -4463,9 +4499,12 @@
       }
     }
 
-    function addSelectedAccessoryLines(items) {
+    function addSelectedAccessoryLines(items, snapshot) {
       document.querySelectorAll("[data-rough-accessory]:checked").forEach((input) => {
-        addRoughCatalogLine(items, input.getAttribute("data-rough-accessory"), "accessory");
+        const itemId = input.getAttribute("data-rough-accessory");
+        addRoughCatalogLine(items, itemId, "accessory", {
+          variantId: getPreferredAcrylicVariantId(itemId, snapshot.acrylicColor)
+        });
       });
     }
 
@@ -4474,7 +4513,9 @@
       const snapshot = getRoughEngineState();
 
       if (snapshot.primaryProduct) {
-        addRoughCatalogLine(items, snapshot.primaryProduct, "product");
+        addRoughCatalogLine(items, snapshot.primaryProduct, "product", {
+          variantId: getPreferredAcrylicVariantId(snapshot.primaryProduct, snapshot.acrylicColor)
+        });
 
         if (ROUGH_ANY_TUB_OR_BASE_IDS.has(snapshot.primaryProduct)) {
           addRoughCatalogLine(items, ROUGH_ITEM_IDS.drain, "product", {
@@ -4488,7 +4529,9 @@
       }
 
       if (snapshot.includeWetWalls && snapshot.wallProduct) {
-        addRoughCatalogLine(items, snapshot.wallProduct, "product");
+        addRoughCatalogLine(items, snapshot.wallProduct, "product", {
+          variantId: getPreferredAcrylicVariantId(snapshot.wallProduct, snapshot.acrylicColor)
+        });
 
         if (snapshot.wallPattern) {
           addRoughCatalogLine(items, ROUGH_ITEM_IDS.tilePattern, "product", {
@@ -4499,12 +4542,15 @@
 
       if (snapshot.wainscotingProduct) {
         addRoughCatalogLine(items, snapshot.wainscotingProduct, "product", {
+          variantId: getPreferredAcrylicVariantId(snapshot.wainscotingProduct, snapshot.acrylicColor),
           quantity: snapshot.wainscotingQuantity || 1
         });
       }
 
       if (snapshot.ceilingProduct && snapshot.showWetAreaScope) {
-        addRoughCatalogLine(items, snapshot.ceilingProduct, "product");
+        addRoughCatalogLine(items, snapshot.ceilingProduct, "product", {
+          variantId: getPreferredAcrylicVariantId(snapshot.ceilingProduct, snapshot.acrylicColor)
+        });
       }
 
       if (snapshot.doorProduct === "custom") {
@@ -4539,7 +4585,7 @@
 
       addRebuildAndPrepLines(items, snapshot);
       addPlumbingLines(items, snapshot);
-      addSelectedAccessoryLines(items);
+      addSelectedAccessoryLines(items, snapshot);
 
       return items.filter(Boolean).concat(state.roughAddOns);
     }
@@ -5261,6 +5307,7 @@
       "roughIncludeWetWalls",
       "roughRemoveExistingDoor",
       "roughPrimaryProduct",
+      "roughAcrylicColor",
       "roughDrainFinish",
       "roughFormedFront",
       "roughWallProduct",
