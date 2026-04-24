@@ -1,13 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 270" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 275" role="img" aria-labelledby="title desc">
   <title id="title">Bath Fitter</title>
   <desc id="desc">Bath Fitter stacked wordmark in teal.</desc>
-  <rect x="0" y="10" width="718" height="4" fill="#151515"/>
-  <rect x="0" y="30" width="520" height="6" fill="#06857E"/>
-  <rect x="0" y="36" width="520" height="94" fill="#FFFFFF"/>
-  <rect x="0" y="130" width="520" height="6" fill="#06857E"/>
-  <rect x="0" y="136" width="520" height="104" fill="#FFFFFF"/>
-  <rect x="0" y="240" width="520" height="6" fill="#06857E"/>
-  <text x="86" y="106" fill="#06857E" font-family="Georgia, 'Times New Roman', serif" font-size="96" font-weight="700" letter-spacing="2">BATH</text>
-  <text x="28" y="219" fill="#06857E" font-family="Georgia, 'Times New Roman', serif" font-size="118" font-weight="700" letter-spacing="2">FITTER</text>
-  <text x="528" y="184" fill="#06857E" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="700">®</text>
+  <rect x="0" y="8" width="560" height="4" fill="#182024"/>
+  <rect x="0" y="30" width="448" height="4" fill="#06857E"/>
+  <rect x="0" y="114" width="448" height="4" fill="#06857E"/>
+  <rect x="0" y="150" width="448" height="4" fill="#06857E"/>
+  <rect x="0" y="256" width="448" height="4" fill="#06857E"/>
+  <text x="224" y="98" fill="#06857E" font-family="Georgia, 'Times New Roman', serif" font-size="88" font-weight="700" text-anchor="middle">BATH</text>
+  <text x="224" y="235" fill="#06857E" font-family="Georgia, 'Times New Roman', serif" font-size="110" font-weight="700" text-anchor="middle">FITTER</text>
 </svg>
