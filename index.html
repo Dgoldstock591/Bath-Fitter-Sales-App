@@ -1656,6 +1656,7 @@
                   <div class="rough-checklist" id="roughOnePieceWithCeilingField" hidden>
                     <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece unit includes ceiling</label>
                   </div>
+                  <p class="estimator-detail" id="roughOnePieceRemovalNote" hidden>One-piece fiberglass units include the walls. The estimator removes the full unit as one demo path.</p>
                 </div>
 
                 <div class="rough-step-section">
@@ -1709,7 +1710,8 @@
                   <h4>Finished route</h4>
                   <div class="choice-row" data-condition-group="route">
                     <button class="choice-button active" type="button" data-value="tub-liner">Tub liner</button>
-                    <button class="choice-button" type="button" data-value="tub-replacement">Tub replacement / freestanding tub</button>
+                    <button class="choice-button" type="button" data-value="tub-to-tub">Tub to tub replacement</button>
+                    <button class="choice-button" type="button" data-value="tub-replacement">Freestanding tub + walls</button>
                     <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
                     <button class="choice-button" type="button" data-value="shower-base">Shower base + walls</button>
                     <button class="choice-button" type="button" data-value="freestanding-base">Freestanding base + walls</button>
@@ -1807,12 +1809,38 @@
                     <input type="number" id="roughWainscotingQuantity" min="1" step="1" value="1" inputmode="numeric" />
                   </div>
                 </div>
+
+                <div class="rough-step-section">
+                  <h4>Sell-side accessories</h4>
+                  <div class="form-field" id="roughCurtainRodField">
+                    <label for="roughCurtainRodProduct">Curtain Rod</label>
+                    <select id="roughCurtainRodProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughShowerRodField">
+                    <label for="roughShowerRodProduct">Shower Rod</label>
+                    <select id="roughShowerRodProduct"></select>
+                  </div>
+                  <div class="rough-checklist">
+                    <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Grab bar</label>
+                    <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L-shaped grab bar</label>
+                    <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner seat</label>
+                    <label><input type="checkbox" data-rough-accessory="l-shape-corner-seat" /> L-shape corner seat</label>
+                    <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> 18 inch fold-down seat</label>
+                    <label><input type="checkbox" data-rough-accessory="fold-down-seat-28" /> 28 inch fold-down seat</label>
+                    <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap dish</label>
+                    <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel bar</label>
+                    <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic shelf</label>
+                    <label><input type="checkbox" data-rough-accessory="oxford-full-length-shelf" /> Full-length shelf</label>
+                    <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window trim / cutout</label>
+                    <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible threshold</label>
+                  </div>
+                </div>
               </div>
 
               <div class="rough-step" data-rough-step-panel="3" hidden>
                 <span class="rough-step-eyebrow">Step 3</span>
                 <h3>What Extra Work Is Needed?</h3>
-                <p class="estimator-detail">Use this step only for labor, plumbing, and add-ons outside the included BF system scope.</p>
+                <p class="estimator-detail">Use this step only for labor and plumbing outside the included BF system scope.</p>
 
                 <div class="rough-step-section">
                   <h4>Rebuild / prep</h4>
@@ -1868,29 +1896,6 @@
                   </div>
                 </div>
 
-                <div class="rough-step-section">
-                  <h4>Accessories / add-ons</h4>
-                  <div class="form-field" id="roughCurtainRodField">
-                    <label for="roughCurtainRodProduct">Curtain Rod</label>
-                    <select id="roughCurtainRodProduct"></select>
-                  </div>
-                  <div class="form-field" id="roughShowerRodField">
-                    <label for="roughShowerRodProduct">Shower Rod</label>
-                    <select id="roughShowerRodProduct"></select>
-                  </div>
-                  <div class="rough-checklist">
-                    <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Grab bar</label>
-                    <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L-shaped grab bar</label>
-                    <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner seat</label>
-                    <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> Fold-down seat</label>
-                    <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap dish</label>
-                    <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel bar</label>
-                    <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic shelf</label>
-                    <label><input type="checkbox" data-rough-accessory="oxford-full-length-shelf" /> Full-length shelf</label>
-                    <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window trim / cutout</label>
-                    <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible threshold</label>
-                  </div>
-                </div>
               </div>
 
               <div class="rough-step" data-rough-step-panel="4" hidden>
@@ -2130,6 +2135,7 @@
     };
     const ROUGH_ROUTE_ORDER = [
       "tub-liner",
+      "tub-to-tub",
       "tub-replacement",
       "tub-to-shower",
       "shower-base",
@@ -2148,12 +2154,12 @@
       {
         id: 2,
         title: "Sell Path",
-        description: "Pick the route and products"
+        description: "Pick the route, products, and accessories"
       },
       {
         id: 3,
         title: "Extra Work",
-        description: "Add labor, plumbing, and accessories"
+        description: "Add labor and plumbing"
       },
       {
         id: 4,
@@ -3853,13 +3859,13 @@
         case "steel-tub":
           return "tub-liner";
         case "fiberglass-tub":
-          return "tub-replacement";
+          return "tub-to-tub";
         case "shower-base":
           return "shower-base";
         case "one-piece-fiberglass":
           return "freestanding-base";
         case "bf-liner":
-          return "tub-replacement";
+          return "tub-to-tub";
         case "concrete-tile-base":
           return "shower-base";
         default:
@@ -3981,19 +3987,19 @@
       switch (existingFixture) {
         case "cast-tub":
         case "steel-tub":
-          return new Set([...shared, "tub-liner", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+          return new Set([...shared, "tub-liner", "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "fiberglass-tub":
-          return new Set([...shared, "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+          return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "shower-base":
           return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base"]);
         case "one-piece-fiberglass":
-          return new Set([...shared, "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+          return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "bf-liner":
-          return new Set([...shared, "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+          return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "concrete-tile-base":
           return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base", "molded-base"]);
         default:
-          return new Set([...shared, "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+          return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
       }
     }
 
@@ -4007,6 +4013,8 @@
           return new Set(["standard", "barrier-free", "special-threshold"]);
         case "molded-base":
           return new Set(["standard", "barrier-free", "special-threshold"]);
+        case "tub-to-tub":
+          return new Set(["standard"]);
         default:
           return new Set(["standard"]);
       }
@@ -4016,6 +4024,7 @@
       switch (route) {
         case "tub-liner":
           return ["tub-liner"];
+        case "tub-to-tub":
         case "tub-replacement":
           return ROUGH_TUB_PRODUCT_IDS;
         case "tub-to-shower":
@@ -4056,7 +4065,7 @@
         return ROUGH_CURVED_DOOR_IDS;
       }
 
-      if (route === "tub-liner" || route === "tub-replacement") {
+      if (route === "tub-liner" || route === "tub-to-tub" || route === "tub-replacement") {
         return ROUGH_TUB_DOOR_IDS;
       }
 
@@ -4134,8 +4143,7 @@
           : raw.route === "molded-base"
             ? !baseOnlyAllowed
             : true;
-      const effectiveWallCondition =
-        raw.existingFixture === "one-piece-fiberglass" || !includeWetWalls ? "staying" : raw.wallCondition;
+      const effectiveWallCondition = !includeWetWalls ? "staying" : raw.wallCondition;
       const tileWallCount = effectiveWallCondition === "tile" ? Math.max(1, raw.tileWallCount) : 0;
       const wainscotingQuantity = raw.wainscotingProduct ? Math.max(1, raw.wainscotingQuantity) : 0;
       const wallRepairCount = Math.max(0, raw.wallRepairCount);
@@ -4158,6 +4166,10 @@
         notes.push("Freestanding tub replacement always carries walls and drain kit.");
       }
 
+      if (raw.route === "tub-to-tub") {
+        notes.push("Tub-to-tub replacement carries walls and drain kit, with the existing tub coming out.");
+      }
+
       if (raw.route === "freestanding-base" || raw.route === "neo-curved-base") {
         notes.push("Freestanding, neo-angle, curved, barrier-free, and flat-floor routes always require walls.");
       }
@@ -4167,7 +4179,7 @@
       }
 
       if (raw.existingFixture === "one-piece-fiberglass") {
-        notes.push("One-piece fiberglass removal suppresses separate fiberglass wall and base demo charges for the same unit.");
+        notes.push("One-piece fiberglass removal includes the integrated walls and suppresses separate fiberglass wall and base demo charges for the same unit.");
       }
 
       if (effectiveWallCondition === "mud") {
@@ -4504,6 +4516,7 @@
     function renderRoughControls() {
       const includeWetWallsInput = document.getElementById("roughIncludeWetWalls");
       const onePieceField = document.getElementById("roughOnePieceWithCeilingField");
+      const onePieceRemovalNote = document.getElementById("roughOnePieceRemovalNote");
       const concreteField = document.getElementById("roughConcreteBeveledField");
       const baseOnlyField = document.getElementById("roughBaseOnlyField");
 
@@ -4526,6 +4539,7 @@
       }
 
       onePieceField.hidden = roughState.existingFixture !== "one-piece-fiberglass";
+      onePieceRemovalNote.hidden = roughState.existingFixture !== "one-piece-fiberglass";
       if (onePieceField.hidden) {
         document.getElementById("roughOnePieceWithCeiling").checked = false;
       }
@@ -4543,8 +4557,9 @@
       }
 
       let allowedWallConditions = new Set(["staying", "fiberglass", "tile", "mud"]);
-      if (
-        roughState.existingFixture === "one-piece-fiberglass" ||
+      if (roughState.existingFixture === "one-piece-fiberglass") {
+        allowedWallConditions = new Set(["fiberglass"]);
+      } else if (
         roughState.route === "wains-only" ||
         (routeSupportsWetWallsToggle(roughState.route) && !includeWetWallsInput.checked)
       ) {
@@ -4552,7 +4567,7 @@
       }
 
       if (!allowedWallConditions.has(roughState.wallCondition)) {
-        roughState.wallCondition = "staying";
+        roughState.wallCondition = allowedWallConditions.has("fiberglass") ? "fiberglass" : "staying";
       }
 
       setChoiceGroupState("route", roughState.route, allowedRoutes);
