@@ -765,6 +765,208 @@
       grid-column: 1 / -1;
     }
 
+    .rough-wizard-shell,
+    .rough-wizard-main,
+    .rough-wizard-aside,
+    .rough-summary-strip,
+    .rough-stepper,
+    .rough-mini-list {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .rough-grid.rough-grid-wizard {
+      grid-template-columns: 1fr;
+    }
+
+    .rough-step[hidden] {
+      display: none !important;
+    }
+
+    .rough-step-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.7rem;
+      color: var(--accent-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .rough-step-section {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .rough-step-section + .rough-step-section {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .rough-step-section h4 {
+      margin: 0;
+      font-size: 0.96rem;
+    }
+
+    .rough-step-section .estimator-detail {
+      margin-top: 0;
+    }
+
+    .rough-stepper {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rough-stepper-button {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.2rem;
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #f4faf9 100%);
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .rough-stepper-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 24px rgba(13, 122, 104, 0.08);
+    }
+
+    .rough-stepper-button strong {
+      font-size: 0.95rem;
+    }
+
+    .rough-stepper-button span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .rough-stepper-button.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(13, 122, 104, 0.12) 0%, rgba(19, 146, 125, 0.05) 100%);
+      box-shadow: 0 16px 28px rgba(13, 122, 104, 0.12);
+    }
+
+    .rough-stepper-button.complete {
+      border-color: rgba(13, 122, 104, 0.25);
+    }
+
+    .rough-stepper-button.active strong,
+    .rough-stepper-button.complete strong {
+      color: var(--accent-dark);
+    }
+
+    .choice-button.suggested:not(.active) {
+      border-color: rgba(13, 122, 104, 0.35);
+      background: #f2faf8;
+      color: var(--accent-dark);
+    }
+
+    .rough-wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .rough-wizard-nav .button[hidden] {
+      display: none;
+    }
+
+    .rough-wizard-nav-spacer {
+      flex: 1;
+    }
+
+    .rough-sticky-summary {
+      position: sticky;
+      top: 1rem;
+    }
+
+    .rough-summary-chip {
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #eff9f7 100%);
+    }
+
+    .rough-summary-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .rough-summary-chip strong {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 1.08rem;
+    }
+
+    .rough-mini-list {
+      gap: 0.75rem;
+    }
+
+    .rough-mini-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 0.8rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fbfdfc;
+    }
+
+    .rough-mini-row span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .rough-mini-row strong {
+      font-size: 0.98rem;
+      white-space: nowrap;
+    }
+
+    .rough-advanced {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #f6fbfa 100%);
+      overflow: hidden;
+    }
+
+    .rough-advanced summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1rem 1.05rem;
+      font-weight: 800;
+      color: var(--accent-dark);
+    }
+
+    .rough-advanced summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rough-advanced[open] summary {
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 122, 104, 0.04);
+    }
+
+    .rough-advanced-body {
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
     .panel-heading p:empty,
     .section-block > p:empty,
     .scenario-top p:empty,
@@ -1107,6 +1309,10 @@
       .rough-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .rough-summary-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (min-width: 1080px) {
@@ -1131,6 +1337,15 @@
 
       .landing-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .rough-wizard-shell {
+        grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+        align-items: start;
+      }
+
+      .rough-stepper {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
     }
 
@@ -1169,6 +1384,16 @@
         flex-direction: column;
       }
 
+      .rough-stepper,
+      .rough-summary-strip,
+      .rough-wizard-nav {
+        grid-template-columns: 1fr;
+      }
+
+      .rough-wizard-nav {
+        display: grid;
+      }
+
       .math-line,
       .finance-item p,
       .estimate-line-meta,
@@ -1187,6 +1412,10 @@
 
       .brand-logo {
         width: min(300px, 100%);
+      }
+
+      .rough-sticky-summary {
+        position: static;
       }
     }
   </style>
@@ -1399,327 +1628,383 @@
           <p>Internal rep exact-math estimator for remote quotes, landlord calls, and fast scenario building.</p>
         </div>
 
-        <div class="rough-grid">
-          <div class="rough-step">
-            <h3>1. Existing Conditions</h3>
-            <p class="estimator-detail">This drives the tear-out path and blocks invalid finished options.</p>
-            <div class="form-field">
-              <label>Existing Bathing Fixture</label>
-              <div class="choice-row" data-condition-group="existingFixture">
-                <button class="choice-button" type="button" data-value="cast-tub">Cast iron tub</button>
-                <button class="choice-button active" type="button" data-value="steel-tub">Steel tub</button>
-                <button class="choice-button" type="button" data-value="fiberglass-tub">Fiberglass tub</button>
-                <button class="choice-button" type="button" data-value="shower-base">Existing shower base</button>
-                <button class="choice-button" type="button" data-value="one-piece-fiberglass">One-piece fiberglass unit</button>
-                <button class="choice-button" type="button" data-value="bf-liner">Existing Bath Fitter liner</button>
-                <button class="choice-button" type="button" data-value="concrete-tile-base">Concrete / tile style base</button>
-                <button class="choice-button" type="button" data-value="other">Other / unknown</button>
-              </div>
-            </div>
-            <div class="rough-checklist" id="roughOnePieceWithCeilingField" hidden>
-              <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece unit includes ceiling</label>
-            </div>
-            <div class="form-field">
-              <label>Existing Wet-Area Walls</label>
-              <div class="choice-row" data-condition-group="wallCondition">
-                <button class="choice-button active" type="button" data-value="staying">Walls staying / no wall removal</button>
-                <button class="choice-button" type="button" data-value="fiberglass">Fiberglass walls</button>
-                <button class="choice-button" type="button" data-value="tile">Tile walls</button>
-                <button class="choice-button" type="button" data-value="mud">Mud walls</button>
-              </div>
-            </div>
-            <div class="form-field" id="roughTileWallCountField" hidden>
-              <label for="roughTileWallCount">Tile Walls Being Removed</label>
-              <select id="roughTileWallCount">
-                <option value="1">1 wall</option>
-                <option value="2">2 walls</option>
-                <option value="3">3 walls</option>
-              </select>
-            </div>
-          </div>
+        <div class="rough-wizard-shell">
+          <div class="rough-wizard-main">
+            <div class="rough-stepper" id="roughWizardStepper" aria-label="Rough estimator steps"></div>
 
-          <div class="rough-step">
-            <h3>2. Job Route</h3>
-            <p class="estimator-detail">Choose the finished route after defining what is there now. Invalid routes will drop out as conditions are selected.</p>
-            <div class="choice-row" data-condition-group="route">
-              <button class="choice-button active" type="button" data-value="tub-liner">Tub liner</button>
-              <button class="choice-button" type="button" data-value="tub-replacement">Tub replacement / freestanding tub</button>
-              <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
-              <button class="choice-button" type="button" data-value="shower-base">Shower base + walls</button>
-              <button class="choice-button" type="button" data-value="freestanding-base">Freestanding base + walls</button>
-              <button class="choice-button" type="button" data-value="neo-curved-base">Neo-angle / curved base + walls</button>
-              <button class="choice-button" type="button" data-value="molded-base">Rare molded base replacement</button>
-              <button class="choice-button" type="button" data-value="wains-only">Wainscoting only</button>
-              <button class="choice-button" type="button" data-value="custom">Other / custom</button>
-            </div>
-            <p class="estimator-detail" id="roughRulesSummary"></p>
-          </div>
+            <div class="rough-grid rough-grid-wizard">
+              <div class="rough-step" data-rough-step-panel="1">
+                <span class="rough-step-eyebrow">Step 1</span>
+                <h3>What Is There Now?</h3>
+                <p class="estimator-detail">Start with the existing unit and current walls so the estimator can narrow the valid path automatically.</p>
 
-          <div class="rough-step">
-            <h3>3. Shape / Layout</h3>
-            <div class="choice-row" data-condition-group="layout">
-              <button class="choice-button active" type="button" data-value="standard">Standard</button>
-              <button class="choice-button" type="button" data-value="neo-angle">Neo-angle</button>
-              <button class="choice-button" type="button" data-value="curved">Curved</button>
-              <button class="choice-button" type="button" data-value="barrier-free">Barrier free / roll-in</button>
-              <button class="choice-button" type="button" data-value="special-threshold">Special threshold condition</button>
-            </div>
-            <div class="rough-checklist" id="roughConcreteBeveledField" hidden>
-              <label><input type="checkbox" id="roughConcreteBeveled" /> Specific beveled concrete molded-base condition</label>
-            </div>
-            <div class="rough-checklist" id="roughBaseOnlyField" hidden>
-              <label><input type="checkbox" id="roughBaseOnlyException" /> Rare base-only exception with existing walls staying</label>
-            </div>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughRemoveExistingDoor" /> Remove existing shower door</label>
-            </div>
-          </div>
-
-          <div class="rough-step">
-            <h3>4. Product / Finish</h3>
-            <div class="rough-checklist" id="roughIncludeWetWallsField" hidden>
-              <label><input type="checkbox" id="roughIncludeWetWalls" checked /> Include wet-area walls on this route</label>
-            </div>
-            <div class="form-field" id="roughPrimaryProductField">
-              <label for="roughPrimaryProduct">Tub / Base Product</label>
-              <select id="roughPrimaryProduct"></select>
-            </div>
-            <div class="form-field" id="roughFormedFrontField">
-              <label for="roughFormedFront">Formed Front</label>
-              <select id="roughFormedFront">
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-              </select>
-            </div>
-            <div class="form-field" id="roughDrainFinishField">
-              <label for="roughDrainFinish">Drain Finish</label>
-              <select id="roughDrainFinish">
-                <option value="Chrome">Chrome</option>
-                <option value="Brushed Nickel">Brushed Nickel</option>
-                <option value="Stainless">Stainless</option>
-                <option value="Oil Rubbed Bronze">Oil Rubbed Bronze</option>
-                <option value="Matte Black">Matte Black</option>
-                <option value="Champagne Bronze">Champagne Bronze</option>
-              </select>
-            </div>
-            <div class="form-field" id="roughWallProductField">
-              <label for="roughWallProduct">Wall Product</label>
-              <select id="roughWallProduct"></select>
-            </div>
-            <div class="form-field" id="roughWainscotingProductField">
-              <label for="roughWainscotingProduct">Wainscoting Product</label>
-              <select id="roughWainscotingProduct"></select>
-            </div>
-            <div class="form-field" id="roughWainscotingQuantityField" hidden>
-              <label for="roughWainscotingQuantity">Wainscoting Sheets</label>
-              <input type="number" id="roughWainscotingQuantity" min="1" step="1" value="1" inputmode="numeric" />
-            </div>
-            <div class="form-field" id="roughWallPatternField">
-              <label for="roughWallPattern">Wall Pattern / Style</label>
-              <select id="roughWallPattern">
-                <option value="">Flat / no pattern upgrade</option>
-                <option value="Tile Pattern Upgrade">Tile Pattern Upgrade</option>
-                <option value="Torino">Torino</option>
-                <option value="Palermo">Palermo</option>
-                <option value="Napoli">Napoli</option>
-                <option value="Padova">Padova</option>
-                <option value="Roma">Roma</option>
-                <option value="Rimini">Rimini</option>
-                <option value="Milano">Milano</option>
-                <option value="Savona">Savona</option>
-                <option value="Genova">Genova</option>
-                <option value="Verona">Verona</option>
-                <option value="12 x 12 Tile Pattern">12 x 12 Tile Pattern</option>
-                <option value="3 x 6 Subway Style">3 x 6 Subway Style</option>
-                <option value="6 x 6 Diamond Tile Pattern">6 x 6 Diamond Tile Pattern</option>
-                <option value="4 x 4 Tile Pattern">4 x 4 Tile Pattern</option>
-                <option value="6 x 6 Tile Pattern">6 x 6 Tile Pattern</option>
-                <option value="10 x 10 Tile Pattern with Design">10 x 10 Tile Pattern with Design</option>
-                <option value="6 x 22 Textured Tile Pattern">6 x 22 Textured Tile Pattern</option>
-                <option value="13 x 13 Textured Tile Pattern with 4 x 4 Inserts">13 x 13 Textured Tile Pattern with 4 x 4 Inserts</option>
-                <option value="Mosaic Tile Pattern">Mosaic Tile Pattern</option>
-              </select>
-            </div>
-            <div class="form-field" id="roughDoorProductField">
-              <label for="roughDoorProduct">Door / Enclosure</label>
-              <select id="roughDoorProduct"></select>
-            </div>
-            <div class="form-field" id="roughCustomDoorField">
-              <label for="roughCustomDoorPrice">Custom Door Price</label>
-              <input type="number" id="roughCustomDoorPrice" min="0" step="0.01" placeholder="0.00" />
-              <p class="estimator-detail">Call Erin for all custom door pricing.</p>
-            </div>
-            <div class="form-field" id="roughCeilingProductField">
-              <label for="roughCeilingProduct">Ceiling Panel</label>
-              <select id="roughCeilingProduct"></select>
-            </div>
-          </div>
-
-          <div class="rough-step">
-            <h3>5. Rebuild / Prep</h3>
-            <p class="estimator-detail">Wall prep auto-charges whenever wet-area walls, wainscoting, or wall disturbance are involved. Other rebuild/prep items stay labor except wall repair.</p>
-            <div class="form-field" id="roughWallRepairCountField">
-              <label for="roughWallRepairCount">Wall Repair Needed</label>
-              <select id="roughWallRepairCount">
-                <option value="0">No wall repair</option>
-                <option value="1">1 wall</option>
-                <option value="2">2 walls</option>
-                <option value="3">3 walls</option>
-              </select>
-            </div>
-            <div class="form-field" id="roughExtraSheetrockCountField">
-              <label for="roughExtraSheetrockCount">Extra New Sheetrock</label>
-              <select id="roughExtraSheetrockCount">
-                <option value="0">No extra sheetrock</option>
-                <option value="1">1 wall</option>
-                <option value="2">2 walls</option>
-                <option value="3">3 walls</option>
-              </select>
-            </div>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughBuildWall" /> Build wall</label>
-              <label><input type="checkbox" id="roughSubfloorReplace" /> Subfloor replacement</label>
-              <label><input type="checkbox" id="roughWrapThreshold" /> Wrap threshold</label>
-              <label><input type="checkbox" id="roughBuildWrapThreshold" /> Build and wrap threshold</label>
-              <label><input type="checkbox" id="roughRemoveHeader" /> Header removal</label>
-              <label><input type="checkbox" id="roughCoverWindow" /> Cover existing window</label>
-              <label><input type="checkbox" id="roughJackhammerCharge" /> Jack hammer charge</label>
-            </div>
-          </div>
-
-          <div class="rough-step">
-            <h3>6. Plumbing / Mechanical</h3>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughValveEnabled" checked /> Include valve / trim set</label>
-            </div>
-            <div class="form-field" id="roughValveProductField">
-              <label for="roughValveProduct">Valve / Trim</label>
-              <select id="roughValveProduct"></select>
-            </div>
-            <div class="form-field" id="roughHandheldProductField">
-              <label for="roughHandheldProduct">Handheld / Diverter Upgrade</label>
-              <select id="roughHandheldProduct"></select>
-            </div>
-            <div class="rough-checklist">
-              <label><input type="checkbox" id="roughRelocateDrain" /> Relocate drain</label>
-              <label><input type="checkbox" id="roughMoveShowerHeadOverflow" /> Move shower head / overflow</label>
-              <label><input type="checkbox" id="roughRelocatePlumbingCopper" /> Relocate plumbing copper</label>
-              <label><input type="checkbox" id="roughAddGooseneck" /> Add spigot / gooseneck</label>
-              <label><input type="checkbox" id="roughRemoveSpigot" /> Remove spigot and cap off</label>
-            </div>
-          </div>
-
-          <div class="rough-step">
-            <h3>7. Accessories / Add-Ons</h3>
-            <div class="form-field" id="roughCurtainRodField">
-              <label for="roughCurtainRodProduct">Curtain Rod</label>
-              <select id="roughCurtainRodProduct"></select>
-            </div>
-            <div class="form-field" id="roughShowerRodField">
-              <label for="roughShowerRodProduct">Shower Rod</label>
-              <select id="roughShowerRodProduct"></select>
-            </div>
-            <div class="rough-checklist">
-              <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Grab bar</label>
-              <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L-shaped grab bar</label>
-              <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner seat</label>
-              <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> Fold-down seat</label>
-              <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap dish</label>
-              <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel bar</label>
-              <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic shelf</label>
-              <label><input type="checkbox" data-rough-accessory="oxford-full-length-shelf" /> Full-length shelf</label>
-              <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window trim / cutout</label>
-              <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible threshold</label>
-            </div>
-          </div>
-
-          <div class="rough-step">
-            <h3>8. Exact Estimate Output</h3>
-            <div class="rough-output-list" id="roughEstimatePreview"></div>
-            <div class="actions">
-              <button class="button primary" id="buildRoughEstimateButton" type="button">Build Exact Estimate</button>
-              <button class="button secondary" id="loadRoughEstimateButton" type="button">Load Into Pricing</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="estimator-layout">
-          <div class="builder-stack">
-            <div class="builder-card">
-              <h3>Quick Add From Price List</h3>
-              <p>Search one exact price-list item when the condition flow needs an extra line.</p>
-              <div class="estimator-form-grid">
-                <div class="form-field">
-                  <label for="catalogCategory">Category</label>
-                  <select id="catalogCategory"></select>
+                <div class="rough-step-section">
+                  <h4>Existing bathing fixture</h4>
+                  <div class="form-field">
+                    <label>Current Unit</label>
+                    <div class="choice-row" data-condition-group="existingFixture">
+                      <button class="choice-button" type="button" data-value="cast-tub">Cast iron tub</button>
+                      <button class="choice-button active" type="button" data-value="steel-tub">Steel tub</button>
+                      <button class="choice-button" type="button" data-value="fiberglass-tub">Fiberglass tub</button>
+                      <button class="choice-button" type="button" data-value="shower-base">Existing shower base</button>
+                      <button class="choice-button" type="button" data-value="one-piece-fiberglass">One-piece fiberglass unit</button>
+                      <button class="choice-button" type="button" data-value="bf-liner">Existing Bath Fitter liner</button>
+                      <button class="choice-button" type="button" data-value="concrete-tile-base">Concrete / tile style base</button>
+                      <button class="choice-button" type="button" data-value="other">Other / unknown</button>
+                    </div>
+                  </div>
+                  <div class="rough-checklist" id="roughOnePieceWithCeilingField" hidden>
+                    <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece unit includes ceiling</label>
+                  </div>
                 </div>
-                <div class="form-field">
-                  <label for="catalogSearch">Search</label>
-                  <input type="text" id="catalogSearch" placeholder="Search item..." />
+
+                <div class="rough-step-section">
+                  <h4>Existing wet-area walls</h4>
+                  <div class="form-field">
+                    <label>Current Wall Condition</label>
+                    <div class="choice-row" data-condition-group="wallCondition">
+                      <button class="choice-button active" type="button" data-value="staying">Walls staying / no wall removal</button>
+                      <button class="choice-button" type="button" data-value="fiberglass">Fiberglass walls</button>
+                      <button class="choice-button" type="button" data-value="tile">Tile walls</button>
+                      <button class="choice-button" type="button" data-value="mud">Mud walls</button>
+                    </div>
+                  </div>
+                  <div class="form-field" id="roughTileWallCountField" hidden>
+                    <label for="roughTileWallCount">Tile Walls Being Removed</label>
+                    <select id="roughTileWallCount">
+                      <option value="1">1 wall</option>
+                      <option value="2">2 walls</option>
+                      <option value="3">3 walls</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="form-field">
-                  <label for="catalogItem">Item</label>
-                  <select id="catalogItem"></select>
-                </div>
-                <div class="form-field">
-                  <label for="catalogVariant">Variant / Finish</label>
-                  <select id="catalogVariant"></select>
-                </div>
-                <div class="form-field">
-                  <label for="catalogQuantity">Quantity</label>
-                  <input type="number" id="catalogQuantity" min="1" step="1" value="1" />
+
+                <div class="rough-step-section">
+                  <h4>Shape / layout</h4>
+                  <div class="choice-row" data-condition-group="layout">
+                    <button class="choice-button active" type="button" data-value="standard">Standard</button>
+                    <button class="choice-button" type="button" data-value="neo-angle">Neo-angle</button>
+                    <button class="choice-button" type="button" data-value="curved">Curved</button>
+                    <button class="choice-button" type="button" data-value="barrier-free">Barrier free / roll-in</button>
+                    <button class="choice-button" type="button" data-value="special-threshold">Special threshold condition</button>
+                  </div>
+                  <div class="rough-checklist" id="roughConcreteBeveledField" hidden>
+                    <label><input type="checkbox" id="roughConcreteBeveled" /> Specific beveled concrete molded-base condition</label>
+                  </div>
+                  <div class="rough-checklist" id="roughBaseOnlyField" hidden>
+                    <label><input type="checkbox" id="roughBaseOnlyException" /> Rare base-only exception with existing walls staying</label>
+                  </div>
+                  <div class="rough-checklist">
+                    <label><input type="checkbox" id="roughRemoveExistingDoor" /> Remove existing shower door</label>
+                  </div>
                 </div>
               </div>
-              <div class="actions">
-                <button class="button primary" id="addCatalogItemButton" type="button">Add To Exact Estimate</button>
+
+              <div class="rough-step" data-rough-step-panel="2" hidden>
+                <span class="rough-step-eyebrow">Step 2</span>
+                <h3>What Are We Selling?</h3>
+                <p class="estimator-detail" id="roughRouteHint"></p>
+
+                <div class="rough-step-section">
+                  <h4>Finished route</h4>
+                  <div class="choice-row" data-condition-group="route">
+                    <button class="choice-button active" type="button" data-value="tub-liner">Tub liner</button>
+                    <button class="choice-button" type="button" data-value="tub-replacement">Tub replacement / freestanding tub</button>
+                    <button class="choice-button" type="button" data-value="tub-to-shower">Tub to shower conversion</button>
+                    <button class="choice-button" type="button" data-value="shower-base">Shower base + walls</button>
+                    <button class="choice-button" type="button" data-value="freestanding-base">Freestanding base + walls</button>
+                    <button class="choice-button" type="button" data-value="neo-curved-base">Neo-angle / curved base + walls</button>
+                    <button class="choice-button" type="button" data-value="molded-base">Rare molded base replacement</button>
+                    <button class="choice-button" type="button" data-value="wains-only">Wainscoting only</button>
+                    <button class="choice-button" type="button" data-value="custom">Other / custom</button>
+                  </div>
+                  <div class="actions">
+                    <button class="mini-button" id="roughUseSuggestedRouteButton" type="button" hidden>Use Suggested Route</button>
+                  </div>
+                  <p class="estimator-detail" id="roughRulesSummary"></p>
+                </div>
+
+                <div class="rough-step-section">
+                  <h4>Wet-area system</h4>
+                  <div class="rough-checklist" id="roughIncludeWetWallsField" hidden>
+                    <label><input type="checkbox" id="roughIncludeWetWalls" checked /> Include wet-area walls on this route</label>
+                  </div>
+                  <div class="form-field" id="roughPrimaryProductField">
+                    <label for="roughPrimaryProduct">Tub / Base Product</label>
+                    <select id="roughPrimaryProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughFormedFrontField">
+                    <label for="roughFormedFront">Formed Front</label>
+                    <select id="roughFormedFront">
+                      <option value="no">No</option>
+                      <option value="yes">Yes</option>
+                    </select>
+                  </div>
+                  <div class="form-field" id="roughDrainFinishField">
+                    <label for="roughDrainFinish">Drain Finish</label>
+                    <select id="roughDrainFinish">
+                      <option value="Chrome">Chrome</option>
+                      <option value="Brushed Nickel">Brushed Nickel</option>
+                      <option value="Stainless">Stainless</option>
+                      <option value="Oil Rubbed Bronze">Oil Rubbed Bronze</option>
+                      <option value="Matte Black">Matte Black</option>
+                      <option value="Champagne Bronze">Champagne Bronze</option>
+                    </select>
+                  </div>
+                  <div class="form-field" id="roughWallProductField">
+                    <label for="roughWallProduct">Wall Product</label>
+                    <select id="roughWallProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughWallPatternField">
+                    <label for="roughWallPattern">Wall Pattern / Style</label>
+                    <select id="roughWallPattern">
+                      <option value="">Flat / no pattern upgrade</option>
+                      <option value="Tile Pattern Upgrade">Tile Pattern Upgrade</option>
+                      <option value="Torino">Torino</option>
+                      <option value="Palermo">Palermo</option>
+                      <option value="Napoli">Napoli</option>
+                      <option value="Padova">Padova</option>
+                      <option value="Roma">Roma</option>
+                      <option value="Rimini">Rimini</option>
+                      <option value="Milano">Milano</option>
+                      <option value="Savona">Savona</option>
+                      <option value="Genova">Genova</option>
+                      <option value="Verona">Verona</option>
+                      <option value="12 x 12 Tile Pattern">12 x 12 Tile Pattern</option>
+                      <option value="3 x 6 Subway Style">3 x 6 Subway Style</option>
+                      <option value="6 x 6 Diamond Tile Pattern">6 x 6 Diamond Tile Pattern</option>
+                      <option value="4 x 4 Tile Pattern">4 x 4 Tile Pattern</option>
+                      <option value="6 x 6 Tile Pattern">6 x 6 Tile Pattern</option>
+                      <option value="10 x 10 Tile Pattern with Design">10 x 10 Tile Pattern with Design</option>
+                      <option value="6 x 22 Textured Tile Pattern">6 x 22 Textured Tile Pattern</option>
+                      <option value="13 x 13 Textured Tile Pattern with 4 x 4 Inserts">13 x 13 Textured Tile Pattern with 4 x 4 Inserts</option>
+                      <option value="Mosaic Tile Pattern">Mosaic Tile Pattern</option>
+                    </select>
+                  </div>
+                  <div class="form-field" id="roughCeilingProductField">
+                    <label for="roughCeilingProduct">Ceiling Panel</label>
+                    <select id="roughCeilingProduct"></select>
+                  </div>
+                </div>
+
+                <div class="rough-step-section">
+                  <h4>Doors / outside wet area</h4>
+                  <div class="form-field" id="roughDoorProductField">
+                    <label for="roughDoorProduct">Door / Enclosure</label>
+                    <select id="roughDoorProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughCustomDoorField">
+                    <label for="roughCustomDoorPrice">Custom Door Price</label>
+                    <input type="number" id="roughCustomDoorPrice" min="0" step="0.01" placeholder="0.00" />
+                    <p class="estimator-detail">Call Erin for all custom door pricing.</p>
+                  </div>
+                  <div class="form-field" id="roughWainscotingProductField">
+                    <label for="roughWainscotingProduct">Wainscoting Product</label>
+                    <select id="roughWainscotingProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughWainscotingQuantityField" hidden>
+                    <label for="roughWainscotingQuantity">Wainscoting Sheets</label>
+                    <input type="number" id="roughWainscotingQuantity" min="1" step="1" value="1" inputmode="numeric" />
+                  </div>
+                </div>
               </div>
-              <p class="estimator-detail" id="catalogItemDetail"></p>
+
+              <div class="rough-step" data-rough-step-panel="3" hidden>
+                <span class="rough-step-eyebrow">Step 3</span>
+                <h3>What Extra Work Is Needed?</h3>
+                <p class="estimator-detail">Use this step only for labor, plumbing, and add-ons outside the included BF system scope.</p>
+
+                <div class="rough-step-section">
+                  <h4>Rebuild / prep</h4>
+                  <p class="estimator-detail">Wall prep auto-charges whenever wet-area walls, wainscoting, or wall disturbance are involved. Other rebuild/prep items stay labor except wall repair.</p>
+                  <div class="form-field" id="roughWallRepairCountField">
+                    <label for="roughWallRepairCount">Wall Repair Needed</label>
+                    <select id="roughWallRepairCount">
+                      <option value="0">No wall repair</option>
+                      <option value="1">1 wall</option>
+                      <option value="2">2 walls</option>
+                      <option value="3">3 walls</option>
+                    </select>
+                  </div>
+                  <div class="form-field" id="roughExtraSheetrockCountField">
+                    <label for="roughExtraSheetrockCount">Extra New Sheetrock</label>
+                    <select id="roughExtraSheetrockCount">
+                      <option value="0">No extra sheetrock</option>
+                      <option value="1">1 wall</option>
+                      <option value="2">2 walls</option>
+                      <option value="3">3 walls</option>
+                    </select>
+                  </div>
+                  <div class="rough-checklist">
+                    <label><input type="checkbox" id="roughBuildWall" /> Build wall</label>
+                    <label><input type="checkbox" id="roughSubfloorReplace" /> Subfloor replacement</label>
+                    <label><input type="checkbox" id="roughWrapThreshold" /> Wrap threshold</label>
+                    <label><input type="checkbox" id="roughBuildWrapThreshold" /> Build and wrap threshold</label>
+                    <label><input type="checkbox" id="roughRemoveHeader" /> Header removal</label>
+                    <label><input type="checkbox" id="roughCoverWindow" /> Cover existing window</label>
+                    <label><input type="checkbox" id="roughJackhammerCharge" /> Jack hammer charge</label>
+                  </div>
+                </div>
+
+                <div class="rough-step-section">
+                  <h4>Plumbing / mechanical</h4>
+                  <div class="rough-checklist">
+                    <label><input type="checkbox" id="roughValveEnabled" checked /> Include valve / trim set</label>
+                  </div>
+                  <div class="form-field" id="roughValveProductField">
+                    <label for="roughValveProduct">Valve / Trim</label>
+                    <select id="roughValveProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughHandheldProductField">
+                    <label for="roughHandheldProduct">Handheld / Diverter Upgrade</label>
+                    <select id="roughHandheldProduct"></select>
+                  </div>
+                  <div class="rough-checklist">
+                    <label><input type="checkbox" id="roughRelocateDrain" /> Relocate drain</label>
+                    <label><input type="checkbox" id="roughMoveShowerHeadOverflow" /> Move shower head / overflow</label>
+                    <label><input type="checkbox" id="roughRelocatePlumbingCopper" /> Relocate plumbing copper</label>
+                    <label><input type="checkbox" id="roughAddGooseneck" /> Add spigot / gooseneck</label>
+                    <label><input type="checkbox" id="roughRemoveSpigot" /> Remove spigot and cap off</label>
+                  </div>
+                </div>
+
+                <div class="rough-step-section">
+                  <h4>Accessories / add-ons</h4>
+                  <div class="form-field" id="roughCurtainRodField">
+                    <label for="roughCurtainRodProduct">Curtain Rod</label>
+                    <select id="roughCurtainRodProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughShowerRodField">
+                    <label for="roughShowerRodProduct">Shower Rod</label>
+                    <select id="roughShowerRodProduct"></select>
+                  </div>
+                  <div class="rough-checklist">
+                    <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Grab bar</label>
+                    <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L-shaped grab bar</label>
+                    <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner seat</label>
+                    <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> Fold-down seat</label>
+                    <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap dish</label>
+                    <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel bar</label>
+                    <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic shelf</label>
+                    <label><input type="checkbox" data-rough-accessory="oxford-full-length-shelf" /> Full-length shelf</label>
+                    <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window trim / cutout</label>
+                    <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible threshold</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rough-step" data-rough-step-panel="4" hidden>
+                <span class="rough-step-eyebrow">Step 4</span>
+                <h3>Review Exact Estimate</h3>
+                <p class="estimator-detail">Review the live exact math, then send it straight into the calculator or save it as exact estimate lines.</p>
+                <div class="rough-output-list" id="roughEstimatePreview"></div>
+                <div class="actions">
+                  <button class="button primary" id="loadRoughEstimateButton" type="button">Load Into Pricing</button>
+                  <button class="button secondary" id="buildRoughEstimateButton" type="button">Save To Exact Lines</button>
+                </div>
+
+                <details class="rough-advanced" id="roughAdvancedTools">
+                  <summary>Advanced add item tools</summary>
+                  <div class="rough-advanced-body">
+                    <div class="estimator-layout">
+                      <div class="builder-stack">
+                        <div class="builder-card">
+                          <h3>Quick Add From Price List</h3>
+                          <p>Search one exact price-list item when the condition flow needs an extra line.</p>
+                          <div class="estimator-form-grid">
+                            <div class="form-field">
+                              <label for="catalogCategory">Category</label>
+                              <select id="catalogCategory"></select>
+                            </div>
+                            <div class="form-field">
+                              <label for="catalogSearch">Search</label>
+                              <input type="text" id="catalogSearch" placeholder="Search item..." />
+                            </div>
+                            <div class="form-field">
+                              <label for="catalogItem">Item</label>
+                              <select id="catalogItem"></select>
+                            </div>
+                            <div class="form-field">
+                              <label for="catalogVariant">Variant / Finish</label>
+                              <select id="catalogVariant"></select>
+                            </div>
+                            <div class="form-field">
+                              <label for="catalogQuantity">Quantity</label>
+                              <input type="number" id="catalogQuantity" min="1" step="1" value="1" />
+                            </div>
+                          </div>
+                          <div class="actions">
+                            <button class="button primary" id="addCatalogItemButton" type="button">Add To Exact Estimate</button>
+                          </div>
+                          <p class="estimator-detail" id="catalogItemDetail"></p>
+                        </div>
+
+                        <div class="builder-card">
+                          <h3>Custom Exact Estimate Item</h3>
+                          <p></p>
+                          <div class="estimator-form-grid">
+                            <div class="form-field">
+                              <label for="customLabel">Line Item Name</label>
+                              <input type="text" id="customLabel" placeholder="Permit, threshold, labor..." />
+                            </div>
+                            <div class="form-field">
+                              <label for="customBucket">Pricing Bucket</label>
+                              <select id="customBucket">
+                                <option value="bf">Bath Fitter</option>
+                                <option value="wainscoting">Wainscoting</option>
+                                <option value="doors">Doors</option>
+                                <option value="labor">Labor</option>
+                                <option value="permits">Permits</option>
+                              </select>
+                            </div>
+                            <div class="form-field">
+                              <label for="customAmount">Unit Price</label>
+                              <input type="number" id="customAmount" min="0" step="0.01" placeholder="0.00" />
+                            </div>
+                            <div class="form-field">
+                              <label for="customQuantity">Quantity</label>
+                              <input type="number" id="customQuantity" min="1" step="1" value="1" />
+                            </div>
+                          </div>
+                          <div class="actions">
+                            <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Exact Item</button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="estimate-card">
+                        <h3>Exact Estimate Lines</h3>
+                        <p></p>
+                        <div class="estimate-summary-strip" id="estimateSummaryStrip"></div>
+                        <div class="actions">
+                          <button class="button primary" id="applyEstimateButton" type="button">Load Into Pricing</button>
+                          <button class="button secondary" id="clearEstimateButton" type="button">Clear Estimate</button>
+                        </div>
+                        <div class="estimate-line-list" id="estimateList"></div>
+                        <p class="estimator-detail" id="estimateStatus"></p>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+              </div>
             </div>
 
-            <div class="builder-card">
-              <h3>Custom Exact Estimate Item</h3>
-              <p></p>
-              <div class="estimator-form-grid">
-                <div class="form-field">
-                  <label for="customLabel">Line Item Name</label>
-                  <input type="text" id="customLabel" placeholder="Permit, threshold, labor..." />
-                </div>
-                <div class="form-field">
-                  <label for="customBucket">Pricing Bucket</label>
-                  <select id="customBucket">
-                    <option value="bf">Bath Fitter</option>
-                    <option value="wainscoting">Wainscoting</option>
-                    <option value="doors">Doors</option>
-                    <option value="labor">Labor</option>
-                    <option value="permits">Permits</option>
-                  </select>
-                </div>
-                <div class="form-field">
-                  <label for="customAmount">Unit Price</label>
-                  <input type="number" id="customAmount" min="0" step="0.01" placeholder="0.00" />
-                </div>
-                <div class="form-field">
-                  <label for="customQuantity">Quantity</label>
-                  <input type="number" id="customQuantity" min="1" step="1" value="1" />
-                </div>
-              </div>
-              <div class="actions">
-                <button class="button secondary" id="addCustomItemButton" type="button">Add Custom Exact Item</button>
-              </div>
+            <div class="rough-wizard-nav">
+              <button class="button secondary" id="roughPrevStepButton" type="button">Back</button>
+              <div class="rough-wizard-nav-spacer" aria-hidden="true"></div>
+              <button class="button primary" id="roughNextStepButton" type="button">Next</button>
             </div>
           </div>
 
-          <div class="estimate-card">
-            <h3>Exact Estimate Lines</h3>
-            <p></p>
-            <div class="estimate-summary-strip" id="estimateSummaryStrip"></div>
-            <div class="actions">
-              <button class="button primary" id="applyEstimateButton" type="button">Load Into Pricing</button>
-              <button class="button secondary" id="clearEstimateButton" type="button">Clear Estimate</button>
+          <aside class="rough-wizard-aside">
+            <div class="estimate-card rough-sticky-summary">
+              <h3>Live Estimate Snapshot</h3>
+              <p id="roughWizardSummaryText">Choose the current condition to tighten the route and build the estimate faster.</p>
+              <div class="rough-summary-strip" id="roughWizardSummaryStrip"></div>
+              <div class="rough-mini-list" id="roughWizardContractStrip"></div>
+              <p class="estimator-detail" id="roughWizardNotes"></p>
             </div>
-            <div class="estimate-line-list" id="estimateList"></div>
-            <p class="estimator-detail" id="estimateStatus"></p>
-          </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -1810,7 +2095,10 @@
       internalSettingsVisible: false,
       expandedCommissionCards: {},
       activeMatrix: "wall",
-      activeMatrixGroup: "all"
+      activeMatrixGroup: "all",
+      roughWizardStep: 1,
+      roughAdvancedVisible: false,
+      roughRouteLocked: false
     };
     const roughState = {
       route: "tub-liner",
@@ -1850,6 +2138,28 @@
       "molded-base",
       "wains-only",
       "custom"
+    ];
+    const ROUGH_WIZARD_STEPS = [
+      {
+        id: 1,
+        title: "Current Conditions",
+        description: "Define what is there now"
+      },
+      {
+        id: 2,
+        title: "Sell Path",
+        description: "Pick the route and products"
+      },
+      {
+        id: 3,
+        title: "Extra Work",
+        description: "Add labor, plumbing, and accessories"
+      },
+      {
+        id: 4,
+        title: "Review",
+        description: "Check totals and send to pricing"
+      }
     ];
     const ROUGH_TUB_PRODUCT_IDS = [
       "fs-empress-standard",
@@ -3530,6 +3840,137 @@
       return ordered.find((layoutId) => allowedLayouts.has(layoutId)) || "standard";
     }
 
+    function getChoiceLabel(groupName, value) {
+      const button = document.querySelector(
+        `[data-condition-group="${groupName}"] .choice-button[data-value="${value}"]`
+      );
+      return button?.textContent?.trim() || value || "";
+    }
+
+    function getSuggestedRoughRoute(existingFixture) {
+      switch (existingFixture) {
+        case "cast-tub":
+        case "steel-tub":
+          return "tub-liner";
+        case "fiberglass-tub":
+          return "tub-replacement";
+        case "shower-base":
+          return "shower-base";
+        case "one-piece-fiberglass":
+          return "freestanding-base";
+        case "bf-liner":
+          return "tub-replacement";
+        case "concrete-tile-base":
+          return "shower-base";
+        default:
+          return "custom";
+      }
+    }
+
+    function setRoughWizardStep(step) {
+      const nextStep = Math.min(ROUGH_WIZARD_STEPS.length, Math.max(1, Number(step) || 1));
+      state.roughWizardStep = nextStep;
+      render();
+    }
+
+    function syncRoughAdvancedTools() {
+      const advancedTools = document.getElementById("roughAdvancedTools");
+      if (!advancedTools) {
+        return;
+      }
+
+      advancedTools.open = Boolean(state.roughAdvancedVisible);
+    }
+
+    function renderRoughWizardSummary(snapshot, previewItems, roughTotals, contractTotals) {
+      const summaryText = document.getElementById("roughWizardSummaryText");
+      const summaryStrip = document.getElementById("roughWizardSummaryStrip");
+      const contractStrip = document.getElementById("roughWizardContractStrip");
+      const notes = document.getElementById("roughWizardNotes");
+      const wallScopeLabel = snapshot.includeWetWalls
+        ? snapshot.wallProduct
+          ? getCatalogItemById(snapshot.wallProduct)?.label || "Wet-area walls included"
+          : "Wet-area walls included"
+        : snapshot.wainscotingQuantity
+          ? `Wainscoting x${snapshot.wainscotingQuantity}`
+          : "No wall scope selected";
+
+      summaryText.textContent = `${getChoiceLabel("existingFixture", snapshot.existingFixture)} -> ${getChoiceLabel("route", snapshot.route)}${previewItems.length ? ` | ${previewItems.length} live line${previewItems.length === 1 ? "" : "s"}` : ""}`;
+
+      summaryStrip.innerHTML = [
+        { label: "Existing", value: getChoiceLabel("existingFixture", snapshot.existingFixture) },
+        { label: "Route", value: getChoiceLabel("route", snapshot.route) },
+        { label: "Wall Scope", value: wallScopeLabel },
+        { label: "Estimated Total", value: formatCurrencyFromCents(roughTotals.total) }
+      ]
+        .map(
+          (item) => `
+            <div class="rough-summary-chip">
+              <span>${escapeHtml(item.label)}</span>
+              <strong>${escapeHtml(item.value)}</strong>
+            </div>
+          `
+        )
+        .join("");
+
+      contractStrip.innerHTML = [
+        { label: "BF System", value: contractTotals.bf },
+        { label: "Wainscoting", value: contractTotals.wainscoting },
+        { label: "Doors", value: contractTotals.doors },
+        { label: "Labor", value: contractTotals.labor },
+        { label: "Permits", value: contractTotals.permits }
+      ]
+        .filter((row) => row.value > 0)
+        .map(
+          (row) => `
+            <div class="rough-mini-row">
+              <span>${escapeHtml(row.label)}</span>
+              <strong>${formatCurrencyFromCents(row.value)}</strong>
+            </div>
+          `
+        )
+        .join("") || `<div class="empty-state">Start choosing the route and products to build the live contract buckets.</div>`;
+
+      notes.textContent =
+        snapshot.notes.join(" ") ||
+        "The estimator is suggesting the valid route, grouping the estimate by contract bucket, and keeping duplicate labor out of the math.";
+    }
+
+    function renderRoughWizard(snapshot, previewItems, roughTotals, contractTotals) {
+      const stepper = document.getElementById("roughWizardStepper");
+      const prevButton = document.getElementById("roughPrevStepButton");
+      const nextButton = document.getElementById("roughNextStepButton");
+
+      state.roughWizardStep = Math.min(ROUGH_WIZARD_STEPS.length, Math.max(1, state.roughWizardStep));
+
+      stepper.innerHTML = ROUGH_WIZARD_STEPS.map((step) => {
+        const classes = [
+          "rough-stepper-button",
+          step.id === state.roughWizardStep ? "active" : "",
+          step.id < state.roughWizardStep ? "complete" : ""
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        return `
+          <button class="${classes}" type="button" data-rough-step-target="${step.id}">
+            <strong>${escapeHtml(`${step.id}. ${step.title}`)}</strong>
+            <span>${escapeHtml(step.description)}</span>
+          </button>
+        `;
+      }).join("");
+
+      document.querySelectorAll("[data-rough-step-panel]").forEach((panel) => {
+        panel.hidden = Number(panel.getAttribute("data-rough-step-panel")) !== state.roughWizardStep;
+      });
+
+      prevButton.disabled = state.roughWizardStep === 1;
+      nextButton.hidden = state.roughWizardStep === ROUGH_WIZARD_STEPS.length;
+
+      renderRoughWizardSummary(snapshot, previewItems, roughTotals, contractTotals);
+      syncRoughAdvancedTools();
+    }
+
     function routeSupportsWetWallsToggle(route) {
       return route === "tub-liner" || route === "custom";
     }
@@ -4067,8 +4508,16 @@
       const baseOnlyField = document.getElementById("roughBaseOnlyField");
 
       const allowedRoutes = getAllowedRoughRoutes(roughState.existingFixture);
+      let suggestedRoute = getSuggestedRoughRoute(roughState.existingFixture);
+      if (!allowedRoutes.has(suggestedRoute)) {
+        suggestedRoute = chooseFirstAllowedRoute(allowedRoutes);
+      }
+
       if (!allowedRoutes.has(roughState.route)) {
-        roughState.route = chooseFirstAllowedRoute(allowedRoutes);
+        roughState.route = suggestedRoute;
+        state.roughRouteLocked = false;
+      } else if (!state.roughRouteLocked && roughState.route !== suggestedRoute) {
+        roughState.route = suggestedRoute;
       }
 
       const allowedLayouts = getAllowedLayouts(roughState.route);
@@ -4110,6 +4559,12 @@
       setChoiceGroupState("existingFixture", roughState.existingFixture);
       setChoiceGroupState("wallCondition", roughState.wallCondition, allowedWallConditions);
       setChoiceGroupState("layout", roughState.layout, allowedLayouts);
+      document.querySelectorAll('[data-condition-group="route"] .choice-button').forEach((button) => {
+        button.classList.toggle(
+          "suggested",
+          button.dataset.value === suggestedRoute && button.dataset.value !== roughState.route
+        );
+      });
 
       const primaryProductIds = getPrimaryProductsForRoute(roughState.route, roughState.layout);
       const hasPrimaryProduct = primaryProductIds.length > 0;
@@ -4177,6 +4632,11 @@
       document.getElementById("roughHandheldProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
       document.getElementById("roughCurtainRodField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughShowerRodField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughRouteHint").textContent =
+        roughState.route === suggestedRoute
+          ? `${getChoiceLabel("route", suggestedRoute)} is the recommended route from the current condition.`
+          : `${getChoiceLabel("route", suggestedRoute)} is the recommended route from the current condition. You can stay on the current route or tap the suggestion to snap back to the fastest valid path.`;
+      document.getElementById("roughUseSuggestedRouteButton").hidden = roughState.route === suggestedRoute;
 
       document.getElementById("roughRulesSummary").textContent =
         snapshot.notes.join(" ") ||
@@ -4187,6 +4647,9 @@
       const previewItems = buildRoughEstimateItems();
       const roughTotals = getRoughGroupedTotals(previewItems);
       const contractTotals = getRoughContractTotals(previewItems);
+      const snapshot = getRoughEngineState();
+
+      renderRoughWizard(snapshot, previewItems, roughTotals, contractTotals);
 
       if (!previewItems.length) {
         document.getElementById("roughEstimatePreview").innerHTML = emptyState("Choose route and conditions to build the exact estimate.");
@@ -4233,17 +4696,21 @@
         )
         .join("");
 
-      document.getElementById("roughEstimatePreview").innerHTML =
-        groupedRows +
-        `<article class="rough-row"><h4>Estimated Subtotal</h4><p>${formatCurrencyFromCents(roughTotals.subtotal)}</p></article>` +
-        `<article class="rough-row"><h4>Estimated Total</h4><p>${formatCurrencyFromCents(roughTotals.total)}</p></article>` +
-        contractRows +
-        lineRows;
+      document.getElementById("roughEstimatePreview").innerHTML = [
+        `<article class="rough-row"><h4>Estimate Totals</h4><p>Live exact math grouped the same way the calculator and contract buckets need it.</p></article>`,
+        groupedRows,
+        `<article class="rough-row"><h4>Estimated Subtotal</h4><p>${formatCurrencyFromCents(roughTotals.subtotal)}</p></article>`,
+        `<article class="rough-row"><h4>Estimated Total</h4><p>${formatCurrencyFromCents(roughTotals.total)}</p></article>`,
+        contractRows,
+        lineRows
+      ].join("");
     }
 
     function buildRoughEstimate() {
       state.estimateItems = buildRoughEstimateItems();
-      state.estimateMessage = "Exact estimate built.";
+      state.estimateMessage = "Exact estimate saved.";
+      state.roughAdvancedVisible = true;
+      state.roughWizardStep = ROUGH_WIZARD_STEPS.length;
       render();
     }
 
@@ -4251,7 +4718,10 @@
       state.estimateItems = buildRoughEstimateItems();
       state.estimateMessage = "Exact estimate loaded into pricing.";
       applyEstimateToCalculator();
-      document.getElementById("calculatorTool").scrollIntoView({ behavior: "smooth", block: "start" });
+      showTool("calculatorTool");
+      window.requestAnimationFrame(() => {
+        document.getElementById("calculatorTool").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     }
 
     function getCatalogCategories() {
@@ -4402,6 +4872,8 @@
       state.roughAddOns.unshift(line);
       state.estimateItems = buildRoughEstimateItems();
       state.estimateMessage = `${item.label} added to exact estimate.`;
+      state.roughAdvancedVisible = true;
+      state.roughWizardStep = ROUGH_WIZARD_STEPS.length;
       render();
     }
 
@@ -4438,6 +4910,8 @@
       document.getElementById("customQuantity").value = "1";
       state.estimateItems = buildRoughEstimateItems();
       state.estimateMessage = `${label} added to exact estimate.`;
+      state.roughAdvancedVisible = true;
+      state.roughWizardStep = ROUGH_WIZARD_STEPS.length;
       render();
     }
 
@@ -4466,6 +4940,7 @@
       state.estimateItems = [];
       state.roughAddOns = [];
       state.estimateMessage = "Exact estimate cleared.";
+      state.roughAdvancedVisible = false;
       render();
     }
 
@@ -4653,9 +5128,42 @@
           return;
         }
 
+        if (group.dataset.conditionGroup === "existingFixture") {
+          state.roughRouteLocked = false;
+        }
+        if (group.dataset.conditionGroup === "route") {
+          state.roughRouteLocked = true;
+          state.roughWizardStep = Math.max(state.roughWizardStep, 2);
+        }
+
         roughState[group.dataset.conditionGroup] = button.dataset.value;
         render();
       });
+    });
+    document.getElementById("roughWizardStepper").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-rough-step-target]");
+      if (!button) {
+        return;
+      }
+
+      setRoughWizardStep(button.getAttribute("data-rough-step-target"));
+    });
+    document.getElementById("roughPrevStepButton").addEventListener("click", () => {
+      setRoughWizardStep(state.roughWizardStep - 1);
+    });
+    document.getElementById("roughNextStepButton").addEventListener("click", () => {
+      setRoughWizardStep(state.roughWizardStep + 1);
+    });
+    document.getElementById("roughUseSuggestedRouteButton").addEventListener("click", () => {
+      const allowedRoutes = getAllowedRoughRoutes(roughState.existingFixture);
+      const suggestedRoute = getSuggestedRoughRoute(roughState.existingFixture);
+      roughState.route = allowedRoutes.has(suggestedRoute) ? suggestedRoute : chooseFirstAllowedRoute(allowedRoutes);
+      state.roughRouteLocked = false;
+      render();
+    });
+    document.getElementById("roughAdvancedTools").addEventListener("toggle", (event) => {
+      state.roughAdvancedVisible = event.target.open;
+      saveState();
     });
     [
       "roughOnePieceWithCeiling",
