@@ -1831,6 +1831,17 @@
                     <label for="roughShowerRodProduct">Shower Rod</label>
                     <select id="roughShowerRodProduct"></select>
                   </div>
+                  <div class="form-field" id="roughCornerCaddyProductField">
+                    <label for="roughCornerCaddyProduct">Corner Caddy</label>
+                    <select id="roughCornerCaddyProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughCornerCaddyQuantityField" hidden>
+                    <label for="roughCornerCaddyQuantity">Corner Caddy Qty</label>
+                    <select id="roughCornerCaddyQuantity">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                    </select>
+                  </div>
                   <div class="rough-checklist">
                     <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Safety Bar 16</label>
                     <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L Shaped Safety Bar 34 x 18</label>
@@ -1841,7 +1852,6 @@
                     <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap Dish</label>
                     <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel Bar</label>
                     <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic Shelf</label>
-                    <label><input type="checkbox" data-rough-accessory="oxford-full-length-shelf" /> Oxford Full Length Corner Shelf with Footrest</label>
                     <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window Cut Out and/or Trim</label>
                     <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible Threshold</label>
                   </div>
@@ -4186,6 +4196,8 @@
         wainscotingProduct: roughValue("roughWainscotingProduct"),
         wainscotingQuantity: roughIntValue("roughWainscotingQuantity", 1),
         wallPattern: roughValue("roughWallPattern"),
+        cornerCaddyProduct: roughValue("roughCornerCaddyProduct"),
+        cornerCaddyQuantity: roughIntValue("roughCornerCaddyQuantity", 1),
         doorProduct: roughValue("roughDoorProduct"),
         customDoorPrice: amountToCents(roughValue("roughCustomDoorPrice")),
         ceilingProduct: roughValue("roughCeilingProduct"),
@@ -4506,6 +4518,13 @@
           variantId: getPreferredAcrylicVariantId(itemId, snapshot.acrylicColor)
         });
       });
+
+      if (snapshot.cornerCaddyProduct) {
+        addRoughCatalogLine(items, snapshot.cornerCaddyProduct, "accessory", {
+          quantity: Math.max(1, snapshot.cornerCaddyQuantity || 1),
+          variantId: getPreferredAcrylicVariantId(snapshot.cornerCaddyProduct, snapshot.acrylicColor)
+        });
+      }
     }
 
     function buildRoughEstimateItems() {
@@ -4703,6 +4722,12 @@
       setSelectFromItems("roughHandheldProduct", ROUGH_HANDHELD_IDS, true, "No handheld / diverter");
       setSelectFromItems("roughCurtainRodProduct", ROUGH_CURTAIN_ROD_IDS, true, "No curtain rod");
       setSelectFromItems("roughShowerRodProduct", ROUGH_SHOWER_ROD_IDS, true, "No shower rod");
+      setSelectFromItems(
+        "roughCornerCaddyProduct",
+        ["oxford-caddy-single", "oxford-caddy-double", "oxford-full-length-shelf"],
+        true,
+        "No corner caddy"
+      );
 
       if (![...wallStyleSelect.options].some((option) => option.value === wallStyleSelect.value)) {
         wallStyleSelect.value = "";
@@ -4762,6 +4787,8 @@
       document.getElementById("roughDoorProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughCustomDoorField").hidden = roughValue("roughDoorProduct") !== "custom";
       document.getElementById("roughCeilingProductField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughCornerCaddyProductField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughCornerCaddyQuantityField").hidden = !snapshot.showWetAreaScope || !snapshot.cornerCaddyProduct;
       document.getElementById("roughTileWallCountField").hidden = snapshot.wallCondition !== "tile";
       document.getElementById("roughValveProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
       document.getElementById("roughHandheldProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
@@ -5317,6 +5344,8 @@
       "roughDoorProduct",
       "roughCustomDoorPrice",
       "roughCeilingProduct",
+      "roughCornerCaddyProduct",
+      "roughCornerCaddyQuantity",
       "roughTileWallCount",
       "roughWallRepairCount",
       "roughExtraSheetrockCount",
