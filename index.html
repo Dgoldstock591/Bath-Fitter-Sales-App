@@ -349,6 +349,36 @@
       display: block;
     }
 
+    .pricing-jump {
+      display: grid;
+      gap: 0.45rem;
+      margin: 0 0 1rem;
+      padding: 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fbfdfc;
+    }
+
+    .pricing-jump label {
+      color: var(--accent-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pricing-jump select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      padding: 0.8rem 1rem;
+      min-width: 0;
+    }
+
     .section-block + .section-block {
       margin-top: 1.2rem;
       padding-top: 1.2rem;
@@ -647,6 +677,11 @@
     .estimate-line,
     .tab-panel {
       min-width: 0;
+    }
+
+    .scenario-card.pricing-jump-highlight {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(6, 133, 126, 0.18), var(--shadow);
     }
 
     .choice-row,
@@ -1565,6 +1600,13 @@
             <button class="tab-button" id="tabOther" type="button" role="tab" aria-controls="panelOther" aria-selected="false" data-tab="panelOther">Other Contracts</button>
           </div>
 
+          <div class="pricing-jump">
+            <label for="pricingModelSelect">Quick Select Pricing Model</label>
+            <select id="pricingModelSelect">
+              <option value="">Choose a pricing model</option>
+            </select>
+          </div>
+
           <section class="tab-panel active" id="panelCumulative" role="tabpanel" aria-labelledby="tabCumulative"></section>
           <section class="tab-panel" id="panelContract" role="tabpanel" aria-labelledby="tabContract"></section>
           <section class="tab-panel" id="panelOther" role="tabpanel" aria-labelledby="tabOther"></section>
@@ -2122,6 +2164,7 @@
       expandedCommissionCards: {},
       activeMatrix: "wall",
       activeMatrixGroup: "all",
+      selectedPricingModel: "",
       roughWizardStep: 1,
       roughAdvancedVisible: false,
       roughRouteLocked: false
@@ -5179,6 +5222,60 @@
       }
     }
 
+    function renderPricingModelSelect() {
+      const select = document.getElementById("pricingModelSelect");
+      if (!select) {
+        return;
+      }
+
+      const activeValue = state.selectedPricingModel;
+      const panelLabels = {
+        panelCumulative: "Cumulative Job",
+        panelContract: "Bath Fitter Contract",
+        panelOther: "Other Contracts"
+      };
+      const optionGroups = tabPanels
+        .map((panel) => {
+          const cards = Array.from(panel.querySelectorAll(".scenario-card"));
+          if (!cards.length) {
+            return "";
+          }
+
+          const options = cards
+            .map((card, index) => {
+              const id = `${panel.id}-pricing-model-${index}`;
+              card.id = id;
+              const title = card.querySelector("h4")?.textContent?.trim() || "Pricing model";
+              const badge = card.querySelector(".badge")?.textContent?.trim() || "";
+              const label = badge ? `${title} | ${badge}` : title;
+              return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
+            })
+            .join("");
+
+          return `<optgroup label="${escapeHtml(panelLabels[panel.id] || panel.id)}">${options}</optgroup>`;
+        })
+        .join("");
+
+      select.innerHTML = `<option value="">Choose a pricing model</option>${optionGroups}`;
+      select.value = activeValue && document.getElementById(activeValue) ? activeValue : "";
+    }
+
+    function jumpToPricingModel(targetId) {
+      const target = document.getElementById(targetId);
+      if (!target) {
+        return;
+      }
+
+      const panel = target.closest(".tab-panel");
+      if (panel) {
+        setActiveTab(panel.id);
+      }
+
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.classList.add("pricing-jump-highlight");
+      window.setTimeout(() => target.classList.remove("pricing-jump-highlight"), 1300);
+    }
+
     function render() {
       const inputs = readInputs();
       syncInternalPanels();
@@ -5195,6 +5292,7 @@
       document.getElementById("panelOther").innerHTML = buildOtherContractsTab(inputs);
 
       ensureHelpfulActiveTab(inputs);
+      renderPricingModelSelect();
       saveState();
     }
 
@@ -5235,7 +5333,16 @@
     tabButtons.forEach((button) => {
       button.addEventListener("click", () => {
         setActiveTab(button.dataset.tab);
+        state.selectedPricingModel = "";
+        renderPricingModelSelect();
       });
+    });
+
+    document.getElementById("pricingModelSelect").addEventListener("change", (event) => {
+      state.selectedPricingModel = event.target.value;
+      if (state.selectedPricingModel) {
+        jumpToPricingModel(state.selectedPricingModel);
+      }
     });
 
     inputIds.forEach((id) => {
