@@ -756,6 +756,16 @@ const PRICE_LIST_DATA = [
     ]
   },
   {
+    id: "labor-remove-existing-bf-system",
+    category: "Labor & Prep",
+    label: "Remove Existing Full Bath Fitter System",
+    bucket: "labor",
+    description: "Removal charge for an existing Bath Fitter tub/base and wall system.",
+    variants: [
+      { id: "standard", label: "Standard", price: 1400 }
+    ]
+  },
+  {
     id: "labor-cap-old-shower-head",
     category: "Labor & Prep",
     label: "Cap Old Shower Head on Relo",

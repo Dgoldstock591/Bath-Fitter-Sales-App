@@ -1763,6 +1763,7 @@
                       <button class="choice-button" type="button" data-value="shower-base">Existing shower base</button>
                       <button class="choice-button" type="button" data-value="one-piece-fiberglass">One-piece fiberglass unit</button>
                       <button class="choice-button" type="button" data-value="bf-liner">Existing Bath Fitter liner</button>
+                      <button class="choice-button" type="button" data-value="bf-system">Existing full Bath Fitter system</button>
                       <button class="choice-button" type="button" data-value="concrete-tile-base">Concrete / tile style base</button>
                       <button class="choice-button" type="button" data-value="other">Other / unknown</button>
                     </div>
@@ -1771,6 +1772,7 @@
                     <label><input type="checkbox" id="roughOnePieceWithCeiling" /> Existing one-piece unit includes ceiling</label>
                   </div>
                   <p class="estimator-detail" id="roughOnePieceRemovalNote" hidden>One-piece fiberglass units include the walls. The estimator removes the full unit as one demo path, and that fiberglass tearout can still lead into freestanding tub products like Empress and Empress XL.</p>
+                  <p class="estimator-detail" id="roughBfSystemRemovalNote" hidden>Existing full Bath Fitter systems include the BF tub/base plus walls. The estimator removes that system as one $1,400 tear-out path and suppresses separate wall/base demo for the same scope.</p>
                 </div>
 
                 <div class="rough-step-section">
@@ -4117,6 +4119,8 @@
           return "tub-replacement";
         case "bf-liner":
           return "tub-to-tub";
+        case "bf-system":
+          return "shower-base";
         case "concrete-tile-base":
           return "shower-base";
         default:
@@ -4247,6 +4251,8 @@
         case "one-piece-fiberglass":
           return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "bf-liner":
+          return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
+        case "bf-system":
           return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "concrete-tile-base":
           return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base", "molded-base"]);
@@ -4468,6 +4474,10 @@
         notes.push("One-piece fiberglass removal includes the integrated walls and suppresses separate fiberglass wall and base demo charges for the same unit.");
       }
 
+      if (raw.existingFixture === "bf-system") {
+        notes.push("Existing full Bath Fitter system removal includes the BF tub/base and walls as one $1,400 tear-out, so separate wall/base demo is not stacked.");
+      }
+
       if (effectiveWallCondition === "mud" && mudWallRemoval) {
         notes.push("Mud wall removal uses the all-three-walls removal charge and suppresses separate tile-wall demo.");
       } else if (effectiveWallCondition === "mud") {
@@ -4564,6 +4574,12 @@
         case "bf-liner":
           addRoughCatalogLine(items, "labor-remove-existing-bf-liner", "tearout");
           break;
+        case "bf-system":
+          addRoughCatalogLine(items, "labor-remove-existing-bf-system", "tearout", {
+            bucketOverride: "bf",
+            reason: "Full Bath Fitter system removal includes the existing BF tub/base and walls as one tear-out path."
+          });
+          break;
         case "concrete-tile-base":
           addRoughCatalogLine(items, "labor-jackhammer-tile-base", "tearout", {
             reason: "Concrete / tile style base conditions use tile-base demo labor."
@@ -4575,7 +4591,7 @@
     }
 
     function addWallRemovalLines(items, snapshot) {
-      if (snapshot.existingFixture === "one-piece-fiberglass") {
+      if (snapshot.existingFixture === "one-piece-fiberglass" || snapshot.existingFixture === "bf-system") {
         return;
       }
 
@@ -4852,6 +4868,7 @@
       const includeWetWallsInput = document.getElementById("roughIncludeWetWalls");
       const onePieceField = document.getElementById("roughOnePieceWithCeilingField");
       const onePieceRemovalNote = document.getElementById("roughOnePieceRemovalNote");
+      const bfSystemRemovalNote = document.getElementById("roughBfSystemRemovalNote");
       const mudWallRemovalField = document.getElementById("roughMudWallRemovalField");
       const concreteField = document.getElementById("roughConcreteBeveledField");
       const baseOnlyField = document.getElementById("roughBaseOnlyField");
@@ -4878,6 +4895,7 @@
 
       onePieceField.hidden = roughState.existingFixture !== "one-piece-fiberglass";
       onePieceRemovalNote.hidden = roughState.existingFixture !== "one-piece-fiberglass";
+      bfSystemRemovalNote.hidden = roughState.existingFixture !== "bf-system";
       if (onePieceField.hidden) {
         document.getElementById("roughOnePieceWithCeiling").checked = false;
       }
@@ -4902,6 +4920,8 @@
       let allowedWallConditions = new Set(["staying", "fiberglass", "tile", "mud"]);
       if (roughState.existingFixture === "one-piece-fiberglass") {
         allowedWallConditions = new Set(["fiberglass"]);
+      } else if (roughState.existingFixture === "bf-system") {
+        allowedWallConditions = new Set(["staying"]);
       } else if (
         roughState.route === "wains-only" ||
         (routeSupportsWetWallsToggle(roughState.route) && !includeWetWallsInput.checked)
