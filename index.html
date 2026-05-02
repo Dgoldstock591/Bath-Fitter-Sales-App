@@ -782,7 +782,8 @@
     }
 
     .rough-checklist[hidden],
-    .form-field[hidden] {
+    .form-field[hidden],
+    .accessory-options[hidden] {
       display: none !important;
     }
 
@@ -794,6 +795,77 @@
       font-weight: 700;
       min-width: 0;
       overflow-wrap: anywhere;
+    }
+
+    .accessory-options {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .accessory-group {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .accessory-group h5 {
+      margin: 0;
+      color: var(--accent-dark);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .accessory-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.55rem;
+    }
+
+    .accessory-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.65rem;
+      align-items: center;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fbfdfc;
+    }
+
+    .accessory-card label {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .accessory-card input[type="number"] {
+      width: 4.7rem;
+      padding: 0.58rem 0.55rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .accessory-card input[type="number"]:disabled {
+      background: #eef3f2;
+      color: var(--muted);
+      opacity: 0.65;
+    }
+
+    .accessory-card .quantity-label {
+      display: grid;
+      gap: 0.2rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
     .rough-step:last-child {
@@ -1887,18 +1959,68 @@
                       <option value="2">2</option>
                     </select>
                   </div>
-                  <div class="rough-checklist">
-                    <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Safety Bar 16</label>
-                    <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L Shaped Safety Bar 34 x 18</label>
-                    <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner Seat</label>
-                    <label><input type="checkbox" data-rough-accessory="l-shape-corner-seat" /> L-Shape Corner Seat 32 x 21</label>
-                    <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> 18 Inch Fold Down Seat with Blocking</label>
-                    <label><input type="checkbox" data-rough-accessory="fold-down-seat-28" /> 28 Inch Fold Down Seat with Blocking</label>
-                    <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap Dish</label>
-                    <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel Bar</label>
-                    <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic Shelf</label>
-                    <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window Cut Out and/or Trim</label>
-                    <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible Threshold</label>
+                  <div class="accessory-options" id="roughAccessoryOptionsField">
+                    <div class="accessory-group">
+                      <h5>Safety / Grab Bars</h5>
+                      <div class="accessory-picker">
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Safety Bar 16</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="safety-bar-16" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L Shaped Safety Bar 34 x 18</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="safety-bar-l-shape" disabled /></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accessory-group">
+                      <h5>Seats</h5>
+                      <div class="accessory-picker">
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="corner-seat" /> Corner Seat</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="corner-seat" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="l-shape-corner-seat" /> L-Shape Corner Seat 32 x 21</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="l-shape-corner-seat" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="fold-down-seat-18" /> 18 Inch Fold Down Seat with Blocking</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="fold-down-seat-18" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="fold-down-seat-28" /> 28 Inch Fold Down Seat with Blocking</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="fold-down-seat-28" disabled /></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="accessory-group">
+                      <h5>Wall Accessories</h5>
+                      <div class="accessory-picker">
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="soap-dish" /> Soap Dish</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="soap-dish" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="towel-bar" /> Towel Bar</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="towel-bar" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="acrylic-shelf" /> Acrylic Shelf</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="acrylic-shelf" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="window-cutout" /> Window Cut Out and/or Trim</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="window-cutout" disabled /></span>
+                        </div>
+                        <div class="accessory-card">
+                          <label><input type="checkbox" data-rough-accessory="collapsible-threshold" /> Collapsible Threshold</label>
+                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="collapsible-threshold" disabled /></span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2393,11 +2515,12 @@
       "safety-bar-16",
       "safety-bar-l-shape",
       "corner-seat",
+      "l-shape-corner-seat",
       "fold-down-seat-18",
+      "fold-down-seat-28",
       "soap-dish",
       "towel-bar",
       "acrylic-shelf",
-      "oxford-full-length-shelf",
       "window-cutout",
       "collapsible-threshold"
     ];
@@ -4574,9 +4697,18 @@
     }
 
     function addSelectedAccessoryLines(items, snapshot) {
+      if (!snapshot.showWetAreaScope) {
+        return;
+      }
+
       document.querySelectorAll("[data-rough-accessory]:checked").forEach((input) => {
         const itemId = input.getAttribute("data-rough-accessory");
+        const quantityInput = Array.from(document.querySelectorAll("[data-rough-accessory-quantity]")).find(
+          (field) => field.getAttribute("data-rough-accessory-quantity") === itemId
+        );
+        const quantity = Math.max(1, Number(quantityInput?.value) || 1);
         addRoughCatalogLine(items, itemId, "accessory", {
+          quantity,
           variantId: getPreferredAcrylicVariantId(itemId, snapshot.acrylicColor)
         });
       });
@@ -4700,6 +4832,20 @@
         },
         { bf: 0, wainscoting: 0, doors: 0, labor: 0, permits: 0, grand: 0 }
       );
+    }
+
+    function syncRoughAccessoryQuantityControls() {
+      document.querySelectorAll("[data-rough-accessory-quantity]").forEach((quantityInput) => {
+        const itemId = quantityInput.getAttribute("data-rough-accessory-quantity");
+        const checkbox = Array.from(document.querySelectorAll("[data-rough-accessory]")).find(
+          (input) => input.getAttribute("data-rough-accessory") === itemId
+        );
+        const checked = Boolean(checkbox?.checked);
+        quantityInput.disabled = !checked;
+        if (!checked) {
+          quantityInput.value = "1";
+        }
+      });
     }
 
     function renderRoughControls() {
@@ -4833,6 +4979,9 @@
         document.getElementById("roughValveEnabled").checked = false;
         document.getElementById("roughValveProduct").value = "";
         document.getElementById("roughHandheldProduct").value = "";
+        document.querySelectorAll("[data-rough-accessory]").forEach((input) => {
+          input.checked = false;
+        });
         snapshot = getRoughEngineState();
       }
 
@@ -4857,6 +5006,7 @@
       document.getElementById("roughCeilingProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughCornerCaddyProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughCornerCaddyQuantityField").hidden = !snapshot.showWetAreaScope || !snapshot.cornerCaddyProduct;
+      document.getElementById("roughAccessoryOptionsField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughTileWallCountField").hidden = snapshot.wallCondition !== "tile";
       document.getElementById("roughMudWallRemovalField").hidden = snapshot.wallCondition !== "mud";
       document.getElementById("roughValveProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
@@ -4872,6 +5022,7 @@
       document.getElementById("roughRulesSummary").textContent =
         snapshot.notes.join(" ") ||
         "Route, tear-out, wall prep, plumbing, and grouped totals are being built from the selected field conditions.";
+      syncRoughAccessoryQuantityControls();
     }
 
     function renderRoughPreview() {
@@ -5510,6 +5661,10 @@
       element.addEventListener("change", render);
     });
     document.querySelectorAll("[data-rough-accessory]").forEach((input) => {
+      input.addEventListener("change", render);
+    });
+    document.querySelectorAll("[data-rough-accessory-quantity]").forEach((input) => {
+      input.addEventListener("input", render);
       input.addEventListener("change", render);
     });
     document.getElementById("buildRoughEstimateButton").addEventListener("click", buildRoughEstimate);
