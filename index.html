@@ -1720,6 +1720,9 @@
                       <option value="3">3 walls</option>
                     </select>
                   </div>
+                  <div class="rough-checklist" id="roughMudWallRemovalField" hidden>
+                    <label><input type="checkbox" id="roughMudWallRemoval" /> Mud walls are being removed</label>
+                  </div>
                 </div>
 
                 <div class="rough-step-section">
@@ -4229,6 +4232,7 @@
         wallCondition: roughState.wallCondition,
         layout: roughState.layout,
         onePieceWithCeiling: roughChecked("roughOnePieceWithCeiling"),
+        mudWallRemoval: roughChecked("roughMudWallRemoval"),
         concreteBeveled: roughChecked("roughConcreteBeveled"),
         baseOnlyRequested: roughChecked("roughBaseOnlyException"),
         includeWetWalls: roughChecked("roughIncludeWetWalls"),
@@ -4298,6 +4302,7 @@
             : true;
       const effectiveWallCondition = !includeWetWalls ? "staying" : raw.wallCondition;
       const tileWallCount = effectiveWallCondition === "tile" ? Math.max(1, raw.tileWallCount) : 0;
+      const mudWallRemoval = effectiveWallCondition === "mud" && raw.mudWallRemoval;
       const wainscotingQuantity = raw.wainscotingProduct ? Math.max(1, raw.wainscotingQuantity) : 0;
       const wallRepairCount = Math.max(0, raw.wallRepairCount);
       const extraSheetrockCount = Math.max(0, raw.extraSheetrockCount);
@@ -4308,7 +4313,12 @@
         raw.route !== "wains-only" &&
         (raw.route !== "custom" ? primaryProductIds.length > 0 : Boolean(raw.primaryProduct && raw.primaryProduct !== "tub-liner"));
       const wallPrepNeeded =
-        includeWetWalls || Boolean(raw.wainscotingProduct) || effectiveWallCondition !== "staying" || wallRepairCount > 0;
+        includeWetWalls ||
+        Boolean(raw.wainscotingProduct) ||
+        effectiveWallCondition === "fiberglass" ||
+        effectiveWallCondition === "tile" ||
+        mudWallRemoval ||
+        wallRepairCount > 0;
       const notes = [];
 
       if (raw.route === "tub-liner") {
@@ -4335,8 +4345,10 @@
         notes.push("One-piece fiberglass removal includes the integrated walls and suppresses separate fiberglass wall and base demo charges for the same unit.");
       }
 
-      if (effectiveWallCondition === "mud") {
-        notes.push("Mud wall removal overrides separate tile wall demo for the same walls.");
+      if (effectiveWallCondition === "mud" && mudWallRemoval) {
+        notes.push("Mud wall removal uses the all-three-walls removal charge and suppresses separate tile-wall demo.");
+      } else if (effectiveWallCondition === "mud") {
+        notes.push("Mud walls staying add the valve-prep upcharge instead of wall-removal labor.");
       }
 
       if (baseOnlyUnlocked && raw.baseOnlyRequested && !baseOnlyAllowed) {
@@ -4353,6 +4365,7 @@
         showWetAreaScope,
         valveEnabled,
         wallCondition: effectiveWallCondition,
+        mudWallRemoval,
         tileWallCount,
         wainscotingQuantity,
         wallRepairCount,
@@ -4463,7 +4476,7 @@
         return;
       }
 
-      if (snapshot.wallCondition === "mud") {
+      if (snapshot.wallCondition === "mud" && snapshot.mudWallRemoval) {
         addRoughCatalogLine(items, "labor-mud-wall-removal", "tearout", {
           reason: "Mud wall removal suppresses separate tile-wall demo for the same walls."
         });
@@ -4535,6 +4548,12 @@
 
       if (snapshot.relocateDrain) {
         addRoughCatalogLine(items, "relocate-drain", "plumbing");
+      }
+
+      if (snapshot.wallCondition === "mud" && !snapshot.mudWallRemoval) {
+        addRoughCatalogLine(items, "mud-wall-valve-prep", "plumbing", {
+          reason: "Mud walls are staying, so the builder adds valve-prep upcharge instead of removal."
+        });
       }
 
       if (snapshot.moveShowerHeadOverflow) {
@@ -4687,6 +4706,7 @@
       const includeWetWallsInput = document.getElementById("roughIncludeWetWalls");
       const onePieceField = document.getElementById("roughOnePieceWithCeilingField");
       const onePieceRemovalNote = document.getElementById("roughOnePieceRemovalNote");
+      const mudWallRemovalField = document.getElementById("roughMudWallRemovalField");
       const concreteField = document.getElementById("roughConcreteBeveledField");
       const baseOnlyField = document.getElementById("roughBaseOnlyField");
       const wallStyleSelect = document.getElementById("roughWallPattern");
@@ -4714,6 +4734,11 @@
       onePieceRemovalNote.hidden = roughState.existingFixture !== "one-piece-fiberglass";
       if (onePieceField.hidden) {
         document.getElementById("roughOnePieceWithCeiling").checked = false;
+      }
+
+      mudWallRemovalField.hidden = roughState.wallCondition !== "mud";
+      if (mudWallRemovalField.hidden) {
+        document.getElementById("roughMudWallRemoval").checked = false;
       }
 
       const showConcreteField = roughState.existingFixture === "concrete-tile-base" || roughState.route === "molded-base";
@@ -4833,6 +4858,7 @@
       document.getElementById("roughCornerCaddyProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughCornerCaddyQuantityField").hidden = !snapshot.showWetAreaScope || !snapshot.cornerCaddyProduct;
       document.getElementById("roughTileWallCountField").hidden = snapshot.wallCondition !== "tile";
+      document.getElementById("roughMudWallRemovalField").hidden = snapshot.wallCondition !== "mud";
       document.getElementById("roughValveProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
       document.getElementById("roughHandheldProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
       document.getElementById("roughCurtainRodField").hidden = !snapshot.showWetAreaScope;
@@ -5436,6 +5462,7 @@
     });
     [
       "roughOnePieceWithCeiling",
+      "roughMudWallRemoval",
       "roughConcreteBeveled",
       "roughBaseOnlyException",
       "roughIncludeWetWalls",

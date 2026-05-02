@@ -1022,6 +1022,16 @@ const PRICE_LIST_DATA = [
     ]
   },
   {
+    id: "mud-wall-valve-prep",
+    category: "Plumbing & Fixtures",
+    label: "Mud Wall Upcharge for Preparation of Valve",
+    bucket: "labor",
+    description: "Mud wall upcharge for preparation of valve when mud walls stay in place.",
+    variants: [
+      { id: "standard", label: "Standard", price: 450 }
+    ]
+  },
+  {
     id: "delta-lahara",
     category: "Plumbing & Fixtures",
     label: "Delta Lahara T17438",
