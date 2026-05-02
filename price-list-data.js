@@ -488,9 +488,9 @@ const PRICE_LIST_DATA = [
   {
     id: "oxford-full-length-shelf",
     category: "Walls & Accessories",
-    label: "Oxford Full Length Corner Shelf with Footrest",
+    label: "Oxford Tower Caddy / Full Length Corner Shelf with Footrest",
     bucket: "bf",
-    description: "Full-length corner shelf.",
+    description: "Tower caddy / full-length corner shelf with footrest.",
     variants: [
       { id: "white", label: "White", price: 395 },
       { id: "pearl", label: "Pearl", price: 395 },
