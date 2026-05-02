@@ -1781,6 +1781,7 @@
                     <label>Current Wall Condition</label>
                     <div class="choice-row" data-condition-group="wallCondition">
                       <button class="choice-button active" type="button" data-value="staying">Walls staying / no wall removal</button>
+                      <button class="choice-button" type="button" data-value="bf-system">Existing Bath Fitter walls/system</button>
                       <button class="choice-button" type="button" data-value="fiberglass">Fiberglass walls</button>
                       <button class="choice-button" type="button" data-value="tile">Tile walls</button>
                       <button class="choice-button" type="button" data-value="mud">Mud walls</button>
@@ -4918,19 +4919,23 @@
       }
 
       let allowedWallConditions = new Set(["staying", "fiberglass", "tile", "mud"]);
-      if (roughState.existingFixture === "one-piece-fiberglass") {
-        allowedWallConditions = new Set(["fiberglass"]);
-      } else if (roughState.existingFixture === "bf-system") {
-        allowedWallConditions = new Set(["staying"]);
-      } else if (
+      if (
         roughState.route === "wains-only" ||
         (routeSupportsWetWallsToggle(roughState.route) && !includeWetWallsInput.checked)
       ) {
         allowedWallConditions = new Set(["staying"]);
+      } else if (roughState.existingFixture === "one-piece-fiberglass") {
+        allowedWallConditions = new Set(["fiberglass"]);
+      } else if (roughState.existingFixture === "bf-system") {
+        allowedWallConditions = new Set(["bf-system"]);
       }
 
       if (!allowedWallConditions.has(roughState.wallCondition)) {
-        roughState.wallCondition = allowedWallConditions.has("fiberglass") ? "fiberglass" : "staying";
+        roughState.wallCondition = allowedWallConditions.has("bf-system")
+          ? "bf-system"
+          : allowedWallConditions.has("fiberglass")
+            ? "fiberglass"
+            : "staying";
       }
 
       setChoiceGroupState("route", roughState.route, allowedRoutes);
