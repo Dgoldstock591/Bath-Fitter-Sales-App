@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.25</title>
+  <title>Bath Fitter Sales Tool 3.26</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1600,7 +1600,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=325"></script>
+  <script src="price-list-data.js?v=326"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1615,9 +1615,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.25</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.26</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.25</h1>
+          <h1>Bath Fitter Sales Toolkit 3.26</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -3418,9 +3418,6 @@
 
       const nonDiscountableAddOns = inputs.doors + inputs.labor + inputs.permits;
       const addOns = inputs.wainscoting + nonDiscountableAddOns;
-      if (!addOns) {
-        return emptyState("Add wainscoting, doors, labor, or permit.");
-      }
 
       const grossTotal = inputs.bf + addOns;
       const depositMethod = getCommissionDepositMethod();
@@ -5705,12 +5702,8 @@
     function chooseDefaultTab(inputs) {
       const hasAddOns = Boolean(inputs.wainscoting || inputs.doors || inputs.labor || inputs.permits);
 
-      if (inputs.bf && hasAddOns) {
-        return "panelCumulative";
-      }
-
       if (inputs.bf) {
-        return "panelContract";
+        return "panelCumulative";
       }
 
       if (hasAddOns) {
