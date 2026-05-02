@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.24</title>
+  <title>Bath Fitter Sales Tool 3.25</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1600,7 +1600,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=324"></script>
+  <script src="price-list-data.js?v=325"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1615,9 +1615,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.24</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.25</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.24</h1>
+          <h1>Bath Fitter Sales Toolkit 3.25</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -1662,6 +1662,7 @@
     <main class="workspace tool-section" id="calculatorTool" hidden>
       <div class="tool-bar">
         <button class="button secondary" type="button" data-open-tool="home">Back to Toolkit</button>
+        <button class="button secondary" id="clearButton" type="button">Clear Job</button>
       </div>
       <section class="panel form-panel">
         <div class="panel-inner">
@@ -1728,7 +1729,6 @@
 
           <div class="actions">
             <button class="button primary" id="refreshButton" type="button">Recalculate</button>
-            <button class="button secondary" id="clearButton" type="button">Clear Job</button>
           </div>
         </div>
       </section>
