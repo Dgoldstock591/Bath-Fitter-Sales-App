@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.22</title>
+  <title>Bath Fitter Sales Tool 3.24</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -660,6 +660,66 @@
       line-height: 1.5;
     }
 
+    .bf-estimate-sheet {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .bf-estimate-header,
+    .bf-estimate-section,
+    .bf-estimate-total {
+      padding: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #fbfdfc;
+    }
+
+    .bf-estimate-header {
+      background: linear-gradient(135deg, rgba(6, 133, 126, 0.1) 0%, #ffffff 100%);
+    }
+
+    .bf-estimate-header h4,
+    .bf-estimate-section h4,
+    .bf-estimate-total h4 {
+      margin: 0 0 0.4rem;
+    }
+
+    .bf-estimate-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto auto;
+      gap: 0.65rem;
+      align-items: start;
+      padding: 0.55rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .bf-estimate-line:first-of-type {
+      border-top: 0;
+    }
+
+    .bf-estimate-line span {
+      color: var(--muted);
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .bf-estimate-line strong {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .bf-estimate-total-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.3rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .bf-estimate-total-row:first-of-type {
+      border-top: 0;
+    }
+
     .pricing-guide-layout {
       display: grid;
       gap: 0.9rem;
@@ -866,6 +926,12 @@
       font-weight: 800;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+    }
+
+    .grab-bar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
     }
 
     .rough-step:last-child {
@@ -1524,9 +1590,17 @@
       .rough-sticky-summary {
         position: static;
       }
+
+      .bf-estimate-line {
+        grid-template-columns: 1fr;
+      }
+
+      .bf-estimate-line strong {
+        text-align: left;
+      }
     }
   </style>
-  <script src="price-list-data.js?v=322"></script>
+  <script src="price-list-data.js?v=324"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1541,9 +1615,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.22</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.24</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.22</h1>
+          <h1>Bath Fitter Sales Toolkit 3.24</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -1926,6 +2000,10 @@
                     <label for="roughDoorProduct">Door / Enclosure</label>
                     <select id="roughDoorProduct"></select>
                   </div>
+                  <div class="form-field" id="roughDoorVariantField">
+                    <label for="roughDoorVariant">Door Finish</label>
+                    <select id="roughDoorVariant"></select>
+                  </div>
                   <div class="form-field" id="roughCustomDoorField">
                     <label for="roughCustomDoorPrice">Custom Door Price</label>
                     <input type="number" id="roughCustomDoorPrice" min="0" step="0.01" placeholder="0.00" />
@@ -1943,25 +2021,34 @@
 
                 <div class="rough-step-section">
                   <h4>Sell-side accessories</h4>
-                  <div class="form-field" id="roughCurtainRodField">
-                    <label for="roughCurtainRodProduct">Curtain Rod</label>
-                    <select id="roughCurtainRodProduct"></select>
+                  <div class="form-field" id="roughRodField">
+                    <label for="roughRodProduct">Curtain / Shower Rod</label>
+                    <select id="roughRodProduct"></select>
                   </div>
-                  <div class="form-field" id="roughShowerRodField">
-                    <label for="roughShowerRodProduct">Shower Rod</label>
-                    <select id="roughShowerRodProduct"></select>
+                  <div class="form-field" id="roughRodFinishField">
+                    <label for="roughRodFinish">Rod Finish</label>
+                    <select id="roughRodFinish"></select>
                   </div>
                   <div class="accessory-options" id="roughAccessoryOptionsField">
                     <div class="accessory-group">
                       <h5>Safety / Grab Bars</h5>
-                      <div class="accessory-picker">
-                        <div class="accessory-card">
-                          <label><input type="checkbox" data-rough-accessory="safety-bar-16" /> Safety Bar 16</label>
-                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="safety-bar-16" disabled /></span>
+                      <div class="grab-bar-grid">
+                        <div class="form-field">
+                          <label for="roughStraightGrabBarVariant">16 Inch Safety Bar</label>
+                          <select id="roughStraightGrabBarVariant"></select>
                         </div>
-                        <div class="accessory-card">
-                          <label><input type="checkbox" data-rough-accessory="safety-bar-l-shape" /> L Shaped Safety Bar 34 x 18</label>
-                          <span class="quantity-label">Qty <input type="number" min="1" step="1" value="1" inputmode="numeric" data-rough-accessory-quantity="safety-bar-l-shape" disabled /></span>
+                        <div class="form-field">
+                          <label for="roughStraightGrabBarQuantity">16 Inch Qty</label>
+                          <input type="number" id="roughStraightGrabBarQuantity" min="1" step="1" value="1" inputmode="numeric" />
+                        </div>
+                        <div class="form-field">
+                          <label for="roughLGrabBarQuantity">L Shaped Safety Bar 34 x 18</label>
+                          <select id="roughLGrabBarQuantity">
+                            <option value="0">No L shaped bar</option>
+                            <option value="1">1 L shaped bar</option>
+                            <option value="2">2 L shaped bars</option>
+                            <option value="3">3 L shaped bars</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -2075,9 +2162,17 @@
                     <label for="roughValveProduct">Valve / Trim</label>
                     <select id="roughValveProduct"></select>
                   </div>
+                  <div class="form-field" id="roughValveVariantField">
+                    <label for="roughValveVariant">Valve Finish</label>
+                    <select id="roughValveVariant"></select>
+                  </div>
                   <div class="form-field" id="roughHandheldProductField">
                     <label for="roughHandheldProduct">Handheld / Diverter Upgrade</label>
                     <select id="roughHandheldProduct"></select>
+                  </div>
+                  <div class="form-field" id="roughHandheldVariantField">
+                    <label for="roughHandheldVariant">Handheld / Diverter Finish</label>
+                    <select id="roughHandheldVariant"></select>
                   </div>
                   <div class="rough-checklist">
                     <label><input type="checkbox" id="roughRelocateDrain" /> Relocate drain</label>
@@ -2094,6 +2189,7 @@
                 <span class="rough-step-eyebrow">Step 4</span>
                 <h3>Review Exact Estimate</h3>
                 <p class="estimator-detail">Review the live exact math, then send it straight into the calculator or save it as exact estimate lines.</p>
+                <div class="bf-estimate-sheet" id="roughBathFitterEstimate"></div>
                 <div class="rough-output-list" id="roughEstimatePreview"></div>
                 <div class="actions">
                   <button class="button primary" id="loadRoughEstimateButton" type="button">Load Into Pricing</button>
@@ -2508,16 +2604,16 @@
       "delta-in2ition-kinetic",
       "delta-kinetic-raincan"
     ];
-    const ROUGH_CURTAIN_ROD_IDS = ["curtain-rod-tension-5"];
-    const ROUGH_SHOWER_ROD_IDS = [
+    const ROUGH_ROD_IDS = [
       "shower-rod-curved-5",
       "shower-rod-curved-6",
       "shower-rod-fixed-5-5",
-      "shower-rod-fixed-6"
+      "shower-rod-fixed-6",
+      "curtain-rod-tension-5"
     ];
+    const ROUGH_STANDARD_ROD_FINISHES = ["Chrome", "Brushed Nickel", "Oil Rubbed Bronze", "Matte Black"];
+    const ROUGH_TENSION_ROD_FINISHES = ["Chrome", "Pearl", "Brass", "Nickel"];
     const ROUGH_ACCESSORY_TOGGLE_IDS = [
-      "safety-bar-16",
-      "safety-bar-l-shape",
       "corner-seat",
       "l-shape-corner-seat",
       "fold-down-seat-18",
@@ -4001,6 +4097,53 @@
           : extraOptions[0]?.value || options[0]?.id || "";
     }
 
+    function setVariantSelectFromItem(selectId, itemId, includeNone = false, noneLabel = "None") {
+      const select = document.getElementById(selectId);
+      const item = getCatalogItemById(itemId);
+      if (!select) {
+        return;
+      }
+
+      if (!item?.variants?.length) {
+        select.innerHTML = includeNone ? `<option value="">${escapeHtml(noneLabel)}</option>` : "";
+        select.value = "";
+        return;
+      }
+
+      const currentValue = select.value;
+      const allowedValues = new Set(item.variants.map((variant) => variant.id));
+      if (includeNone) {
+        allowedValues.add("");
+      }
+
+      select.innerHTML =
+        (includeNone ? `<option value="">${escapeHtml(noneLabel)}</option>` : "") +
+        item.variants
+          .map(
+            (variant) =>
+              `<option value="${escapeHtml(variant.id)}">${escapeHtml(variant.label)} | ${formatCurrency(variant.price)}</option>`
+          )
+          .join("");
+
+      select.value = allowedValues.has(currentValue) ? currentValue : includeNone ? "" : item.variants[0].id;
+    }
+
+    function setRodFinishOptions(selectId, rodProductId) {
+      const select = document.getElementById(selectId);
+      if (!select) {
+        return;
+      }
+
+      const finishes = rodProductId
+        ? rodProductId === "curtain-rod-tension-5"
+          ? ROUGH_TENSION_ROD_FINISHES
+          : ROUGH_STANDARD_ROD_FINISHES
+        : [];
+      const currentValue = select.value;
+      select.innerHTML = finishes.map((finish) => `<option value="${escapeHtml(finish)}">${escapeHtml(finish)}</option>`).join("");
+      select.value = finishes.includes(currentValue) ? currentValue : finishes[0] || "";
+    }
+
     function getRoughGroupForItem(item) {
       if (!item) {
         return "accessory";
@@ -4378,6 +4521,7 @@
         wainscotingQuantity: roughIntValue("roughWainscotingQuantity", 1),
         wallPattern: roughValue("roughWallPattern"),
         doorProduct: roughValue("roughDoorProduct"),
+        doorVariant: roughValue("roughDoorVariant"),
         customDoorPrice: amountToCents(roughValue("roughCustomDoorPrice")),
         ceilingProduct: roughValue("roughCeilingProduct"),
         tileWallCount: roughIntValue("roughTileWallCount", 3),
@@ -4399,8 +4543,13 @@
         coverWindow: roughChecked("roughCoverWindow"),
         jackhammerCharge: roughChecked("roughJackhammerCharge"),
         removeExistingDoor: roughChecked("roughRemoveExistingDoor"),
-        curtainRodProduct: roughValue("roughCurtainRodProduct"),
-        showerRodProduct: roughValue("roughShowerRodProduct")
+        rodProduct: roughValue("roughRodProduct"),
+        rodFinish: roughValue("roughRodFinish"),
+        straightGrabBarVariant: roughValue("roughStraightGrabBarVariant"),
+        straightGrabBarQuantity: roughIntValue("roughStraightGrabBarQuantity", 1),
+        lGrabBarQuantity: roughIntValue("roughLGrabBarQuantity", 0),
+        valveVariant: roughValue("roughValveVariant"),
+        handheldVariant: roughValue("roughHandheldVariant")
       };
     }
 
@@ -4681,11 +4830,15 @@
 
     function addPlumbingLines(items, snapshot) {
       if (snapshot.valveEnabled && snapshot.valveProduct) {
-        addRoughCatalogLine(items, snapshot.valveProduct, "plumbing");
+        addRoughCatalogLine(items, snapshot.valveProduct, "plumbing", {
+          variantId: snapshot.valveVariant || null
+        });
       }
 
       if (snapshot.valveEnabled && snapshot.handheldProduct) {
-        addRoughCatalogLine(items, snapshot.handheldProduct, "plumbing");
+        addRoughCatalogLine(items, snapshot.handheldProduct, "plumbing", {
+          variantId: snapshot.handheldVariant || null
+        });
       }
 
       if (snapshot.relocateDrain) {
@@ -4731,6 +4884,25 @@
           variantId: getPreferredAcrylicVariantId(itemId, snapshot.acrylicColor)
         });
       });
+    }
+
+    function addGrabBarLines(items, snapshot) {
+      if (!snapshot.showWetAreaScope) {
+        return;
+      }
+
+      if (snapshot.straightGrabBarVariant) {
+        addRoughCatalogLine(items, "safety-bar-16", "accessory", {
+          quantity: Math.max(1, snapshot.straightGrabBarQuantity || 1),
+          variantId: snapshot.straightGrabBarVariant
+        });
+      }
+
+      if (snapshot.lGrabBarQuantity > 0) {
+        addRoughCatalogLine(items, "safety-bar-l-shape", "accessory", {
+          quantity: snapshot.lGrabBarQuantity
+        });
+      }
     }
 
     function buildRoughEstimateItems() {
@@ -4788,15 +4960,15 @@
           "Call Erin for all custom door pricing."
         );
       } else if (snapshot.doorProduct) {
-        addRoughCatalogLine(items, snapshot.doorProduct, "accessory");
+        addRoughCatalogLine(items, snapshot.doorProduct, "accessory", {
+          variantId: snapshot.doorVariant || null
+        });
       }
 
-      if (snapshot.curtainRodProduct) {
-        addRoughCatalogLine(items, snapshot.curtainRodProduct, "accessory");
-      }
-
-      if (snapshot.showerRodProduct) {
-        addRoughCatalogLine(items, snapshot.showerRodProduct, "accessory");
+      if (snapshot.rodProduct) {
+        addRoughCatalogLine(items, snapshot.rodProduct, "accessory", {
+          labelSuffix: snapshot.rodFinish || ""
+        });
       }
 
       addMainFixtureRemovalLine(items, snapshot);
@@ -4810,6 +4982,7 @@
 
       addRebuildAndPrepLines(items, snapshot);
       addPlumbingLines(items, snapshot);
+      addGrabBarLines(items, snapshot);
       addSelectedAccessoryLines(items, snapshot);
 
       return items.filter(Boolean).concat(state.roughAddOns);
@@ -4954,8 +5127,12 @@
       setSelectFromItems("roughCeilingProduct", ROUGH_CEILING_IDS, true, "No ceiling panel");
       setSelectFromItems("roughValveProduct", ROUGH_VALVE_IDS, true, "No valve");
       setSelectFromItems("roughHandheldProduct", ROUGH_HANDHELD_IDS, true, "No handheld / diverter");
-      setSelectFromItems("roughCurtainRodProduct", ROUGH_CURTAIN_ROD_IDS, true, "No curtain rod");
-      setSelectFromItems("roughShowerRodProduct", ROUGH_SHOWER_ROD_IDS, true, "No shower rod");
+      setSelectFromItems("roughRodProduct", ROUGH_ROD_IDS, true, "No rod");
+      setVariantSelectFromItem("roughDoorVariant", roughValue("roughDoorProduct"), false);
+      setVariantSelectFromItem("roughValveVariant", roughValue("roughValveProduct"), false);
+      setVariantSelectFromItem("roughHandheldVariant", roughValue("roughHandheldProduct"), false);
+      setVariantSelectFromItem("roughStraightGrabBarVariant", "safety-bar-16", true, "No 16 inch safety bar");
+      setRodFinishOptions("roughRodFinish", roughValue("roughRodProduct"));
       if (![...wallStyleSelect.options].some((option) => option.value === wallStyleSelect.value)) {
         wallStyleSelect.value = "";
       }
@@ -4987,8 +5164,10 @@
       if (!snapshot.showWetAreaScope) {
         document.getElementById("roughDoorProduct").value = "";
         document.getElementById("roughCeilingProduct").value = "";
-        document.getElementById("roughCurtainRodProduct").value = "";
-        document.getElementById("roughShowerRodProduct").value = "";
+        document.getElementById("roughRodProduct").value = "";
+        document.getElementById("roughRodFinish").value = "";
+        document.getElementById("roughStraightGrabBarVariant").value = "";
+        document.getElementById("roughLGrabBarQuantity").value = "0";
         document.getElementById("roughValveEnabled").checked = false;
         document.getElementById("roughValveProduct").value = "";
         document.getElementById("roughHandheldProduct").value = "";
@@ -5016,14 +5195,21 @@
       document.getElementById("roughWainscotingQuantityField").hidden = !snapshot.wainscotingProduct;
       document.getElementById("roughDoorProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughCustomDoorField").hidden = roughValue("roughDoorProduct") !== "custom";
+      document.getElementById("roughDoorVariantField").hidden =
+        !snapshot.showWetAreaScope || !snapshot.doorProduct || snapshot.doorProduct === "custom";
       document.getElementById("roughCeilingProductField").hidden = !snapshot.showWetAreaScope;
       document.getElementById("roughAccessoryOptionsField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughStraightGrabBarQuantity").disabled = !snapshot.straightGrabBarVariant;
       document.getElementById("roughTileWallCountField").hidden = snapshot.wallCondition !== "tile";
       document.getElementById("roughMudWallRemovalField").hidden = snapshot.wallCondition !== "mud";
       document.getElementById("roughValveProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
+      document.getElementById("roughValveVariantField").hidden =
+        !snapshot.showWetAreaScope || !snapshot.valveEnabled || !snapshot.valveProduct;
       document.getElementById("roughHandheldProductField").hidden = !snapshot.showWetAreaScope || !snapshot.valveEnabled;
-      document.getElementById("roughCurtainRodField").hidden = !snapshot.showWetAreaScope;
-      document.getElementById("roughShowerRodField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughHandheldVariantField").hidden =
+        !snapshot.showWetAreaScope || !snapshot.valveEnabled || !snapshot.handheldProduct;
+      document.getElementById("roughRodField").hidden = !snapshot.showWetAreaScope;
+      document.getElementById("roughRodFinishField").hidden = !snapshot.showWetAreaScope || !snapshot.rodProduct;
       document.getElementById("roughRouteHint").textContent =
         roughState.route === suggestedRoute
           ? `${getChoiceLabel("route", suggestedRoute)} is the recommended route from the current condition.`
@@ -5036,6 +5222,148 @@
       syncRoughAccessoryQuantityControls();
     }
 
+    function getBathFitterEstimateSection(item) {
+      const group = getRoughGroup(item);
+      const category = String(item.category || "").toLowerCase();
+      const label = String(item.label || "").toLowerCase();
+
+      if (item.bucket === "doors" || category.includes("door")) {
+        return "DOORS SECTION";
+      }
+
+      if (item.bucket === "wainscoting") {
+        return "WAINSCOTING / OUTSIDE WET AREA";
+      }
+
+      if (category.includes("ceiling") || label.includes("ceiling")) {
+        return "CEILING SECTION";
+      }
+
+      if (group === "plumbing" || group === "accessory") {
+        return "PLUMBING, MISC LABOR AND ACCESSORIES SECTION";
+      }
+
+      if (
+        category.includes("wall") ||
+        label.includes("wall") ||
+        label.includes("window") ||
+        label.includes("wains")
+      ) {
+        return "WALL AND WINDOW SECTION";
+      }
+
+      if (
+        category.includes("tub") ||
+        category.includes("base") ||
+        label.includes("tub") ||
+        label.includes("base") ||
+        label.includes("drain kit") ||
+        label.includes("formed front")
+      ) {
+        return "TUB / SHOWER BASE SECTION";
+      }
+
+      if (group === "rebuild" || group === "tearout") {
+        return "PLUMBING, MISC LABOR AND ACCESSORIES SECTION";
+      }
+
+      return "SPECIAL ITEMS";
+    }
+
+    function renderBathFitterEstimateOutput(items, totals, contractTotals) {
+      const container = document.getElementById("roughBathFitterEstimate");
+      if (!container) {
+        return;
+      }
+
+      if (!items.length) {
+        container.innerHTML = emptyState("Complete the estimator selections to generate Bath Fitter-style line items.");
+        return;
+      }
+
+      const sectionOrder = [
+        "TUB / SHOWER BASE SECTION",
+        "WALL AND WINDOW SECTION",
+        "CEILING SECTION",
+        "DOORS SECTION",
+        "PLUMBING, MISC LABOR AND ACCESSORIES SECTION",
+        "WAINSCOTING / OUTSIDE WET AREA",
+        "SPECIAL ITEMS"
+      ];
+      const sections = sectionOrder.reduce((result, section) => {
+        result[section] = [];
+        return result;
+      }, {});
+
+      items.forEach((item) => {
+        const section = getBathFitterEstimateSection(item);
+        sections[section].push(item);
+      });
+
+      const sectionMarkup = sectionOrder
+        .filter((section) => sections[section].length)
+        .map((section) => {
+          const rows = sections[section]
+            .map((item) => {
+              const detailParts = [
+                item.variantLabel && item.variantLabel !== "Standard" ? item.variantLabel : "",
+                item.description || "",
+                item.engineReason || ""
+              ].filter(Boolean);
+
+              return `
+                <div class="bf-estimate-line">
+                  <span>${escapeHtml(item.label)}</span>
+                  <span>${escapeHtml(detailParts.join(" | ") || item.category || "")}</span>
+                  <span>Qty ${escapeHtml(item.quantity)}</span>
+                  <strong>${formatCurrencyFromCents(item.totalCents)}</strong>
+                </div>
+              `;
+            })
+            .join("");
+
+          return `
+            <section class="bf-estimate-section">
+              <h4>${escapeHtml(section)}</h4>
+              ${rows}
+            </section>
+          `;
+        })
+        .join("");
+
+      const bucketRows = [
+        { label: "BF System EOI", value: contractTotals.bf },
+        { label: "Wainscoting EOI", value: contractTotals.wainscoting },
+        { label: "Doors EOI", value: contractTotals.doors },
+        { label: "Labor EOI", value: contractTotals.labor },
+        { label: "Permit EOI", value: contractTotals.permits }
+      ]
+        .filter((row) => row.value > 0)
+        .map(
+          (row) => `
+            <div class="bf-estimate-total-row">
+              <span>${escapeHtml(row.label)}</span>
+              <strong>${formatCurrencyFromCents(row.value)}</strong>
+            </div>
+          `
+        )
+        .join("");
+
+      container.innerHTML = `
+        <section class="bf-estimate-header">
+          <h4>BATH FITTER ESTIMATE LINE ITEMS</h4>
+          <p>Rep-only exact estimate output formatted around the Bath Fitter field estimate sections.</p>
+        </section>
+        ${sectionMarkup}
+        <section class="bf-estimate-total">
+          <h4>SUBTOTAL / TOTAL</h4>
+          <div class="bf-estimate-total-row"><span>Estimated Subtotal</span><strong>${formatCurrencyFromCents(totals.subtotal)}</strong></div>
+          <div class="bf-estimate-total-row"><span>Estimated Total</span><strong>${formatCurrencyFromCents(totals.total)}</strong></div>
+          ${bucketRows}
+        </section>
+      `;
+    }
+
     function renderRoughPreview() {
       const previewItems = buildRoughEstimateItems();
       const roughTotals = getRoughGroupedTotals(previewItems);
@@ -5043,6 +5371,7 @@
       const snapshot = getRoughEngineState();
 
       renderRoughWizard(snapshot, previewItems, roughTotals, contractTotals);
+      renderBathFitterEstimateOutput(previewItems, roughTotals, contractTotals);
 
       if (!previewItems.length) {
         document.getElementById("roughEstimatePreview").innerHTML = emptyState("Choose route and conditions to build the exact estimate.");
@@ -5638,6 +5967,7 @@
       "roughWainscotingQuantity",
       "roughWallPattern",
       "roughDoorProduct",
+      "roughDoorVariant",
       "roughCustomDoorPrice",
       "roughCeilingProduct",
       "roughTileWallCount",
@@ -5645,7 +5975,9 @@
       "roughExtraSheetrockCount",
       "roughValveEnabled",
       "roughValveProduct",
+      "roughValveVariant",
       "roughHandheldProduct",
+      "roughHandheldVariant",
       "roughRelocateDrain",
       "roughMoveShowerHeadOverflow",
       "roughRelocatePlumbingCopper",
@@ -5658,8 +5990,11 @@
       "roughRemoveHeader",
       "roughCoverWindow",
       "roughJackhammerCharge",
-      "roughCurtainRodProduct",
-      "roughShowerRodProduct"
+      "roughRodProduct",
+      "roughRodFinish",
+      "roughStraightGrabBarVariant",
+      "roughStraightGrabBarQuantity",
+      "roughLGrabBarQuantity"
     ].forEach((id) => {
       const element = document.getElementById(id);
       if (!element) {
