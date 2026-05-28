@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.27</title>
+  <title>Bath Fitter Sales Tool 3.28</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1822,7 +1822,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=327"></script>
+  <script src="price-list-data.js?v=328"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1837,9 +1837,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.27</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.28</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.27</h1>
+          <h1>Bath Fitter Sales Toolkit 3.28</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -3956,9 +3956,10 @@
       `;
     }
 
-    function sectionMarkup(title, description, cards, twoUp = true) {
+    function sectionMarkup(title, description, cards, twoUp = true, defaultOpen = false) {
       const panelKey = `output-${slugifyKey(title)}`;
-      const isOpen = Boolean(state.expandedOutputPanels[panelKey]);
+      const hasStoredState = Object.prototype.hasOwnProperty.call(state.expandedOutputPanels, panelKey);
+      const isOpen = hasStoredState ? Boolean(state.expandedOutputPanels[panelKey]) : defaultOpen;
       const optionLabel = cards.length === 1 ? "1 option" : `${cards.length} options`;
       return `
         <details class="section-block output-panel" data-output-panel-key="${escapeHtml(panelKey)}"${isOpen ? " open" : ""}>
@@ -4106,7 +4107,9 @@
         sectionMarkup(
           "Cash / Check / Charge",
           "",
-          cashCards
+          cashCards,
+          true,
+          true
         ) +
         sectionMarkup(
           "Veterans / Manager Special",
@@ -4305,7 +4308,9 @@
         sectionMarkup(
           "Cash / Check / Charge Cumulative",
           "",
-          cumulativeCards
+          cumulativeCards,
+          true,
+          true
         ) +
         sectionMarkup(
           "Veterans / Manager Special Cumulative",
@@ -4507,8 +4512,8 @@
       }
 
       return (
-        (wainscotingCards.length ? sectionMarkup("Wainscoting EOI", "", wainscotingCards) : "") +
-        (cards.length ? sectionMarkup("Standalone Contracts", "", cards) : "")
+        (wainscotingCards.length ? sectionMarkup("Wainscoting EOI", "", wainscotingCards, true, true) : "") +
+        (cards.length ? sectionMarkup("Standalone Contracts", "", cards, true, !wainscotingCards.length) : "")
       );
     }
 
@@ -4795,7 +4800,7 @@
       }
 
       if (kind === "financePlans") {
-        const plans = (FINANCING_PLANS || []).map((plan) => plan.id).filter(Boolean);
+        const plans = (SYNCHRONY_PLANS || []).map((plan) => plan.id).filter(Boolean);
         return plans.length
           ? [`Current financing plan codes in the calculator: ${plans.join(", ")}.`]
           : ["Use the financing plan codes shown in the Calculator Tool."];
@@ -4888,6 +4893,18 @@
           }).join("")}
         </div>
       `;
+    }
+
+    function safeRenderTrainingResources() {
+      try {
+        renderTrainingResources();
+      } catch (error) {
+        console.warn("Training Resources could not render.", error);
+        const container = document.getElementById("trainingModules");
+        if (container) {
+          container.innerHTML = emptyState("Training Resources could not load. The calculator and pricing tools are still available.");
+        }
+      }
     }
 
     function setSelectFromItems(
@@ -6637,7 +6654,7 @@
       renderEstimateList();
       renderPricingGuide();
       renderProductMatrix();
-      renderTrainingResources();
+      safeRenderTrainingResources();
       renderRoughControls();
       renderRoughPreview();
 
