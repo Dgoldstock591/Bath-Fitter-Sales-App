@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.35</title>
+  <title>Bath Fitter Sales Tool 3.36</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -2078,7 +2078,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=335"></script>
+  <script src="price-list-data.js?v=336"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2093,9 +2093,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.35</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.36</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.35</h1>
+          <h1>Bath Fitter Sales Toolkit 3.36</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -5958,6 +5958,82 @@
           sections: practiceScenarioSections
         });
       }
+    }
+
+    {
+      const linearTrainingOrder = {
+        "Understanding Your Measurement Sheet": [
+          "Detailed Standard: Measurement Sheet Purpose and Accountability",
+          "Tub Liner Measuring SOP",
+          "Full Training Standard: Tub Tear-Out Measuring",
+          "Full Training Standard: Wall Measuring",
+          "Wall Matrix and Extension Reference",
+          "Full Training Standard: Door Measuring",
+          "Full Training Standard: Molded Base / Flat Floor Measuring",
+          "Detailed Standard: Job Condition Questionnaire Field-by-Field",
+          "Detailed Standard: Place to Bend and One-Piece Wall Handling",
+          "Detailed Standard: Wainscoting / Bead Board Measuring Notes",
+          "Completion Standard"
+        ],
+        "Understanding the Bath Fitter Estimate / Contract": [
+          "Detailed Standard: EOI Separation Decision Rules",
+          "Full Training Standard: Customer Information Section",
+          "Full Training Standard: Tub Section",
+          "End Cap and End Finishing Piece",
+          "Full Training Standard: Shower Base Section",
+          "Full Training Standard: Wall and Window Section",
+          "Detailed Standard: Ceiling Section",
+          "Detailed Standard: Door Section on BF System EOI",
+          "Remove and Dispose Examples",
+          "Drain Test and Slow Drain Note",
+          "Detailed Standard: Accessory and Finish Writing Rules",
+          "Wall Repair vs Labor EOI",
+          "Detailed Standard: Bottom Pricing, Deposit, Financing, and Signatures",
+          "Special Items Box Use"
+        ],
+        "Door EOI Module": [
+          "Full Training Standard: Door EOI Rules",
+          "Detailed Standard: Arizona Glass Custom Door Language",
+          "Detailed Standard: Door EOI Bottom Paperwork"
+        ],
+        "Permit / Plumbing Fee EOI Module": [
+          "Detailed Standard: Permit Payment and Financing Rules"
+        ],
+        "Wainscoting EOI Module": [
+          "Detailed Standard: Wainscoting Scope, Styles, and Prep",
+          "Wainscoting Measuring and Diagram Detail",
+          "Scheduling and Bottom Paperwork"
+        ],
+        "Labor EOI Module": [
+          "Detailed Standard: When Labor Gets Its Own EOI",
+          "What Does Not Need a Labor EOI",
+          "Detailed Standard: How to Write the Labor EOI",
+          "Detailed Standard: Labor Bottom Paperwork"
+        ]
+      };
+
+      TRAINING_MODULES.forEach((module) => {
+        const orderedTitles = linearTrainingOrder[module.title];
+        if (!orderedTitles) {
+          return;
+        }
+
+        const sectionsByTitle = new Map((module.sections || []).map((section) => [section.title, section]));
+        module.sections = orderedTitles.map((title) => sectionsByTitle.get(title)).filter(Boolean);
+      });
+
+      TRAINING_MODULES.forEach((module) => {
+        if (module.title === "Practice Scenarios") {
+          return;
+        }
+
+        module.sections = (module.sections || []).map((section) => ({
+          ...section,
+          title: section.title
+            .replace("Full Training Standard: ", "")
+            .replace("Detailed Standard: ", "")
+        }));
+      });
     }
 
     function roundToCents(value) {
