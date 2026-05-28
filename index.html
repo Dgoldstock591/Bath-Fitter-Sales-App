@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.33</title>
+  <title>Bath Fitter Sales Tool 3.34</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -2063,7 +2063,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=333"></script>
+  <script src="price-list-data.js?v=334"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2078,9 +2078,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.33</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.34</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.33</h1>
+          <h1>Bath Fitter Sales Toolkit 3.34</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -5562,6 +5562,40 @@
         measurementModule.sections = measurementModule.sections.filter(
           (section) => !duplicatedTubLinerTitles.has(section.title)
         );
+      }
+    }
+
+    {
+      const isPracticeScenarioSection = (section) => {
+        const title = (section?.title || "").toLowerCase();
+        return title.includes("scenario") || title.includes("training example");
+      };
+      const practiceScenarioSections = [];
+
+      TRAINING_MODULES.forEach((module) => {
+        if (module.title === "Practice Scenarios") {
+          return;
+        }
+
+        module.sections = (module.sections || []).filter((section) => {
+          if (!isPracticeScenarioSection(section)) {
+            return true;
+          }
+
+          practiceScenarioSections.push({
+            ...section,
+            sourceModule: module.title
+          });
+          return false;
+        });
+      });
+
+      if (practiceScenarioSections.length) {
+        TRAINING_MODULES.push({
+          title: "Practice Scenarios",
+          intro: "End-of-module practice scenarios for coaching reps after the training material has been reviewed.",
+          sections: practiceScenarioSections
+        });
       }
     }
 
