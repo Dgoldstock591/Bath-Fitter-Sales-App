@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.26</title>
+  <title>Bath Fitter Sales Tool 3.27</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -385,6 +385,85 @@
       border-top: 1px solid var(--border);
     }
 
+    .output-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #f6fbfa 100%);
+      overflow: hidden;
+      box-shadow: 0 12px 22px rgba(14, 76, 64, 0.05);
+    }
+
+    .output-panel + .output-panel {
+      margin-top: 0.85rem;
+      padding-top: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .output-panel summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .output-panel summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .output-panel[open] summary {
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 122, 104, 0.04);
+    }
+
+    .output-panel-title {
+      display: grid;
+      gap: 0.25rem;
+      min-width: 0;
+    }
+
+    .output-panel-title h3 {
+      margin: 0;
+    }
+
+    .output-panel-title p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .output-panel-count {
+      color: var(--accent-dark);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .output-panel-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 900;
+      transition: transform 0.18s ease;
+    }
+
+    .output-panel[open] .output-panel-icon {
+      transform: rotate(45deg);
+    }
+
+    .output-panel-body {
+      padding: 1rem;
+    }
+
     .section-block h3 {
       margin: 0 0 0.25rem;
       font-size: 1.08rem;
@@ -735,6 +814,9 @@
     .guide-row,
     .rough-row,
     .estimate-line,
+    .output-panel,
+    .training-module,
+    .training-section,
     .tab-panel {
       min-width: 0;
     }
@@ -1140,6 +1222,146 @@
       padding: 1rem;
     }
 
+    .training-layout,
+    .training-module-stack,
+    .training-section-stack,
+    .training-content {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .training-module,
+    .training-section {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #ffffff 0%, #f6fbfa 100%);
+      overflow: hidden;
+      box-shadow: 0 12px 22px rgba(14, 76, 64, 0.05);
+    }
+
+    .training-module summary,
+    .training-section summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      list-style: none;
+      cursor: pointer;
+      padding: 1rem;
+      color: var(--accent-dark);
+      font-weight: 800;
+    }
+
+    .training-module summary::-webkit-details-marker,
+    .training-section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .training-module[open] > summary,
+    .training-section[open] > summary {
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 122, 104, 0.04);
+    }
+
+    .training-module-title,
+    .training-section-title {
+      display: grid;
+      gap: 0.25rem;
+      min-width: 0;
+    }
+
+    .training-module-title strong,
+    .training-section-title strong {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .training-module-title span,
+    .training-section-title span {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .training-toggle-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 900;
+      transition: transform 0.18s ease;
+    }
+
+    .training-module[open] > summary .training-toggle-icon,
+    .training-section[open] > summary .training-toggle-icon {
+      transform: rotate(45deg);
+    }
+
+    .training-module-body,
+    .training-section-body {
+      display: grid;
+      gap: 0.9rem;
+      padding: 1rem;
+    }
+
+    .training-content p,
+    .training-content li {
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .training-content p {
+      margin: 0;
+    }
+
+    .training-content ul,
+    .training-checklist ul {
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+
+    .training-callout,
+    .training-checklist,
+    .training-diagram {
+      padding: 0.9rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #fbfdfc;
+    }
+
+    .training-callout strong,
+    .training-checklist strong,
+    .training-diagram strong {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--accent-dark);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .training-callout.warning {
+      border-color: rgba(184, 144, 82, 0.45);
+      background: rgba(184, 144, 82, 0.1);
+    }
+
+    .training-diagram pre {
+      margin: 0;
+      overflow-x: auto;
+      color: var(--text);
+      font-family: "Courier New", monospace;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      white-space: pre;
+    }
+
     .panel-heading p:empty,
     .section-block > p:empty,
     .scenario-top p:empty,
@@ -1509,7 +1731,7 @@
       }
 
       .landing-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
 
       .rough-wizard-shell {
@@ -1600,7 +1822,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=326"></script>
+  <script src="price-list-data.js?v=327"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1615,9 +1837,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.26</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.27</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.26</h1>
+          <h1>Bath Fitter Sales Toolkit 3.27</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -1625,6 +1847,7 @@
             <a class="hero-badge" href="#calculatorTool" data-open-tool="calculatorTool">Calculator</a>
             <a class="hero-badge" href="#pricingGuide" data-open-tool="pricingGuide">Pricing Guide</a>
             <a class="hero-badge" href="#roughEstimator" data-open-tool="roughEstimator">Rough Estimate Generator</a>
+            <a class="hero-badge" href="#trainingResources" data-open-tool="trainingResources">Training Resources</a>
           </div>
         </div>
       </div>
@@ -1654,6 +1877,12 @@
             <strong>Rough Estimate Generator</strong>
             <p>Build exact rep-only estimates with condition logic, bucket routing, and calculator handoff.</p>
             <small>Open estimator</small>
+          </a>
+          <a class="landing-card" href="#trainingResources" data-open-tool="trainingResources">
+            <span>04</span>
+            <strong>Training Resources</strong>
+            <p>Review measurement, EOI, door, permit, wainscoting, and labor rules in collapsible rep modules.</p>
+            <small>Open training</small>
           </a>
         </div>
       </div>
@@ -2302,6 +2531,19 @@
       </div>
     </section>
 
+    <section class="panel estimator-panel tool-section" id="trainingResources" hidden>
+      <div class="panel-inner">
+        <div class="tool-bar">
+          <button class="button secondary" type="button" data-open-tool="home">Back to Toolkit</button>
+        </div>
+        <div class="panel-heading">
+          <h2>Training Resources</h2>
+          <p>Rep-only reference modules for measuring, EOI paperwork, contracts, and job-scope rules.</p>
+        </div>
+        <div class="training-layout" id="trainingModules"></div>
+      </div>
+    </section>
+
   </div>
 
   <script>
@@ -2387,6 +2629,9 @@
       estimateMessage: "",
       internalSettingsVisible: false,
       expandedCommissionCards: {},
+      expandedOutputPanels: {},
+      expandedTrainingModules: {},
+      expandedTrainingSections: {},
       activeMatrix: "wall",
       activeMatrixGroup: "all",
       selectedPricingModel: "",
@@ -2629,11 +2874,11 @@
     ];
     const PRODUCT_MATRICES = {
       wall: [
-        { group: "Flat Walls", label: "84 x 132", details: "Flat wall panel", notes: "Wet-area wall package reference" },
-        { group: "Flat Walls", label: "84 x 156", details: "Flat wall panel", notes: "Wet-area wall package reference" },
-        { group: "Flat Walls", label: "90 x 132", details: "Flat wall panel", notes: "Wet-area wall package reference" },
-        { group: "Flat Walls", label: "90 x 156", details: "Flat wall panel", notes: "Wet-area wall package reference" },
-        { group: "Flat Walls", label: "90 x 192", details: "Flat wall panel", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "84 x 132", details: "Flat wall material", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "84 x 156", details: "Flat wall material", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "90 x 132", details: "Flat wall material", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "90 x 156", details: "Flat wall material", notes: "Wet-area wall package reference" },
+        { group: "Flat Walls", label: "90 x 192", details: "Flat wall material", notes: "Wet-area wall package reference" },
         { group: "Wall Extensions", label: "Flat Extension Approx 2 x 11", details: "Flat wall extension", notes: "Pairs with flat wall packages where needed" },
         { group: "Wall Extensions", label: "Flat Extension Approx 2 x 13", details: "Flat wall extension", notes: "Pairs with flat wall packages where needed" },
         { group: "Wall Extensions", label: "Tile Extension Approx 1 x 11", details: "Tile extension for Palermo, Napoli, Padova, Rimini, Milano, or Savona", notes: "Wet-area extension, not wainscoting" },
@@ -2689,6 +2934,460 @@
         { group: "Wainscoting", label: "Savona 54 x 132 7/8", details: "White only", notes: "Outside wet area only; separate wainscoting EOI" }
       ]
     };
+
+    const TRAINING_MODULES = [
+      {
+        title: "Understanding Your Measurement Sheet",
+        intro: "Use the measurement sheet as the translation guide for the actual Bath Fitter measurement form. The form is where the rep writes the numbers; this module explains what each number means, where to measure from, and why it matters.",
+        sections: [
+          {
+            title: "Purpose of the Measurement Sheet",
+            intro: "A completed sheet should answer what we are fitting into, the exact dimensions, and what conditions could affect ordering, production, or installation.",
+            paragraphs: [
+              "The measurement sheet is not just about writing numbers. It documents the exact physical condition of the bathroom so the customer, installer, office, production team, and salesperson are protected.",
+              "The better the form is filled out, the fewer surprises happen later."
+            ],
+            bullets: [
+              "Document tub measurements, tub tear-out measurements, wall measurements, door opening measurements, molded base or flat floor measurements, and the job-condition questionnaire.",
+              "Add special instructions, access conditions, anything unusual, and anything that could affect installation or customer expectations.",
+              "Do not assume anything is square, level, standard, or normal."
+            ],
+            warnings: [
+              "Every measurement and condition note should be exact. If the answer does not fit a checkbox cleanly, write the explanation in the notes area."
+            ]
+          },
+          {
+            title: "Tub Measuring Guide",
+            intro: "Tub liner measurements are exact mold-identification measurements, not rough estimates.",
+            bullets: [
+              "Tools needed: Bath Fitter tub measuring tool, two tape measures, level or straight edge, pen, and the measurement sheet.",
+              "Set the reference tape on the standing surface from drain center toward the back of the tub. Do not run the tape up the wall.",
+              "Use the reference tape to locate 2 inches, 20 inches, 36 inches, and 30 inches if 36 inches is not available.",
+              "Keep the side of the Bath Fitter tub tool with the actual tape measure pointed toward the faucet/drain side.",
+              "Measurements down to 1/16 inch matter. Do not round loosely.",
+              "The red numbers on the tub tool are only used for R, the rail measurement. The red number replaces the black number above it."
+            ],
+            diagram: [
+              "Top view of tub floor / standing surface",
+              "",
+              "Faucet / Drain Side",
+              "+--------------------------------------+",
+              "|                                      |",
+              "|   Drain Center                       |",
+              "|      o------ reference tape ------>  |",
+              "|      0 in  2 in     20 in    36 in   |",
+              "|                                      |",
+              "+--------------------------------------+",
+              "                         Back / Laying Area"
+            ].join("\n"),
+            checklists: [
+              "A: top width at 20 inches.",
+              "B: top length from the centered spout area to the back laying area, kept flat and level.",
+              "C: depth near drain using a level or straight edge.",
+              "D: depth at 36 inches, or 30 inches if 36 is not available and clearly noted.",
+              "E: bottom length on the standing surface without riding up the laying area.",
+              "F/G/H: bottom widths at 2, 20, and 36 inches, using 30 inches when needed and noted.",
+              "R: rail width at 20 inches using the clamp method and red numbers, unless the rail flares wider beyond 20 inches."
+            ],
+            warnings: [
+              "Do not tilt the tub tool or let the tape dip, pitch, bend, or ride up a surface. That can change the measurement enough to cause fitment problems.",
+              "When closing the tub tool, put the stick back into the shaft properly. Do not force it closed because the tape measure inside can be damaged."
+            ]
+          },
+          {
+            title: "Tub Tear-Out Guide",
+            intro: "For tear-outs, measure what is being removed. The goal is to document the existing tub and overall space, not identify an exact liner mold.",
+            bullets: [
+              "Front to back: measure from the back wall to the front/outside edge of the tub area.",
+              "Side to side: measure from left-hand wall to right-hand wall.",
+              "Floor to top of tub: measure from the finished bathroom floor outside the tub straight up to the top of the tub rail."
+            ],
+            warnings: [
+              "If the existing unit being torn out is a shower, do not use the Tub Tear-Out section. Use the Molded Base / Flat Floor section and record only the two outside overall measurements."
+            ]
+          },
+          {
+            title: "Wall Measuring Guide",
+            intro: "The wall measuring section determines the amount of Bath Fitter one-piece, heat-bent acrylic wall material needed to cover the tub or shower area.",
+            bullets: [
+              "Use the seven measurement bubbles above the dotted line for standard tub/shower units.",
+              "Outside bubbles: finished bathroom floor outside the wet area up to the ceiling.",
+              "Upper wing-wall bubbles: front-to-back measurement at the top of each side wall.",
+              "Lower back-wall bubbles: current tub or shower base surface up to the ceiling.",
+              "Center bubble: overall back wall side-to-side measurement.",
+              "Wall total: cumulative total of the left side wall, back wall, and right side wall coverage."
+            ],
+            dynamicBullets: "wallMatrixGroups",
+            warnings: [
+              "Bath Fitter walls are a one-piece, heat-bent acrylic wall system. Do not describe them to customers as a set of individual wall panels.",
+              "After measuring, check the wall matrix to confirm enough material is available. If the measured space exceeds available material, additional wall material, extensions, or special ordering may be required."
+            ]
+          },
+          {
+            title: "Door Measuring Guide",
+            intro: "Door measurements document the finished usable opening for a tub or shower door.",
+            bullets: [
+              "Measure available height from what the door will sit on up to the ceiling, soffit, header, dropped ceiling, tile line, or other upper barrier.",
+              "If the existing tub/shower is staying, measure from the tub rail or shower threshold.",
+              "If the job is a tear-out, measure from finished bathroom floor to the upper barrier.",
+              "Measure opening width at the top, middle, and bottom.",
+              "Note wall build-out, trim, tile edges, acrylic wall thickness, soffits, ceilings, headers, out-of-square walls, door track residue, and obstructions."
+            ],
+            warnings: [
+              "Do not assume the new door can use the old door measurements. Existing doors may have been installed out of level, shimmed, or cut around bad walls."
+            ]
+          },
+          {
+            title: "Molded Base / Flat Floor Guide",
+            intro: "This section can be used for shower tear-out measurements or for existing molded base / flat floor measurements.",
+            bullets: [
+              "For a shower tear-out, use only the exterior boxes: overall side to side and overall front to back.",
+              "Overall side to side is measured from left-hand wall to right-hand wall.",
+              "Overall front to back is measured from the back wall to the exterior/front edge where the threshold or rail returns down to the floor.",
+              "For molded base / flat floor measuring, capture exterior side-to-side/front-to-back and interior standing-area side-to-side/front-to-back.",
+              "Drain location: X is back wall to drain center. Y is right-hand wall to drain center.",
+              "Rail height outside is finished bathroom floor to the top surface of the rail. Rail height inside is top of rail down to the interior standing area."
+            ],
+            warnings: [
+              "Molded bases are rare and have limited application availability. In many situations, the better option is to tear out the existing base and build a freestanding unit."
+            ]
+          },
+          {
+            title: "Job Condition Questionnaire",
+            intro: "Measurements tell us the size. The questionnaire tells us the conditions.",
+            bullets: [
+              "Every question should be answered on every job.",
+              "Note anything within about 18 inches of the tub or shower area, including heater, door frame, window, vanity, toilet, cabinet, trim, shelving, radiator, or other obstruction.",
+              "Document tub type or shower base type: cast iron, steel, fiberglass, Bath Fitter system, Re-Bath system, acrylic system, porcelain base, tile base, unknown, or other.",
+              "Hand means drain location: left-hand, right-hand, or center drain.",
+              "Template used should currently be marked No for Bath Fitter tub liners.",
+              "Will tub stick out ties to whether an end cap or end finishing piece is needed.",
+              "If Bath Fitter removes an existing shower door, it must be charged and noted. If the customer removes it, the full door, frame, tracks, and hardware must be removed before installation.",
+              "Document whether there is a place to bend on site, such as garage, basement, driveway, porch, large room, or other open work area.",
+              "Mark plumbing access and drain access yes/no. Do not open an access panel; take pictures when visible.",
+              "Document the floor, mobile home status, whether there is a window inside the wet area, number of bathrooms, wall height destination, extensions, extra pieces, special instructions, and other conditions."
+            ],
+            warnings: [
+              "Bath Fitter wall material is laid out, cut, and heat-bent on site before being carried into the bathroom folded in on itself. The installer needs usable space to bend it.",
+              "For wainscoting or bead board, draw a diagram on the back of the measurement sheet showing bathroom shape, covered walls, wall lengths, openings, returns, and unusual conditions."
+            ]
+          }
+        ]
+      },
+      {
+        title: "Understanding the Bath Fitter Estimate / Contract",
+        intro: "This module covers how to fill out the Bath Fitter estimate / EOI paperwork so each job piece is written in the correct place, charged correctly, and separated into the correct contract when needed.",
+        sections: [
+          {
+            title: "General Contract Rules",
+            bullets: [
+              "A full job can include a Primary Bath Fitter System Contract, Door Contract, Wainscoting Contract, Labor Contract, and Permit / Plumbing Fee Contract.",
+              "The Bath Fitter system contract includes Bath Fitter portions of the tub/shower project: tub liner, shower base, wall system, window trim, ceiling material, standard accessories, and standard tear-out charges for normal tub/shower units.",
+              "Standardized tear-outs may stay on the Bath Fitter system contract when removing a normal unit such as cast iron tub, steel tub, fiberglass tub/shower, or standard cast/fiberglass shower base.",
+              "Separate labor EOIs are needed for work beyond standard scope, such as relocating plumbing, relocating drains, tile wall removal, new sheetrock, major wall repair, construction work, and non-standard prep."
+            ]
+          },
+          {
+            title: "Customer / Estimate Information",
+            bullets: [
+              "The top customer information section must be filled out in its entirety on every individual EOI.",
+              "This applies to Bath Fitter system, door, wainscoting, labor, and permit/plumbing fee contracts.",
+              "Every estimate page needs date, customer name, address, contact information, and other required header fields."
+            ]
+          },
+          {
+            title: "Tub Section",
+            bullets: [
+              "Use this section only for bathtub-related Bath Fitter system items. Shower bases go in the shower base section.",
+              "Model/Number and Rail are for internal office use; the estimator should not fill them out.",
+              "Select Left-hand or Right-hand. Write Type only for Empress, Empress XL, or Garden.",
+              "Write tub color clearly and keep colors consistent unless the customer intentionally chooses otherwise.",
+              "Slip resistant coating has an additional charge and maintenance expectations; only check it if the customer is certain.",
+              "For formed front / non-formed front / Aristocrat front, underline the tub style and write the corresponding first letter in the formed front line.",
+              "The formed front charge is added to the base tub price unless the pricing system explicitly says otherwise.",
+              "Drain kit applies to tub drains and shower drains; use the correct finish designation.",
+              "End panel is internal form language for an end finishing piece. End cap and end finishing piece are different items with different charges."
+            ],
+            checklists: [
+              "Metal finish codes: CHR Chrome, BN Brushed Nickel, ORB Oil-Rubbed Bronze, CZ Brushed Gold, BLK Matte Black."
+            ]
+          },
+          {
+            title: "Shower Base Section",
+            bullets: [
+              "Use this section when the job includes a shower base rather than a bathtub.",
+              "Write base color clearly and mark slip resistant only if the customer specifically chooses it.",
+              "Base style categories include Wheelchair, Molded, Flat, and Freestanding.",
+              "For curved or neo-angle bases, write the base type in the blank space above base style and check the freestanding base box.",
+              "Mark drain hand: left-hand, right-hand, or center drain.",
+              "Model / Side-to-Side / Front-to-Back is office use only.",
+              "For seats, identify corner seat or fold down seat and write the color/finish designation where needed."
+            ],
+            checklists: [
+              "Seat color/finish codes used on the form include WHT, WHM, IVM, and PRL."
+            ]
+          },
+          {
+            title: "Wall and Window Section",
+            intro: "The wall and window section is used for Bath Fitter wall material, wall finish upgrades, wall prep, wall repair, extensions, extra pieces, or window trim.",
+            bullets: [
+              "Bath Fitter uses a one-piece, heat-bent acrylic wall system custom cut and bent to fit the exact space.",
+              "Write the wall color clearly.",
+              "In the blank space next to color, write where the wall is going in height: to ceiling, existing surround profile, current wall height, tile line, measured height, or extension needed.",
+              "Company pricing policy starts at a minimum wall size of 7.5 x 11 for pricing, but reps must still confirm enough material on the matrix.",
+              "If a needed wall size is on the matrix but not listed on the EOI checkbox area, write it into the available blank space.",
+              "All walls sold get charged a base wall price. Tile-pattern walls also get the wall finish upgrade.",
+              "Wall repair is for minor repair needed to create a smooth, solid, level surface.",
+              "Major repair, tile wall removal, or re-sheetrocking requires a separate labor EOI.",
+              "Wall prep should be charged any time anything is written in the Wall and Window section.",
+              "Extra pieces and extensions are used for wall extensions, returns, extra bends, extra wrapping, additional wall material, or special coverage.",
+              "If there is a window in the tub/shower wet area, window trim is required. Identify F-molding or bullnose."
+            ],
+            dynamicBullets: "wallStyles",
+            warnings: [
+              "Do not guess wall style names. Use the spelling shown in the current matrix and price list."
+            ]
+          },
+          {
+            title: "Ceiling Section",
+            bullets: [
+              "Use this section when the job includes acrylic ceiling material above the tub or shower area.",
+              "Standard ceiling is 3 x 5. Oversized ceiling is 4 x 5.",
+              "If there is no light cutout, write the ceiling charge on the top ceiling line.",
+              "If there is a light cutout, underline light cut out and write the price of the entire ceiling unit on that line according to the current price list.",
+              "Dome style ceiling may be available in some situations; check the matrix before writing it."
+            ],
+            warnings: [
+              "Dome style ceilings cannot have light cutouts."
+            ]
+          },
+          {
+            title: "Door Section on Bath Fitter System EOI",
+            bullets: [
+              "Doors always get their own separate Door EOI.",
+              "The Bath Fitter system EOI may include only curtain rod and remove/dispose charge for an existing shower door.",
+              "For curtain rods, include metal finish, size, and style/angle.",
+              "The top door line should generally not be filled out on the Bath Fitter system contract.",
+              "If Bath Fitter removes an existing shower door, check remove and dispose existing shower door and write the current price-list charge.",
+              "Bath Fitter no longer removes/reinstalls customer shower doors or installs customer-supplied shower doors."
+            ]
+          },
+          {
+            title: "Plumbing, Miscellaneous Labor, and Accessories",
+            bullets: [
+              "Relocate drain belongs on a separate labor contract, not the Bath Fitter system contract.",
+              "For tub liner or direct tub replacement jobs, perform a drain test and mark whether the current drain is slow.",
+              "Remove and dispose is used for removing/disposing the existing unit or material.",
+              "For a one-piece fiberglass unit, underline remove/dispose fiberglass tub and surround wall system.",
+              "For cast tub with fiberglass surround, stack the matching current price-list charges and write the combined charge on one line.",
+              "Valve accessories include handhelds, slide bars, extra shower heads, and rain heads. Write name, finish code, and charge.",
+              "Write valve trim style, finish, and charge.",
+              "Soap dishes refer to on-wall accessories, not corner caddies.",
+              "Corner caddy codes: SCC Single Corner Caddy, DCC Double Corner Caddy, TCC Tower Corner Caddy.",
+              "Grab bars should include style/texture, color or metal finish, size, quantity, and current price-list charge.",
+              "Towel bars should include collection name, color, quantity, and charge. Do not write anything in the size space for towel bars."
+            ],
+            warnings: [
+              "If an item is not listed in the current app/price list, contact Erin before quoting it."
+            ]
+          },
+          {
+            title: "Bottom Pricing / Signature Section",
+            bullets: [
+              "Subtotal is the cumulative total of all pieces on that individual contract page.",
+              "Write the promo name and discount amount on the open discount line when a promo applies.",
+              "Total is the amount after discount.",
+              "Collect a 50% deposit on all jobs. A 30% deposit is acceptable on finance jobs only.",
+              "Balance due at time of completion is the remaining balance.",
+              "If financed, write the plan code under the balance due line and clearly note that the job is financed.",
+              "The salesperson signs and dates every contract. If it is a sale, the customer signs it too.",
+              "Fill out deposit information with amount received, card/check method, last four/card type, or check number.",
+              "Special Items should mirror the measurement sheet for agreed special conditions. If used, the customer initials or signs the box."
+            ],
+            dynamicBullets: "financePlans"
+          }
+        ]
+      },
+      {
+        title: "Door EOI Module",
+        intro: "Every door sold receives its own separate contract / EOI. Doors are not written into the Bath Fitter system contract.",
+        sections: [
+          {
+            title: "Core Door Rules",
+            bullets: [
+              "Every door gets its own individual contract page.",
+              "The Door EOI has its own customer information, subtotal, total, deposit, balance, signatures, deposit information, and special items box if applicable.",
+              "The main Bath Fitter system EOI may include curtain rod and remove/dispose charge for an existing shower door only."
+            ],
+            warnings: [
+              "Doors cannot be discounted unless specifically approved by Erin. Do not apply standard Bath Fitter system discounts to doors."
+            ]
+          },
+          {
+            title: "Bath Fitter Doors and Custom Doors",
+            bullets: [
+              "Bath Fitter door options are listed in the current price list and should be written on their own Door EOI.",
+              "Any door outside Bath Fitter price-list options is a custom door through Arizona Glass.",
+              "All custom door pricing must be approved through Erin before giving the customer a price.",
+              "Custom doors need accurate final measurements after the Bath Fitter system is installed because the opening can change after base, wall system, trim, and finished surfaces are in place."
+            ],
+            warnings: [
+              "Do not guess custom door pricing. Do not quote a custom door without calling Erin first."
+            ]
+          },
+          {
+            title: "Custom Door Special Items Wording",
+            paragraphs: [
+              "Use the Special Items box for custom Arizona Glass doors and require customer initials."
+            ],
+            checklists: [
+              "Custom door to be ordered at time of installation and installed 3-6 weeks after Bath Fitter system installation date. Customer initials required: ______"
+            ]
+          },
+          {
+            title: "Door EOI Bottom Paperwork",
+            bullets: [
+              "Complete subtotal, discount line only if approved by Erin, total, deposit, balance due at completion, installation scheduled box, salesperson signature/date, customer signature if sold, deposit information, financing notation if financed, and special items if applicable."
+            ]
+          }
+        ]
+      },
+      {
+        title: "Permit / Plumbing Fee EOI Module",
+        intro: "Use this EOI when a job requires permitting, plumbing fees, or branch-specific code-related charges separated from the main Bath Fitter system contract.",
+        sections: [
+          {
+            title: "Core Permit Rules",
+            bullets: [
+              "Permits and plumbing fees should be written on their own separate EOI when applicable.",
+              "Write the charge as Plumb / Permit / Fee.",
+              "This wording covers the permit-related part of the job and any related plumbing/code fee that belongs with that permit process."
+            ],
+            warnings: [
+              "Permit fees cannot be financed, rolled into another pricing route, dragged into the Bath Fitter system contract, or included as part of another financed EOI balance."
+            ]
+          },
+          {
+            title: "Branch-Specific Code Charges",
+            bullets: [
+              "Some branches or municipalities may require additional plumbing work or fees based on local code.",
+              "For Albany and Schenectady, New York, write T->S Plumbing on the second free-space line when local code requires the tub-to-shower plumbing charge."
+            ]
+          },
+          {
+            title: "Permit Fee Payment Rule",
+            bullets: [
+              "All permit fees are due at contract signing.",
+              "Subtotal is the permit/plumbing fee total.",
+              "Discount is none.",
+              "Total equals subtotal.",
+              "Deposit equals total.",
+              "Balance due at completion is zero."
+            ]
+          }
+        ]
+      },
+      {
+        title: "Wainscoting EOI Module",
+        intro: "Wainscoting gets its own separate EOI when the customer is purchasing Bath Fitter wall material outside the wet area for bathroom wall coverage.",
+        sections: [
+          {
+            title: "Core Wainscoting Rules",
+            bullets: [
+              "Wainscoting is outside the tub/shower wet area and should stay separate from the wet-area wall package.",
+              "Wainscoting can be added alongside a Bath Fitter job, but it should not be counted inside the BF wet-area wall total.",
+              "Accessories attached directly to wainscoting can be included on the Wainscoting EOI."
+            ],
+            warnings: [
+              "Wainscoting has a maximum allowed discount threshold of 15% unless otherwise approved by Erin."
+            ]
+          },
+          {
+            title: "Available Wainscoting Styles",
+            bullets: [
+              "Traditional beadboard style.",
+              "6x6 Palermo.",
+              "2x6 brick/subway tile Savona.",
+              "Torino flat smooth, plain white only.",
+              "Traditional beadboard is the only style that can be ordered in partial sheet quantities."
+            ],
+            dynamicBullets: "wainsMatrix"
+          },
+          {
+            title: "Where to Write Wainscoting",
+            bullets: [
+              "Write wainscoting in the Walls section on the Wall Finish Upgrade line.",
+              "Use wording such as Waines - Board, Waines - Palermo, Waines - Savona, or Waines - Torino.",
+              "Charge wall prep once per every three walls covered in wainscoting.",
+              "Confirm matrix availability for material height, material length, sheet availability, and total coverage needed."
+            ]
+          },
+          {
+            title: "Scheduling and Bottom Paperwork",
+            bullets: [
+              "If the job includes both a Bath Fitter unit and wainscoting, expect the job may require more than a simple one-day install depending on complexity.",
+              "Complete full customer information, subtotal, discount line, total, deposit, balance, installation scheduled box, salesperson/customer signatures, payment notation, financing notation if financed, and special items if applicable."
+            ]
+          }
+        ]
+      },
+      {
+        title: "Labor EOI Module",
+        intro: "The Labor EOI is used for labor, construction, plumbing, demolition, or job-prep work that falls outside the standard Bath Fitter system contract.",
+        sections: [
+          {
+            title: "Core Labor Rules",
+            bullets: [
+              "Labor gets its own EOI when the work is separate enough to need its own contract page, pricing, deposit, balance, and signatures.",
+              "Use it for work like relocating plumbing, relocating drains, removing tile walls, new sheetrock, removing mud walls, building walls, removing headers, subfloor replacement, jackhammer work, vanity work, toilet work, moving shower heads or overflows, and other non-standard labor items on the price list.",
+              "Clearly write LABOR in the top-left area of the contract."
+            ],
+            warnings: [
+              "Labor is not discounted. Do not apply promo discounts, Bath Fitter discounts, wainscoting discounts, door discounts, veteran discounts, holiday discounts, or any other discount."
+            ]
+          },
+          {
+            title: "What Does Not Need a Labor EOI",
+            bullets: [
+              "Standard Bath Fitter wall system work written in the Wall and Window section.",
+              "Wainscoting written on its own Wainscoting EOI.",
+              "Remove/dispose existing shower door written in the Bath Fitter system contract.",
+              "Standard remove/dispose of the current system when it belongs on the Bath Fitter system EOI.",
+              "Standard tear-out charges that belong on the Bath Fitter system EOI."
+            ]
+          },
+          {
+            title: "When to Use a Labor EOI",
+            bullets: [
+              "Plumbing/drain labor: relocate drain, relocate plumbing/copper, move shower head, move overflow, cap old shower head, trip lever mechanism when applicable.",
+              "Wall/structural labor: remove tile walls, new sheetrock, build wall and frame, remove wall, remove header, remove mud walls, drop ceiling, cover existing window, extra cuts or bends where applicable.",
+              "Shower base/floor labor: subfloor replacement, remove and jackhammer tile base, jackhammer charge, shower-to-tub labor with slab, threshold build/wrap labor.",
+              "Fixture labor: remove/reinstall toilet, install new toilet, remove/reinstall vanity, install new vanity, remove/dispose old vanity or toilet."
+            ]
+          },
+          {
+            title: "Writing and Pricing Labor",
+            bullets: [
+              "Use the two free-space lines in the tub / tub-shower section for the labor service when possible.",
+              "If more room is needed, use open shaded blank areas or the Special Items box.",
+              "If Special Items is used, the customer must sign or initial that box.",
+              "Use the current price list for labor pricing."
+            ],
+            warnings: [
+              "If the labor item is not listed or the situation is outside normal scope, contact Erin for accurate pricing before presenting it to the customer."
+            ]
+          },
+          {
+            title: "Labor EOI Bottom Paperwork",
+            bullets: [
+              "Complete customer information, subtotal, total, deposit, balance due at completion, installation scheduled box if applicable, salesperson signature/date, customer signature if sold, deposit information, financing notation if financed, and special items if needed.",
+              "Since labor is not discounted, subtotal and total usually match.",
+              "Use the standard deposit structure unless branch policy says otherwise: 50% standard deposit or 30% only on financed jobs."
+            ]
+          }
+        ]
+      }
+    ];
 
     function roundToCents(value) {
       return Math.round((value + Number.EPSILON) * 100) / 100;
@@ -2902,6 +3601,13 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#39;");
+    }
+
+    function slugifyKey(value) {
+      return String(value ?? "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "section";
     }
 
     function readInputs() {
@@ -3251,14 +3957,25 @@
     }
 
     function sectionMarkup(title, description, cards, twoUp = true) {
+      const panelKey = `output-${slugifyKey(title)}`;
+      const isOpen = Boolean(state.expandedOutputPanels[panelKey]);
+      const optionLabel = cards.length === 1 ? "1 option" : `${cards.length} options`;
       return `
-        <section class="section-block">
-          <h3>${escapeHtml(title)}</h3>
-          ${description ? `<p>${escapeHtml(description)}</p>` : ""}
-          <div class="card-grid ${twoUp ? "two-up" : ""}">
-            ${cards.join("")}
+        <details class="section-block output-panel" data-output-panel-key="${escapeHtml(panelKey)}"${isOpen ? " open" : ""}>
+          <summary>
+            <span class="output-panel-title">
+              <h3>${escapeHtml(title)}</h3>
+              ${description ? `<p>${escapeHtml(description)}</p>` : ""}
+            </span>
+            <span class="output-panel-count">${escapeHtml(optionLabel)}</span>
+            <span class="output-panel-icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="output-panel-body">
+            <div class="card-grid ${twoUp ? "two-up" : ""}">
+              ${cards.join("")}
+            </div>
           </div>
-        </section>
+        </details>
       `;
     }
 
@@ -4053,6 +4770,124 @@
             )
             .join("")
         : emptyState("No matching matrix rows.");
+    }
+
+    function getTrainingDynamicBullets(kind) {
+      if (kind === "wallStyles") {
+        const skipGroups = new Set(["Flat Walls", "Wall Extensions"]);
+        const styles = Array.from(
+          new Set((PRODUCT_MATRICES.wall || []).map((row) => row.group).filter((group) => !skipGroups.has(group)))
+        );
+        return styles.length
+          ? [`Current matrix wall style names: ${styles.join(", ")}.`]
+          : ["Use the wall style names shown in the current Matrix Guide."];
+      }
+
+      if (kind === "wallMatrixGroups") {
+        const groups = Array.from(new Set((PRODUCT_MATRICES.wall || []).map((row) => row.group)));
+        return groups.length
+          ? [`Matrix groups currently available in the app: ${groups.join(", ")}.`]
+          : ["Check the current Matrix Guide for available wall material sizes."];
+      }
+
+      if (kind === "wainsMatrix") {
+        return (PRODUCT_MATRICES.wains || []).map((row) => `${row.group} | ${row.label}: ${row.details}. ${row.notes || ""}`.trim());
+      }
+
+      if (kind === "financePlans") {
+        const plans = (FINANCING_PLANS || []).map((plan) => plan.id).filter(Boolean);
+        return plans.length
+          ? [`Current financing plan codes in the calculator: ${plans.join(", ")}.`]
+          : ["Use the financing plan codes shown in the Calculator Tool."];
+      }
+
+      return [];
+    }
+
+    function trainingListMarkup(items) {
+      if (!items || !items.length) {
+        return "";
+      }
+
+      return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+    }
+
+    function renderTrainingSection(section, moduleKey, index) {
+      const sectionKey = `${moduleKey}-${slugifyKey(section.title)}`;
+      const hasStoredState = Object.prototype.hasOwnProperty.call(state.expandedTrainingSections, sectionKey);
+      const isOpen = hasStoredState ? Boolean(state.expandedTrainingSections[sectionKey]) : index === 0;
+      const dynamicBullets = getTrainingDynamicBullets(section.dynamicBullets);
+      const bullets = (section.bullets || []).concat(dynamicBullets);
+
+      return `
+        <details class="training-section" data-training-section-key="${escapeHtml(sectionKey)}"${isOpen ? " open" : ""}>
+          <summary>
+            <span class="training-section-title">
+              <strong>${escapeHtml(section.title)}</strong>
+              ${section.intro ? `<span>${escapeHtml(section.intro)}</span>` : ""}
+            </span>
+            <span class="training-toggle-icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="training-section-body">
+            <div class="training-content">
+              ${(section.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+              ${trainingListMarkup(bullets)}
+              ${(section.warnings || []).map((warning) => `
+                <div class="training-callout warning">
+                  <strong>Watch Out</strong>
+                  <p>${escapeHtml(warning)}</p>
+                </div>
+              `).join("")}
+              ${section.checklists && section.checklists.length ? `
+                <div class="training-checklist">
+                  <strong>Checklist</strong>
+                  ${trainingListMarkup(section.checklists)}
+                </div>
+              ` : ""}
+              ${section.diagram ? `
+                <div class="training-diagram">
+                  <strong>Simple Diagram</strong>
+                  <pre>${escapeHtml(section.diagram)}</pre>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderTrainingResources() {
+      const container = document.getElementById("trainingModules");
+      if (!container) {
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="training-module-stack">
+          ${TRAINING_MODULES.map((module, index) => {
+            const moduleKey = `training-${slugifyKey(module.title)}`;
+            const hasStoredState = Object.prototype.hasOwnProperty.call(state.expandedTrainingModules, moduleKey);
+            const isOpen = hasStoredState ? Boolean(state.expandedTrainingModules[moduleKey]) : index === 0;
+
+            return `
+              <details class="training-module" data-training-module-key="${escapeHtml(moduleKey)}"${isOpen ? " open" : ""}>
+                <summary>
+                  <span class="training-module-title">
+                    <strong>${escapeHtml(module.title)}</strong>
+                    ${module.intro ? `<span>${escapeHtml(module.intro)}</span>` : ""}
+                  </span>
+                  <span class="training-toggle-icon" aria-hidden="true">+</span>
+                </summary>
+                <div class="training-module-body">
+                  <div class="training-section-stack">
+                    ${(module.sections || []).map((section, sectionIndex) => renderTrainingSection(section, moduleKey, sectionIndex)).join("")}
+                  </div>
+                </div>
+              </details>
+            `;
+          }).join("")}
+        </div>
+      `;
     }
 
     function setSelectFromItems(
@@ -5695,7 +6530,7 @@
 
     function showInitialTool() {
       const requestedTool = window.location.hash.replace("#", "");
-      const knownTools = ["calculatorTool", "pricingGuide", "roughEstimator"];
+      const knownTools = ["calculatorTool", "pricingGuide", "roughEstimator", "trainingResources"];
       showTool(knownTools.includes(requestedTool) ? requestedTool : "home");
     }
 
@@ -5781,6 +6616,14 @@
         setActiveTab(panel.id);
       }
 
+      const outputPanel = target.closest("details.output-panel");
+      if (outputPanel) {
+        outputPanel.open = true;
+        if (outputPanel.dataset.outputPanelKey) {
+          state.expandedOutputPanels[outputPanel.dataset.outputPanelKey] = true;
+        }
+      }
+
       target.scrollIntoView({ behavior: "smooth", block: "start" });
       target.classList.add("pricing-jump-highlight");
       window.setTimeout(() => target.classList.remove("pricing-jump-highlight"), 1300);
@@ -5794,6 +6637,7 @@
       renderEstimateList();
       renderPricingGuide();
       renderProductMatrix();
+      renderTrainingResources();
       renderRoughControls();
       renderRoughPreview();
 
@@ -6019,6 +6863,27 @@
         toggleCommissionCard(commissionButton.getAttribute("data-toggle-commission-card"));
       }
     });
+    document.getElementById("calculatorTool").addEventListener("toggle", (event) => {
+      const outputPanel = event.target.closest?.("details.output-panel");
+      if (!outputPanel || !outputPanel.dataset.outputPanelKey) {
+        return;
+      }
+
+      state.expandedOutputPanels[outputPanel.dataset.outputPanelKey] = outputPanel.open;
+    }, true);
+    document.getElementById("trainingModules").addEventListener("toggle", (event) => {
+      const modulePanel = event.target.closest?.("details.training-module");
+      const sectionPanel = event.target.closest?.("details.training-section");
+
+      if (sectionPanel && sectionPanel.dataset.trainingSectionKey) {
+        state.expandedTrainingSections[sectionPanel.dataset.trainingSectionKey] = sectionPanel.open;
+        return;
+      }
+
+      if (modulePanel && modulePanel.dataset.trainingModuleKey) {
+        state.expandedTrainingModules[modulePanel.dataset.trainingModuleKey] = modulePanel.open;
+      }
+    }, true);
 
     document.getElementById("estimateList").addEventListener("click", (event) => {
       const removeButton = event.target.closest("[data-remove-estimate]");
