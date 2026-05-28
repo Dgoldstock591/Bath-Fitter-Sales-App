@@ -1,8 +1,8 @@
-const CACHE_NAME = "bf-sales-cache-v3-30";
+const CACHE_NAME = "bf-sales-cache-v3-31";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
-  "./price-list-data.js?v=330",
+  "./price-list-data.js?v=331",
   "./manifest.json",
   "./service-worker.js",
   "./bath-fitter-logo.svg",

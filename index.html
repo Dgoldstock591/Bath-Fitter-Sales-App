@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.30</title>
+  <title>Bath Fitter Sales Tool 3.31</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1766,9 +1766,23 @@
     }
 
     @media (max-width: 699px) {
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        font-size: 16px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        max-width: 100%;
+      }
+
       .page-shell {
-        width: min(100% - 1rem, 100%);
-        padding-top: 0.75rem;
+        width: 100%;
+        padding: 0.5rem;
       }
 
       .hero,
@@ -1782,6 +1796,25 @@
       .results-shell {
         padding-top: 1rem;
         padding-bottom: 1rem;
+      }
+
+      .panel,
+      .landing-card,
+      .input-card,
+      .builder-card,
+      .estimate-card,
+      .scenario-card,
+      .guide-row,
+      .rough-row,
+      .rough-step,
+      .estimate-line,
+      .summary-chip,
+      .estimate-summary-chip,
+      .metric,
+      .finance-item,
+      .internal-panel,
+      .tab-panel {
+        overflow: visible;
       }
 
       .tab-list {
@@ -1810,6 +1843,7 @@
       }
 
       .choice-row {
+        display: grid;
         align-items: stretch;
         grid-template-columns: 1fr;
       }
@@ -1910,7 +1944,11 @@
       .training-section-title span,
       .training-content p,
       .training-content li,
+      .training-callout p,
+      .training-checklist li,
       .section-block p,
+      .estimate-line-meta,
+      .bf-estimate-line span,
       .scenario-top h4,
       .scenario-top p,
       .guide-row h4,
@@ -1924,6 +1962,38 @@
         overflow-wrap: anywhere;
         word-break: normal;
         white-space: normal;
+      }
+
+      .training-content p,
+      .training-content li,
+      .training-callout p,
+      .training-checklist li {
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+
+      .training-module-title strong,
+      .training-section-title strong,
+      .output-panel-title h3 {
+        font-size: 1.02rem;
+        line-height: 1.25;
+      }
+
+      .training-module-title span,
+      .training-section-title span,
+      .output-panel-title p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+
+      .training-content ul,
+      .training-checklist ul {
+        padding-left: 1rem;
+      }
+
+      .training-diagram pre {
+        white-space: pre-wrap;
+        overflow-x: visible;
       }
 
       .output-panel-body,
@@ -1993,7 +2063,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=330"></script>
+  <script src="price-list-data.js?v=331"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2008,9 +2078,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.30</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.31</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.30</h1>
+          <h1>Bath Fitter Sales Toolkit 3.31</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -2052,7 +2122,7 @@
           <a class="landing-card" href="#trainingResources" data-open-tool="trainingResources">
             <span>04</span>
             <strong>Training Resources</strong>
-            <p>Review measurement, EOI, door, permit, wainscoting, and labor rules in collapsible rep modules.</p>
+            <p>Work through in-depth rep training modules with lessons, examples, mistakes to avoid, and paperwork checkpoints.</p>
             <small>Open training</small>
           </a>
         </div>
@@ -2709,7 +2779,7 @@
         </div>
         <div class="panel-heading">
           <h2>Training Resources</h2>
-          <p>Rep-only reference modules for measuring, EOI paperwork, contracts, and job-scope rules.</p>
+          <p>In-depth sales rep training curriculum for measuring, EOIs, contracts, and job-scope decisions.</p>
         </div>
         <div class="training-layout" id="trainingModules"></div>
       </div>
@@ -4060,6 +4130,512 @@
       const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
       if (module) {
         module.sections.push(...sections);
+      }
+    });
+
+    const TRAINING_FULL_REFERENCE_SECTIONS = {
+      "Understanding Your Measurement Sheet": [
+        {
+          title: "Full Tub Measuring Checklist",
+          intro: "Use this as the final self-check before leaving a tub liner appointment.",
+          checklists: [
+            "Reference tape started at drain center.",
+            "Reference tape laid flat on standing surface and not run up the wall.",
+            "Tub tool tape-measure side faced the faucet/drain side.",
+            "Tool kept flat and level for each tool measurement.",
+            "Measurements written to the nearest 1/16 inch.",
+            "A taken as top width at 20 inches.",
+            "B taken flat and level from centered spout area to back laying area.",
+            "C taken with a level or straight edge.",
+            "D taken at 36 inches, or 30 inches if needed and noted.",
+            "E taken on standing surface without riding up the laying area.",
+            "F taken at 2 inches from drain center.",
+            "G taken at 20 inches from drain center.",
+            "H taken at 36 inches, or 30 inches if needed and noted.",
+            "R taken using the clamp method and red numbers.",
+            "Rail flare beyond 20 inches checked.",
+            "Any unusual tub shape, rail flare, damage, access issue, or customer condition noted."
+          ]
+        },
+        {
+          title: "Wall Matrix and Extension Reference",
+          intro: "Wall measurements must be paired with the matrix. The EOI checkbox area is not the entire availability universe.",
+          bullets: [
+            "Common wall matrix sizes include 7 x 11, 7.5 x 11, 7 x 13, and 7.5 x 13.",
+            "Torino includes a 7.5 x 16 option in the matrix.",
+            "Extensions may be needed when going to ceiling or when measured coverage exceeds the selected wall material.",
+            "Extensions create an additional acrylic piece above the main wall with a slight seam.",
+            "Wall extensions belong to the wet-area BF wall EOI, not wainscoting.",
+            "Extra pieces can include return walls, extra bends, unusual coverage, additional wall sections, special transitions, or extra wrapping.",
+            "If extra pieces are needed, write where they go and describe size, color, pattern, and material needed."
+          ],
+          warnings: [
+            "If the measured space exceeds available material, stop and verify matrix/ordering path before writing the EOI."
+          ]
+        },
+        {
+          title: "Questionnaire Field-by-Field Reminders",
+          bullets: [
+            "Anything near tub/shower means anything close enough to affect installation, generally within about 18 inches.",
+            "Tub type applies to shower bases too. Write in Bath Fitter system, Re-Bath system, acrylic system, porcelain base, tile base, unknown material, or other remodel system when the checkbox choices do not fit.",
+            "Will tub stick out is used to catch end cap or end finishing-piece needs before the customer is surprised.",
+            "Existing shower door must say who removes it. If customer removes it, the entire door, frame, tracks, and hardware must be gone before install.",
+            "Place to bend is required because the installer lays out, cuts, heat-bends, folds, carries, and unfurls the one-piece acrylic wall material on site.",
+            "Plumbing access panel should be photographed, not opened.",
+            "Drain system access should be checked and photographed if visible.",
+            "Job floor should clearly say first floor, second floor, basement, third floor, high-rise, apartment/condo, or mobile home.",
+            "Window means a window inside the wet area only.",
+            "Bathroom count uses full baths as whole numbers and half baths as 0.5."
+          ]
+        },
+        {
+          title: "Special Instructions and Customer Agreement Notes",
+          bullets: [
+            "Use Special Instructions for any conversation, request, agreement, condition, or customer expectation that affects the job.",
+            "Use Other Notes / Conditions for anything that helps ordering, production, office review, or installation.",
+            "If extra pieces are needed, explain where they are needed.",
+            "If going to ceiling, write that clearly and verify matrix coverage.",
+            "If the wall follows an existing profile, tile line, current surround height, or measured height, write the exact destination.",
+            "If there is no usable place to bend, write that clearly because it affects installation planning."
+          ]
+        }
+      ],
+      "Understanding the Bath Fitter Estimate / Contract": [
+        {
+          title: "What Belongs on the Bath Fitter System EOI",
+          bullets: [
+            "Tub liner, freestanding tub, shower base, flat floor, wall system, wall finish upgrade, wall prep, minor wall repair, window trim, ceiling material, standard accessories, drain kit, valve, and standard remove/dispose lines can belong on the BF system EOI when they are part of normal BF scope.",
+            "Standardized removal of a normal unit can stay on the BF system EOI, including cast/steel tub removal, fiberglass tub removal, fiberglass tub/shower removal, standard shower base removal, or standard fiberglass surround removal when written correctly.",
+            "Remove/dispose existing shower door can be written on the BF system EOI.",
+            "Curtain/shower rod can be written on the BF system EOI.",
+            "Doors themselves get their own Door EOI.",
+            "Wainscoting gets its own Wainscoting EOI.",
+            "Permit/plumbing fee gets its own Permit / Plumbing Fee EOI.",
+            "Extra labor outside standard scope gets its own Labor EOI."
+          ]
+        },
+        {
+          title: "Slip Resistant Coating Talking Points",
+          bullets: [
+            "Slip resistant coating is factory-applied and costs extra.",
+            "It must be reapplied approximately every three years.",
+            "It requires substantially more cleaning than standard honeycomb texture.",
+            "The standard Bath Fitter honeycomb texture is already designed as an anti-slip floor.",
+            "Customers are generally recommended to try the standard honeycomb texture first.",
+            "The coating can be added later if needed."
+          ],
+          warnings: [
+            "Only check slip resistant coating if the customer has discussed it and is completely sure."
+          ]
+        },
+        {
+          title: "Wall Repair vs Labor EOI",
+          bullets: [
+            "Wall repair is minor repair to make the wall smooth, solid, and level for the one-piece acrylic wall system.",
+            "Examples of minor wall repair include one loose tile, an old grab bar attachment point, tiled soap dish, tiled-in shelf, or a small area that needs repair before wall installation.",
+            "Removing tile walls is not minor wall repair.",
+            "Re-sheetrocking is not minor wall repair.",
+            "Major wall repair, tile tear-out, new sheetrock, structural work, mud wall removal, and construction work belong on a separate Labor EOI."
+          ]
+        },
+        {
+          title: "Drain Test and Slow Drain Note",
+          bullets: [
+            "For a tub liner or direct tub replacement, perform the drain test when applicable.",
+            "Fill water to the bottom floor of the tub.",
+            "Release/drain the water.",
+            "Count down from 10.",
+            "If it takes longer than 10 seconds for the water to drain, mark the current drain as slow.",
+            "Check Yes or No for current slow drain based on the test."
+          ]
+        },
+        {
+          title: "Special Items Box Use",
+          bullets: [
+            "The Special Items box should mirror the measurement sheet for special conditions agreed to with the customer.",
+            "Use it when the customer agreed to a specific scope, special prep requirement, limitation, timing detail, custom door note, access requirement, or unusual condition.",
+            "If writing in Special Items, the customer needs to initial or sign the bottom of the box."
+          ],
+          warnings: [
+            "Do not rely on verbal agreements for special conditions. Put them in the box and get initials/signature."
+          ]
+        }
+      ],
+      "Door EOI Module": [
+        {
+          title: "Door EOI Full Paperwork Checklist",
+          checklists: [
+            "Full customer information completed at top.",
+            "Door written on its own EOI.",
+            "Bath Fitter door priced from current price list, or custom Arizona Glass price approved by Erin.",
+            "Subtotal completed.",
+            "Discount line blank unless Erin approved a door discount.",
+            "Total completed.",
+            "Deposit completed.",
+            "Balance due at completion completed.",
+            "Install scheduled box completed if applicable.",
+            "Salesperson signature/date completed.",
+            "Customer signature completed if sold.",
+            "Deposit information completed.",
+            "Financing notation completed if financed.",
+            "Special Items completed and initialed if custom door timing or special conditions apply."
+          ]
+        },
+        {
+          title: "Customer-Facing Custom Door Timing",
+          bullets: [
+            "Explain that the custom door is ordered after the Bath Fitter system is installed because the final finished opening can change.",
+            "The base, wall system, trim, finished surfaces, and opening corrections can affect final measurements.",
+            "The custom door is then installed after the final measurement/order process.",
+            "Use the Special Items wording so expectations are written and initialed."
+          ]
+        }
+      ],
+      "Permit / Plumbing Fee EOI Module": [
+        {
+          title: "Permit EOI Do and Do Not List",
+          bullets: [
+            "Do write permit/plumbing fee on its own EOI.",
+            "Do collect the full permit fee at signing.",
+            "Do write balance due at completion as $0.",
+            "Do complete all signatures and payment information.",
+            "Do not finance permit fees.",
+            "Do not roll permit fees into a BF, door, labor, or wainscoting balance.",
+            "Do not discount permit fees.",
+            "Do not bury permit fees inside another EOI."
+          ]
+        }
+      ],
+      "Wainscoting EOI Module": [
+        {
+          title: "Wainscoting Measuring and Diagram Detail",
+          bullets: [
+            "Draw the bathroom shape on the back of the measurement sheet.",
+            "Mark every wall receiving wainscoting.",
+            "Write the length of each wall section.",
+            "Show breaks for doorways, vanities, toilets, openings, returns, and unusual conditions.",
+            "Note whether accessories are being attached directly to the wainscoting material.",
+            "Confirm total sheet coverage and whether partial beadboard sheet ordering applies."
+          ]
+        },
+        {
+          title: "Wainscoting vs Wet-Area Wall Language",
+          bullets: [
+            "Wet-area walls are inside the tub/shower area and belong to the BF system wall EOI.",
+            "Wainscoting is outside the wet area and belongs on a separate wainscoting EOI.",
+            "Wall extensions are wet-area wall logic, not wainscoting.",
+            "Wainscoting still triggers wall prep rules for the wainscoting scope.",
+            "Do not count wainscoting inside BF wet-area wall total."
+          ]
+        }
+      ],
+      "Labor EOI Module": [
+        {
+          title: "Labor Category Examples by Type",
+          bullets: [
+            "Plumbing/drain labor: relocate drain, relocate plumbing/copper, move shower head, move overflow, cap old shower head, trip lever mechanism when applicable.",
+            "Wall/structural labor: remove tile walls, new sheetrock, build wall/frame, remove wall, remove header, remove mud walls, drop ceiling/sheetrock/framing, cover existing window, extra cuts or extra bends when applicable.",
+            "Shower base/floor labor: subfloor replacement, remove and jackhammer tile base, jackhammer charge, shower-to-tub labor with slab, threshold build/wrap labor when applicable.",
+            "Fixture labor: remove/reinstall existing toilet, remove old toilet and install new toilet, install new toilet, remove/reinstall vanity, remove old vanity and install new vanity, install new vanity, remove/dispose old vanity or toilet."
+          ]
+        },
+        {
+          title: "Labor Scope Clarity",
+          bullets: [
+            "The labor description should be clear enough that the office, installer, and customer understand exactly what is being charged.",
+            "If the scope depends on customer preparation, access, sequencing, or unusual conditions, put that detail in Special Items.",
+            "If the scope is not listed on the current price list, stop and contact Erin for updated and accurate pricing.",
+            "Labor subtotal and total should usually match because labor is not discounted."
+          ]
+        }
+      ]
+    };
+
+    Object.entries(TRAINING_FULL_REFERENCE_SECTIONS).forEach(([moduleTitle, sections]) => {
+      const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
+      if (module) {
+        module.sections.push(...sections);
+      }
+    });
+
+    const TRAINING_LESSON_SECTIONS = {
+      "Understanding Your Measurement Sheet": [
+        {
+          title: "Lesson Goal: Think Like Production and Install",
+          intro: "The measurement sheet is a training exercise in translating a real bathroom into an orderable, buildable Bath Fitter job.",
+          paragraphs: [
+            "A rep is not simply recording dimensions. The rep is documenting the physical conditions that production, ordering, installation, and the office will rely on after the appointment is over.",
+            "The form should let another person understand the bathroom without standing in it. If the installer or office has to guess, the measurement sheet did not do its job."
+          ],
+          bullets: [
+            "What are we fitting into?",
+            "What exact dimensions control the product order?",
+            "What physical conditions could affect installation?",
+            "What customer expectations or special agreements need to be protected in writing?",
+            "What could create a surprise if it is not noted today?"
+          ],
+          warnings: [
+            "The training mindset is not speed first. It is accuracy first, then speed after the process is consistent."
+          ]
+        },
+        {
+          title: "Measurement Training Sequence",
+          intro: "Teach new reps to measure in the same order every time so missed fields become obvious.",
+          bullets: [
+            "Start by identifying the existing unit and material: cast, steel, fiberglass, shower base, one-piece fiberglass, Bath Fitter system, tile base, porcelain base, or unknown.",
+            "Next identify whether the existing unit stays, gets covered, or gets removed.",
+            "Then measure the tub, base, wall, door, and molded base/flat floor areas using the correct diagram for the job type.",
+            "After dimensions, complete the job-condition questionnaire before walking away from the bathroom.",
+            "Finish by reviewing notes, photos, access, special conditions, and customer expectations before leaving the home."
+          ],
+          checklists: [
+            "Condition first.",
+            "Measurement second.",
+            "Questionnaire third.",
+            "Notes/photos fourth.",
+            "Customer expectation confirmation last."
+          ]
+        },
+        {
+          title: "Why Small Measurement Mistakes Matter",
+          intro: "Bath Fitter measuring is exact because small errors can change product fit, production, material coverage, or install outcome.",
+          bullets: [
+            "A loose tub measurement can point to the wrong mold.",
+            "A dipped tape on B can make a tub seem longer or shorter than it really is.",
+            "A missed rail flare can create liner/skirt fit issues.",
+            "A wall height assumption can miss extension needs.",
+            "A door opening measured only once can miss out-of-plumb walls.",
+            "A missing access note can surprise the installer.",
+            "A missing customer agreement can create conflict after the sale."
+          ]
+        },
+        {
+          title: "Practice Scenario: Steel Tub Liner and Walls",
+          intro: "Use this scenario to train the decision path before a rep fills out the real form.",
+          bullets: [
+            "Existing condition: steel tub in good condition with walls being covered.",
+            "Correct thinking: tub liner is allowed because steel can receive a liner.",
+            "Measure full tub liner A-H and R dimensions because the tub stays.",
+            "Measure wet-area wall coverage and confirm matrix size.",
+            "Wall prep applies because wall material is being installed.",
+            "Drain kit applies because a tub liner is selected.",
+            "Valve is optional but should be discussed and usually suggested.",
+            "Complete questionnaire, access, door, window, place-to-bend, special notes, and photos."
+          ],
+          warnings: [
+            "Do not use tub tear-out measurements when the tub is staying for a liner."
+          ]
+        },
+        {
+          title: "Practice Scenario: Shower Tear-Out",
+          intro: "A shower tear-out uses a different measuring mindset than a tub liner.",
+          bullets: [
+            "Existing condition: shower base or shower unit being removed.",
+            "Correct thinking: measure what is being removed and the overall shower footprint.",
+            "Use the molded base / flat floor diagram for shower tear-out reference.",
+            "Record only the outside overall side-to-side and front-to-back measurements for a simple shower tear-out.",
+            "Do not fill interior molded-base boxes unless measuring a molded base / flat floor condition.",
+            "Door opening measurements should reflect finished usable opening expectations and barriers.",
+            "Questionnaire still must be completed fully."
+          ]
+        }
+      ],
+      "Understanding the Bath Fitter Estimate / Contract": [
+        {
+          title: "Lesson Goal: Separate the Job Into Correct EOIs",
+          intro: "The estimate/contract is not just a price page. It is the written structure of the job.",
+          paragraphs: [
+            "A Bath Fitter sale can be one job but several EOIs. Training reps to separate the job correctly prevents discount mistakes, financing mistakes, deposit mistakes, install confusion, and office rework."
+          ],
+          bullets: [
+            "BF System EOI: core tub/shower Bath Fitter system scope.",
+            "Door EOI: doors sold as their own contract.",
+            "Wainscoting EOI: outside-wet-area wall material.",
+            "Labor EOI: extra construction, plumbing, demo, or non-standard prep.",
+            "Permit / Plumbing Fee EOI: permit and code fee items paid separately."
+          ],
+          warnings: [
+            "If a rep writes everything on one page, discounts, deposits, commission, and office processing can all become wrong."
+          ]
+        },
+        {
+          title: "How to Decide Which EOI an Item Belongs On",
+          intro: "Train reps to ask what the item is, not where there is blank space on the form.",
+          bullets: [
+            "Is it part of the core Bath Fitter wet-area system? It usually belongs on the BF System EOI.",
+            "Is it a shower/tub door? It belongs on a Door EOI.",
+            "Is it wall material outside the wet area? It belongs on a Wainscoting EOI.",
+            "Is it extra construction, plumbing relocation, major demo, or structural prep? It belongs on a Labor EOI.",
+            "Is it a permit, plumbing fee, or code fee? It belongs on a Permit / Plumbing Fee EOI.",
+            "Is it unclear or outside the price list? Stop and call Erin before quoting."
+          ]
+        },
+        {
+          title: "Training Example: Cast Tub With Tile Walls to Shower",
+          bullets: [
+            "Existing condition: cast tub with tile walls.",
+            "Sold route: tub-to-shower conversion with base and walls.",
+            "BF System EOI: base, wet-area wall system, drain kit, valve if selected, BF accessories, standard BF scope.",
+            "BF System or standard remove/dispose line: cast/steel tub removal when written as standard system removal.",
+            "Labor EOI: tile wall removal and new sheetrock/re-rock per wall if tile walls are being removed.",
+            "Door EOI: any actual shower door sold.",
+            "Permit EOI: permit/plumbing fee if applicable.",
+            "Bottom math: each EOI has its own subtotal, total, deposit, balance, and signatures."
+          ],
+          warnings: [
+            "Tile wall removal and new sheetrock should not be hidden inside a generic BF discount."
+          ]
+        },
+        {
+          title: "Common Contract Mistakes to Coach Out",
+          bullets: [
+            "Writing a Bath Fitter door on the BF System EOI instead of a separate Door EOI.",
+            "Discounting labor.",
+            "Discounting permit fees.",
+            "Discounting doors without Erin approval.",
+            "Forgetting wall prep when wall material is written.",
+            "Forgetting drain kit on tub/base/liner routes.",
+            "Writing relocate drain on the BF System EOI instead of Labor.",
+            "Leaving financing notation off the balance line.",
+            "Using Special Items without customer initials/signature.",
+            "Leaving header/customer information incomplete on secondary EOIs."
+          ]
+        },
+        {
+          title: "Rep Checkpoint Before Customer Signs",
+          checklists: [
+            "Every EOI page has full customer information.",
+            "Every item is on the correct EOI.",
+            "Discounts only apply where allowed.",
+            "Deposit rule is correct for cash/check/charge or financing.",
+            "Balance due at completion is correct.",
+            "Financing plan code is written where applicable.",
+            "Special Items match customer expectations and are initialed/signed.",
+            "Salesperson signed and dated every page.",
+            "Customer signed every sold EOI."
+          ]
+        }
+      ],
+      "Door EOI Module": [
+        {
+          title: "Lesson Goal: Teach Door Separation",
+          intro: "Door training is about preventing reps from treating doors as an accessory line on the BF system.",
+          bullets: [
+            "Every door sold is its own EOI.",
+            "The BF System EOI door section is not where the actual Bath Fitter door goes.",
+            "The BF System EOI may include curtain/shower rod and remove/dispose existing shower door only.",
+            "Door discounts are not automatic and require Erin approval.",
+            "Custom door pricing is never guessed."
+          ]
+        },
+        {
+          title: "Door Training Scenario",
+          bullets: [
+            "Customer buys a BF shower system and an Elegance Bypass door.",
+            "Write the shower system on the BF System EOI.",
+            "Write the Elegance Bypass door on its own Door EOI.",
+            "Do not apply BF system discount to the door unless Erin approves.",
+            "If the job is financed, write financing notation on the Door EOI too.",
+            "If custom Arizona Glass is used, include the custom door timing language in Special Items and get initials."
+          ]
+        }
+      ],
+      "Permit / Plumbing Fee EOI Module": [
+        {
+          title: "Lesson Goal: Keep Permit Money Clean",
+          intro: "Permit/plumbing fees are separated because they follow different payment and financing rules than the rest of the job.",
+          bullets: [
+            "Permit fees are due at signing.",
+            "Permit fees are not financed.",
+            "Permit fees are not discounted.",
+            "Permit fees should not be hidden in another EOI.",
+            "The permit EOI should end with deposit equal to total and balance due at completion equal to zero."
+          ],
+          warnings: [
+            "If a permit fee gets rolled into financing by mistake, the paperwork and payment expectation are wrong."
+          ]
+        },
+        {
+          title: "Permit Training Scenario",
+          bullets: [
+            "Permit/plumbing fee total is written on its own EOI as Plumb / Permit / Fee.",
+            "Subtotal equals the permit fee.",
+            "No discount is written.",
+            "Total equals subtotal.",
+            "Deposit equals total.",
+            "Balance due at completion is $0.",
+            "Customer and salesperson signatures still apply."
+          ]
+        }
+      ],
+      "Wainscoting EOI Module": [
+        {
+          title: "Lesson Goal: Separate Wet Area From Bathroom Wall Coverage",
+          intro: "Wainscoting training starts with language and scope: wet-area walls and outside-wet-area wainscoting are different products/scopes.",
+          bullets: [
+            "Wet-area wall system is inside the tub/shower area.",
+            "Wainscoting is outside the wet area in the rest of the bathroom.",
+            "Wet-area walls belong to the BF System EOI.",
+            "Wainscoting belongs to its own Wainscoting EOI.",
+            "Wainscoting can be sold with a BF system but should not be merged into the BF wall total.",
+            "Wainscoting discount rules are different from BF system discount rules."
+          ]
+        },
+        {
+          title: "Wainscoting Training Scenario",
+          bullets: [
+            "Customer buys a tub liner + walls and wants beadboard around the rest of the bathroom.",
+            "Write tub liner and wet-area walls on the BF System EOI.",
+            "Write beadboard wainscoting on the Wainscoting EOI.",
+            "Draw the bathroom layout and all wainscoting wall lengths on the measurement sheet.",
+            "Confirm sheet quantity and whether partial beadboard sheet ordering applies.",
+            "Charge wall prep according to wainscoting wall coverage rules.",
+            "Apply wainscoting discount cap unless Erin approves otherwise."
+          ]
+        }
+      ],
+      "Labor EOI Module": [
+        {
+          title: "Lesson Goal: Train Labor Judgment",
+          intro: "Labor EOI training is about recognizing when the job has moved beyond standard BF scope.",
+          bullets: [
+            "Standard BF product installation belongs on the BF System EOI.",
+            "Standard removal/disposal may belong on the BF System EOI when it matches normal listed scope.",
+            "Extra construction, plumbing relocation, tile removal, new sheetrock, major repair, mud wall removal, and structural work belong on Labor.",
+            "Labor is never discounted.",
+            "Labor scope must be clear enough for the customer, office, and installer to understand."
+          ]
+        },
+        {
+          title: "Labor Training Scenario",
+          bullets: [
+            "Existing tub has tile walls and customer is converting to a shower.",
+            "Write BF base and wet-area walls on BF System EOI.",
+            "Write tile wall removal on Labor EOI.",
+            "Write new sheetrock/re-rock per wall on Labor EOI.",
+            "If drain relocation is needed, write relocate drain on Labor EOI.",
+            "Do not discount the Labor EOI.",
+            "Use Special Items if the labor scope depends on access, sequence, or customer prep."
+          ]
+        },
+        {
+          title: "Labor Coaching Questions",
+          checklists: [
+            "Is this normal BF product installation, or extra work?",
+            "Is this listed as a labor item on the price list?",
+            "Does this require a separate scope explanation?",
+            "Would discounting this item be wrong?",
+            "Would the installer know exactly what to do from this description?",
+            "If this is not listed, did I call Erin before quoting?"
+          ]
+        }
+      ]
+    };
+
+    Object.entries(TRAINING_LESSON_SECTIONS).forEach(([moduleTitle, sections]) => {
+      const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
+      if (module) {
+        module.sections.unshift(...sections);
       }
     });
 
