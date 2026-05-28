@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.34</title>
+  <title>Bath Fitter Sales Tool 3.35</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1350,11 +1350,26 @@
 
     .training-callout,
     .training-checklist,
-    .training-diagram {
+    .training-diagram,
+    .training-subsection {
       padding: 0.9rem;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       background: #fbfdfc;
+    }
+
+    .training-subsection {
+      display: grid;
+      gap: 0.75rem;
+      background: #ffffff;
+    }
+
+    .training-subsection h4 {
+      margin: 0;
+      color: var(--accent-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
     }
 
     .training-callout strong,
@@ -2063,7 +2078,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=334"></script>
+  <script src="price-list-data.js?v=335"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2078,9 +2093,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.34</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.35</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.34</h1>
+          <h1>Bath Fitter Sales Toolkit 3.35</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -5198,7 +5213,33 @@
     {
       const measurementModule = TRAINING_MODULES.find((item) => item.title === "Understanding Your Measurement Sheet");
       if (measurementModule) {
-        measurementModule.sections.unshift(...TUB_LINER_MEASURING_FULL_SOP_SECTIONS);
+        measurementModule.sections.unshift({
+          title: "Tub Liner Measuring SOP",
+          intro: "Full tub liner measuring standard under one header, with each tool rule and A-H/R measurement kept inside this one SOP.",
+          paragraphs: [
+            "Use this SOP when the existing cast iron or steel tub is staying in place and the rep is measuring for a Bath Fitter tub liner or tub-related system.",
+            "These are exact mold-identification and fitment measurements. The goal is not to estimate the rough opening; the goal is to document the physical shape of the existing tub so the correct liner can be ordered and installed."
+          ],
+          diagram: [
+            "Top view of tub floor / standing surface",
+            "",
+            "Faucet / Drain Side",
+            "+--------------------------------------+",
+            "|                                      |",
+            "|   Drain Center                       |",
+            "|      o------ reference tape ------>  |",
+            "|      0 in  2 in     20 in    36 in   |",
+            "|                                      |",
+            "+--------------------------------------+",
+            "                         Back / Laying Area"
+          ].join("\n"),
+          subsections: TUB_LINER_MEASURING_FULL_SOP_SECTIONS.map((section) => ({
+            ...section,
+            title: section.title
+              .replace("Tub Liner Measuring SOP: ", "")
+              .replace("Tub Liner SOP: ", "")
+          }))
+        });
       }
     }
 
@@ -5525,6 +5566,326 @@
     };
 
     Object.entries(ALL_MODULES_FULL_DEPTH_EXPANSION).forEach(([moduleTitle, sections]) => {
+      const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
+      if (module) {
+        module.sections.push(...sections);
+      }
+    });
+
+    const TRAINING_PROMPT_DETAIL_EXPANSION = {
+      "Understanding Your Measurement Sheet": [
+        {
+          title: "Detailed Standard: Measurement Sheet Purpose and Accountability",
+          intro: "The measurement sheet is a job-condition record, not just a place to write numbers.",
+          paragraphs: [
+            "A completed measurement sheet should answer three things: what we are fitting into, what the exact dimensions are, and what conditions could affect ordering, production, installation, or customer expectations.",
+            "The form protects the customer, installer, office, production/ordering team, and salesperson because it turns the bathroom into clear written instructions."
+          ],
+          bullets: [
+            "Tub measurements identify the existing tub shape when the tub is staying for a liner.",
+            "Tub tear-out measurements document the overall existing tub area when the tub is being removed.",
+            "Wall measurements document the amount of one-piece, heat-bent acrylic wall material needed.",
+            "Door measurements document the finished usable opening and any height or width barriers.",
+            "Molded base / flat floor measurements document the shower base footprint only when that diagram applies.",
+            "The job-condition questionnaire documents the non-size issues that affect the install.",
+            "Special instructions, access notes, photos, and unusual conditions belong on the sheet before the rep leaves."
+          ],
+          warnings: [
+            "Do not assume anything is square, level, standard, or normal. If something affects the install, material order, access, pricing, or customer expectations, write it down."
+          ]
+        },
+        {
+          title: "Detailed Standard: Job Condition Questionnaire Field-by-Field",
+          intro: "Every question should be answered. If the checkbox does not fully explain the condition, use notes.",
+          bullets: [
+            "Anything near tub/shower means anything within about 18 inches of the wet area, including heater, door frame, window, vanity, toilet, cabinet, trim, shelving, radiator, or another obstruction.",
+            "Tub type / shower base type identifies what is currently there: cast iron, steel, fiberglass, Bath Fitter system, Re-Bath system, acrylic system, porcelain base, tile base, unknown material, or other remodel system.",
+            "Hand means drain location: left-hand drain, right-hand drain, or center drain.",
+            "Template used should currently be marked No for Bath Fitter tub liners.",
+            "Will tub stick out connects directly to end cap or end finishing piece needs.",
+            "Existing shower door must state whether Bath Fitter removes it or the customer removes it.",
+            "If the customer removes an existing door, the entire door and frame must be gone before installation, including glass, tracks, frame, and hardware.",
+            "Plumbing access panel is yes/no. Do not open it; take a photo showing that it exists.",
+            "Drain system access is yes/no. If visible, inspect it and take a photo so the installer knows the drain setup.",
+            "Job floor should identify first floor, second floor, basement, third floor, high-rise, apartment/condo, or mobile home.",
+            "If the job is in a mobile home, clearly note it because construction and framing can differ from standard residential construction.",
+            "Window means a window inside the tub or shower wet area, not any window in the bathroom.",
+            "Number of bathrooms uses full bathrooms as whole numbers and half bathrooms as 0.5.",
+            "The height section is not currently being used; move to the wall height / go-to-ceiling logic instead.",
+            "Go to ceiling must be marked clearly, and the wall matrix must be checked if going to ceiling.",
+            "Extensions are additional acrylic pieces used when the main wall material is not tall enough to reach the desired height.",
+            "Any extra pieces needed should explain where additional acrylic material, extra returns, extra bends, wrapping, trim, or unusual coverage is needed.",
+            "Special instructions and other notes should include any customer agreement, access concern, unusual condition, or expectation that affects the job."
+          ]
+        },
+        {
+          title: "Detailed Standard: Place to Bend and One-Piece Wall Handling",
+          intro: "Bath Fitter walls are a one-piece, heat-bent acrylic wall system custom cut and bent on site.",
+          paragraphs: [
+            "The wall material is laid out, cut, and heat-bent before it is brought into the bathroom. Once bent, it is carried in folded in on itself, almost like a large D shape, then unfurled into place on top of the tub or base."
+          ],
+          bullets: [
+            "The installer needs a usable place to lay out the wall material.",
+            "Possible places include garage, basement, driveway, porch, large open room, or another open work area.",
+            "If there is no usable place to bend, clearly note that on the measurement sheet.",
+            "This is why reps must not describe Bath Fitter walls as separate wall panels.",
+            "The form may use internal phrases like end finishing piece, but the wet-area wall system itself is one-piece, heat-bent acrylic wall material."
+          ],
+          warnings: [
+            "Do not tell customers the wall system is made from individual panels. If the internal form says end panel, clarify that this refers to an end finishing piece, not the wall system."
+          ]
+        },
+        {
+          title: "Detailed Standard: Wainscoting / Bead Board Measuring Notes",
+          intro: "Wainscoting is outside-wet-area bathroom wall coverage and should be diagrammed separately.",
+          bullets: [
+            "Draw a diagram on the back of the measurement sheet for wainscoting or bead board.",
+            "Show the general bathroom shape.",
+            "Show which walls receive wainscoting.",
+            "Write the length of each wall section.",
+            "Show breaks for doors, vanities, toilets, openings, returns, or special coverage areas.",
+            "Include notes for unusual conditions and anything that affects material quantity.",
+            "Keep wainscoting separate from wet-area wall measurements because it belongs to a separate scope and EOI."
+          ]
+        }
+      ],
+      "Understanding the Bath Fitter Estimate / Contract": [
+        {
+          title: "Detailed Standard: EOI Separation Decision Rules",
+          intro: "Train reps to decide what each item is, not where there is blank space on the paper.",
+          bullets: [
+            "Primary BF System EOI is for the core tub/shower Bath Fitter system scope.",
+            "Door EOI is for shower or tub doors sold as doors.",
+            "Wainscoting EOI is for outside-wet-area wall material.",
+            "Labor EOI is for extra construction, plumbing relocation, tile removal, new sheetrock, major repair, demolition, or non-standard prep.",
+            "Permit / Plumbing Fee EOI is for permit, plumbing fee, or branch-specific code-fee items.",
+            "Standard remove/dispose of normal systems may stay on the BF System EOI when it matches the standard listed scope.",
+            "If an item has a different discount rule, payment rule, or financing rule, it usually needs its own EOI.",
+            "If the item is not listed or the scope is unclear, call Erin before quoting."
+          ],
+          warnings: [
+            "Do not force everything onto one EOI. That is how discounts, financing, deposits, commission, and installer instructions become wrong."
+          ]
+        },
+        {
+          title: "Detailed Standard: Ceiling Section",
+          intro: "Use the ceiling section only when acrylic ceiling material is included above the tub or shower area.",
+          bullets: [
+            "Write the ceiling color clearly.",
+            "Standard ceiling size/style is 3 x 5.",
+            "Oversized ceiling size/style is 4 x 5.",
+            "If there is no light cutout, write the corresponding ceiling charge on the top ceiling line.",
+            "If there is a light cutout, underline light cut out and write the price of the entire ceiling unit on that same line according to the current price list.",
+            "Dome style ceiling may be available in some situations, but the matrix must be checked before writing it.",
+            "Dome style ceilings cannot have light cutouts."
+          ],
+          warnings: [
+            "Do not quote or write a ceiling condition that is not supported by the current price list or matrix."
+          ]
+        },
+        {
+          title: "Detailed Standard: Door Section on BF System EOI",
+          intro: "The BF System EOI door section is commonly misunderstood.",
+          bullets: [
+            "Doors always get their own separate Door EOI.",
+            "A Bath Fitter shower door or tub door should not be written into the BF System EOI.",
+            "Only curtain rod and remove/dispose existing shower door charge may be written in this section.",
+            "For a rod, write metal finish, size, and style/angle.",
+            "Metal finish examples include CHR, BN, ORB, CZ, and BLK.",
+            "Rod size examples include 5 ft and 6 ft.",
+            "Rod style/angle examples include straight, curved, and tension.",
+            "The top door line should generally not be filled out on the BF System EOI.",
+            "If Bath Fitter removes the existing shower door, check remove/dispose existing shower door and write the current price-list charge.",
+            "Bath Fitter no longer removes and reinstalls customer shower doors.",
+            "Bath Fitter no longer installs customer-supplied shower doors."
+          ]
+        },
+        {
+          title: "Detailed Standard: Accessory and Finish Writing Rules",
+          intro: "The plumbing/miscellaneous/accessory section needs clear naming, finish, quantity, and charge.",
+          bullets: [
+            "Valve accessories include handhelds, slide bars, extra shower heads, and rain heads.",
+            "For valve accessories, write the name of the accessory, metal finish, and corresponding charge.",
+            "Valve model should include trim style name, finish, and charge.",
+            "Finish codes include CHR Chrome, BN Brushed Nickel, ORB Oil-Rubbed Bronze, CZ Brushed Gold, and BLK Matte Black.",
+            "Soap dishes are on-the-wall style accessories, not corner caddies.",
+            "Shelves include corner caddies, 20-inch shelves, and 25-inch shelves.",
+            "Corner caddy codes are SCC Single Corner Caddy, DCC Double Corner Caddy, and TCC Tower Corner Caddy.",
+            "For corner caddies and shelves, include color designation, quantity, and charge.",
+            "For grab bars, write grab next to bar, identify TXT textured or SMTH smooth, write color/metal finish, size, quantity, and charge.",
+            "Grab bar sizes include 16 inch, 24 inch, 36 inch, and 48 inch, but reps must check current availability.",
+            "For towel bars, write towel next to bar, use the collection name such as Allegra or Oxford, write color, quantity, and charge.",
+            "Do not write anything in the size space for towel bars."
+          ],
+          warnings: [
+            "Do not invent an accessory price. If the current app/price list does not show it, contact Erin before quoting."
+          ]
+        },
+        {
+          title: "Detailed Standard: Bottom Pricing, Deposit, Financing, and Signatures",
+          intro: "Every EOI has its own bottom math and signatures.",
+          bullets: [
+            "Subtotal is the cumulative total of all pieces on that individual contract page.",
+            "The open promo/discount line is where the promo name and discount amount are written when allowed.",
+            "Write the promo name, such as the current holiday promo, veteran discount, or approved discount name, with the subtraction amount.",
+            "Total is the amount after discount.",
+            "Collect a 50% deposit on all jobs unless it is financed.",
+            "A 30% deposit is acceptable on finance jobs only.",
+            "Balance due at time of completion is the remaining amount after deposit.",
+            "If financed, write the financing plan code under the balance due number and clearly write that the job is financed.",
+            "The installation scheduled box needs the scheduled installation date.",
+            "The salesperson signs and dates every contract.",
+            "If the job is a sale, the customer signs every sold EOI.",
+            "Deposit information must include amount received and whether it was card or check.",
+            "If card, include last four digits and issuing company/card type.",
+            "If check, include check number and underline/check the check notation.",
+            "Special Items should mirror the measurement sheet for special conditions agreed to with the customer.",
+            "If Special Items is used, the customer needs to initial or sign the box."
+          ]
+        }
+      ],
+      "Door EOI Module": [
+        {
+          title: "Detailed Standard: Door EOI Bottom Paperwork",
+          intro: "The Door EOI follows the same bottom-of-contract structure as the other sold EOIs.",
+          bullets: [
+            "Complete full customer information at the top.",
+            "Write the door subtotal.",
+            "Use the discount line only if Erin specifically approved a door discount.",
+            "Write total, deposit, and balance due at completion.",
+            "Fill in installation scheduled box when applicable.",
+            "Salesperson signs and dates the Door EOI.",
+            "Customer signs if sold.",
+            "Fill out deposit information and payment method.",
+            "If financed, write financing notation clearly on the Door EOI too.",
+            "Use Special Items if custom timing or door-specific terms need to be documented."
+          ],
+          warnings: [
+            "Doors cannot be discounted unless Erin approves. Do not apply the BF system discount to a door just because it is part of the same job."
+          ]
+        },
+        {
+          title: "Detailed Standard: Arizona Glass Custom Door Language",
+          intro: "Custom doors need final measurements after the Bath Fitter system is installed.",
+          paragraphs: [
+            "The opening can change after the base, one-piece wall system, trim, and finished surfaces are installed. Ordering after installation helps prevent incorrect sizing, reorders, delays, customer frustration, and poor long-term door performance."
+          ],
+          checklists: [
+            "Custom door to be ordered at time of installation and installed 3-6 weeks after Bath Fitter system installation date. Customer initials required: ______"
+          ],
+          warnings: [
+            "Do not guess custom door pricing. Call Erin for accurate pricing before quoting."
+          ]
+        }
+      ],
+      "Permit / Plumbing Fee EOI Module": [
+        {
+          title: "Detailed Standard: Permit Payment and Financing Rules",
+          intro: "Permit and plumbing fee money is handled differently from the rest of the job.",
+          bullets: [
+            "Permits and plumbing fees should be written on their own separate EOI when applicable.",
+            "Write the charge as Plumb / Permit / Fee.",
+            "For Albany and Schenectady, New York, write T->S Plumbing on the second free-space line when local code requires it.",
+            "All permit fees are due at contract signing.",
+            "Permit fees cannot be financed.",
+            "Permit fees cannot be rolled into another pricing route.",
+            "Permit fees cannot be dragged into the BF System EOI.",
+            "Permit fees cannot be included as part of another EOI's financed balance.",
+            "Subtotal equals the permit/plumbing fee total.",
+            "There is no discount.",
+            "Total equals subtotal.",
+            "Deposit equals total.",
+            "Balance due at completion is $0."
+          ]
+        }
+      ],
+      "Wainscoting EOI Module": [
+        {
+          title: "Detailed Standard: Wainscoting Scope, Styles, and Prep",
+          intro: "Wainscoting is outside the wet area and belongs to its own scope.",
+          bullets: [
+            "Wainscoting is Bath Fitter wall material outside the tub/shower wet area.",
+            "Wet-area wall system belongs to the BF System EOI.",
+            "Wainscoting belongs on its own Wainscoting EOI when applicable.",
+            "Wainscoting has a maximum allowed discount threshold of 15% unless Erin approves otherwise.",
+            "Available wainscoting styles are Traditional beadboard, 6x6 Palermo, 2x6 brick/subway tile Savona, and Torino flat smooth plain white only.",
+            "Traditional beadboard is the only wainscoting style that can be ordered in partial sheet quantities.",
+            "Confirm material height, material length, sheet availability, and total coverage needed using the current matrix.",
+            "Write wainscoting in the Walls section on the Wall Finish Upgrade line.",
+            "Use Waines - Board, Waines - Palermo, Waines - Savona, or Waines - Torino.",
+            "Wall prep applies because wainscoting is written in the wall section.",
+            "Charge wall prep once per every three walls covered in wainscoting.",
+            "Accessories attached directly to wainscoting can be included on the Wainscoting EOI, such as toilet paper holder, towel bar, or other approved accessory.",
+            "If the job includes both the BF unit and wainscoting, expect the job may require about 1.5 to 2 full days depending on complexity."
+          ],
+          warnings: [
+            "Do not count wainscoting inside the BF wet-area wall total."
+          ]
+        }
+      ],
+      "Labor EOI Module": [
+        {
+          title: "Detailed Standard: When Labor Gets Its Own EOI",
+          intro: "Labor EOI is for work outside standard BF system scope.",
+          bullets: [
+            "Use Labor EOI for relocating plumbing.",
+            "Use Labor EOI for relocating drains.",
+            "Use Labor EOI for removing tile walls.",
+            "Use Labor EOI for new sheetrock or re-rock.",
+            "Use Labor EOI for removing mud walls.",
+            "Use Labor EOI for building walls or framing.",
+            "Use Labor EOI for removing walls or headers.",
+            "Use Labor EOI for drop ceiling / sheetrock and framing.",
+            "Use Labor EOI for covering an existing window in the shower area.",
+            "Use Labor EOI for subfloor replacement.",
+            "Use Labor EOI for remove and jackhammer tile base or jackhammer charge.",
+            "Use Labor EOI for shower-to-tub labor with slab when applicable.",
+            "Use Labor EOI for threshold build/wrap labor when applicable.",
+            "Use Labor EOI for remove/reinstall toilet or vanity work.",
+            "Use Labor EOI for moving shower head, moving overflow, cap old shower head on relocation, or similar plumbing labor."
+          ],
+          warnings: [
+            "Labor is not discounted in any way, shape, or form."
+          ]
+        },
+        {
+          title: "Detailed Standard: How to Write the Labor EOI",
+          intro: "The labor description must be clear enough for the office, installer, customer, and rep to understand exactly what is being charged.",
+          bullets: [
+            "Write LABOR in the top-left area of the contract.",
+            "Use the two free-space lines in the tub/tub-shower section to write the labor service.",
+            "Examples include Relocate drain, Remove tile walls + new sheetrock, Remove vanity and reinstall vanity, or Subfloor replacement.",
+            "If the two free-space lines are not enough, use the open shaded blank areas between contract sections.",
+            "If more detail is needed, use Special Items.",
+            "Use Special Items when work has unusual conditions, customer-agreed scope, access limits, customer prep, sequence requirements, or clarification beyond the line item.",
+            "If Special Items is used, the customer must sign or initial that box.",
+            "Use the current price list for labor pricing.",
+            "If the labor item is not listed or the situation is outside normal scope, call Erin before presenting a price."
+          ]
+        },
+        {
+          title: "Detailed Standard: Labor Bottom Paperwork",
+          intro: "The Labor EOI follows the bottom-paperwork structure, but labor is not discounted.",
+          bullets: [
+            "Complete full customer information at the top.",
+            "Subtotal is the total of all labor items on that Labor EOI.",
+            "Leave the discount line blank unless Erin approved a specific exception.",
+            "Total usually equals subtotal because labor is not discounted.",
+            "Deposit follows the normal deposit structure unless branch policy says otherwise.",
+            "A 50% deposit is standard.",
+            "A 30% deposit is acceptable only on financed jobs.",
+            "Write balance due at completion.",
+            "If financed, write the financing plan code under the balance due line.",
+            "Complete installation scheduled box if applicable.",
+            "Salesperson signs and dates the Labor EOI.",
+            "Customer signs if sold.",
+            "Fill out deposit amount and card/check information."
+          ]
+        }
+      ]
+    };
+
+    Object.entries(TRAINING_PROMPT_DETAIL_EXPANSION).forEach(([moduleTitle, sections]) => {
       const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
       if (module) {
         module.sections.push(...sections);
@@ -7027,12 +7388,53 @@
       return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
     }
 
+    function trainingContentMarkup(content) {
+      const dynamicBullets = getTrainingDynamicBullets(content.dynamicBullets);
+      const bullets = (content.bullets || []).concat(dynamicBullets);
+      return `
+        ${(content.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+        ${trainingListMarkup(bullets)}
+        ${(content.warnings || []).map((warning) => `
+          <div class="training-callout warning">
+            <strong>Watch Out</strong>
+            <p>${escapeHtml(warning)}</p>
+          </div>
+        `).join("")}
+        ${content.checklists && content.checklists.length ? `
+          <div class="training-checklist">
+            <strong>Checklist</strong>
+            ${trainingListMarkup(content.checklists)}
+          </div>
+        ` : ""}
+        ${content.diagram ? `
+          <div class="training-diagram">
+            <strong>Simple Diagram</strong>
+            <pre>${escapeHtml(content.diagram)}</pre>
+          </div>
+        ` : ""}
+      `;
+    }
+
+    function trainingSubsectionsMarkup(subsections) {
+      if (!subsections || !subsections.length) {
+        return "";
+      }
+
+      return subsections
+        .map((subsection) => `
+          <section class="training-subsection">
+            <h4>${escapeHtml(subsection.title)}</h4>
+            ${subsection.intro ? `<p>${escapeHtml(subsection.intro)}</p>` : ""}
+            ${trainingContentMarkup(subsection)}
+          </section>
+        `)
+        .join("");
+    }
+
     function renderTrainingSection(section, moduleKey, index) {
       const sectionKey = `${moduleKey}-${slugifyKey(section.title)}`;
       const hasStoredState = Object.prototype.hasOwnProperty.call(state.expandedTrainingSections, sectionKey);
       const isOpen = hasStoredState ? Boolean(state.expandedTrainingSections[sectionKey]) : index === 0;
-      const dynamicBullets = getTrainingDynamicBullets(section.dynamicBullets);
-      const bullets = (section.bullets || []).concat(dynamicBullets);
 
       return `
         <details class="training-section" data-training-section-key="${escapeHtml(sectionKey)}"${isOpen ? " open" : ""}>
@@ -7045,26 +7447,8 @@
           </summary>
           <div class="training-section-body">
             <div class="training-content">
-              ${(section.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
-              ${trainingListMarkup(bullets)}
-              ${(section.warnings || []).map((warning) => `
-                <div class="training-callout warning">
-                  <strong>Watch Out</strong>
-                  <p>${escapeHtml(warning)}</p>
-                </div>
-              `).join("")}
-              ${section.checklists && section.checklists.length ? `
-                <div class="training-checklist">
-                  <strong>Checklist</strong>
-                  ${trainingListMarkup(section.checklists)}
-                </div>
-              ` : ""}
-              ${section.diagram ? `
-                <div class="training-diagram">
-                  <strong>Simple Diagram</strong>
-                  <pre>${escapeHtml(section.diagram)}</pre>
-                </div>
-              ` : ""}
+              ${trainingContentMarkup(section)}
+              ${trainingSubsectionsMarkup(section.subsections)}
             </div>
           </div>
         </details>
