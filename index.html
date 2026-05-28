@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.32</title>
+  <title>Bath Fitter Sales Tool 3.33</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -2063,7 +2063,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=332"></script>
+  <script src="price-list-data.js?v=333"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2078,9 +2078,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.32</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.33</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.32</h1>
+          <h1>Bath Fitter Sales Toolkit 3.33</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -4931,13 +4931,6 @@
       }
     ];
 
-    {
-      const measurementModule = TRAINING_MODULES.find((item) => item.title === "Understanding Your Measurement Sheet");
-      if (measurementModule) {
-        measurementModule.sections.unshift(...TUB_LINER_MEASURING_DEEP_DIVE_SECTIONS);
-      }
-    }
-
     const TUB_LINER_MEASURING_FULL_SOP_SECTIONS = [
       {
         title: "Tub Liner Measuring SOP: What This Training Covers",
@@ -5537,6 +5530,40 @@
         module.sections.push(...sections);
       }
     });
+
+    {
+      const measurementModule = TRAINING_MODULES.find((item) => item.title === "Understanding Your Measurement Sheet");
+      if (measurementModule) {
+        const duplicatedTubLinerTitles = new Set([
+          "Tub Measuring Guide",
+          "Reference Tape and Tub Tool Setup",
+          "Tub Measurements A Through H",
+          "R Measurement and Rail Flare Exception",
+          "Full Tub Measuring Checklist",
+          "Tub Liner Measuring Master Lesson",
+          "Tub Liner Measuring Tools and Setup",
+          "Step 1: Set the Reference Tape",
+          "Tub Tool Orientation Rule",
+          "Tub Tool Handling Rule",
+          "Precision and Red Number Rules",
+          "Measurement A: Width, Top Center, 20 Inches From Drain Center",
+          "Measurement B: Length, Top Center",
+          "Measurement C: Depth, 2 Inches From Drain Center",
+          "Measurement D: Depth, 36 Inches From Drain Center",
+          "Measurement E: Length, Bottom Center",
+          "Measurement F: Width, Bottom, 2 Inches From Drain Center",
+          "Measurement G: Width, Bottom, 20 Inches From Drain Center",
+          "Measurement H: Width, Bottom, 36 Inches From Drain Center",
+          "Measurement R: Rail Width, 20 Inches From Drain Center",
+          "R Exception: Rail Flare Beyond 20 Inches",
+          "Tub Liner Measuring Common Mistakes",
+          "Tub Liner Measuring Rep Checkpoint"
+        ]);
+        measurementModule.sections = measurementModule.sections.filter(
+          (section) => !duplicatedTubLinerTitles.has(section.title)
+        );
+      }
+    }
 
     function roundToCents(value) {
       return Math.round((value + Number.EPSILON) * 100) / 100;
