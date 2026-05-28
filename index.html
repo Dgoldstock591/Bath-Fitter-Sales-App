@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.38</title>
+  <title>Bath Fitter Sales Tool 3.39</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -2163,7 +2163,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=338"></script>
+  <script src="price-list-data.js?v=339"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2178,7 +2178,7 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales team resource | 3.38</p>
+          <p class="eyebrow">Bath Fitter sales team resource | 3.39</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
           <h1>Bath Fitter Sales Team Toolkit</h1>
           <p class="hero-copy">
@@ -6138,6 +6138,524 @@
             .replace("Full Training Standard: ", "")
             .replace("Detailed Standard: ", "")
         }));
+      });
+    }
+
+    {
+      const findTrainingSection = (moduleTitle, sectionTitle) => {
+        const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
+        return module?.sections?.find((section) => section.title === sectionTitle);
+      };
+      const tubLinerSop = findTrainingSection("Understanding Your Measurement Sheet", "Tub Liner Measuring SOP");
+
+      const coachingModules = {
+        "Understanding Your Measurement Sheet": {
+          intro: "A coached measuring course that teaches reps how to observe the bathroom, choose the correct measuring path, capture exact dimensions, and leave enough notes for ordering and installation.",
+          sections: [
+            {
+              title: "Lesson 1: Build the Bathroom Story",
+              intro: "Before writing numbers, the rep should be able to explain what is there now and what Bath Fitter is being asked to install.",
+              paragraphs: [
+                "This lesson trains the rep to slow down just enough to avoid measuring the wrong thing. A good measurement sheet tells the office and installer the story of the bathroom: what exists, what stays, what is removed, what is being sold, and what conditions could change the install.",
+                "The goal is not to memorize every field. The goal is to think in the same order every time so missed information becomes obvious before leaving the home."
+              ],
+              subsections: [
+                {
+                  title: "Teach the rep to say this out loud",
+                  bullets: [
+                    "This is the existing unit and material.",
+                    "This is what is staying and what is being removed.",
+                    "This is the finished Bath Fitter route.",
+                    "These are the measurements that apply to that route.",
+                    "These are the conditions that could affect ordering, production, install, access, or customer expectations."
+                  ]
+                },
+                {
+                  title: "Coach the sequence",
+                  bullets: [
+                    "Identify the existing tub or base first.",
+                    "Identify the existing wet-area wall condition second.",
+                    "Choose the correct measuring section third.",
+                    "Measure exact dimensions fourth.",
+                    "Complete the questionnaire fifth.",
+                    "Take photos, notes, and customer-agreement details last."
+                  ]
+                }
+              ],
+              checklists: [
+                "The rep can explain what is there now.",
+                "The rep can explain what Bath Fitter is selling.",
+                "The rep knows which measuring diagram applies.",
+                "The rep knows what must be photographed or noted."
+              ]
+            },
+            tubLinerSop ? {
+              ...tubLinerSop,
+              title: "Lesson 2: Tub Liner Measuring Lab",
+              intro: "Hands-on tub liner measuring training under one header. This is where the rep learns the tool, reference tape, A-H measurements, R measurement, and rail-flare exception."
+            } : null,
+            {
+              title: "Lesson 3: Liner Measuring vs Tear-Out Measuring",
+              intro: "This lesson teaches reps not to mix exact liner mold measuring with tear-out footprint measuring.",
+              paragraphs: [
+                "A tub liner measurement is about the shape of the tub that is staying. A tear-out measurement is about the overall space and the material being removed. Those are different jobs, different thinking, and different fields on the form."
+              ],
+              subsections: [
+                {
+                  title: "If the tub is staying for a liner",
+                  bullets: [
+                    "Use the tub liner measuring process.",
+                    "Capture A, B, C, D, E, F, G, H, and R exactly.",
+                    "Use the reference tape from drain center.",
+                    "Use the tub tool orientation correctly.",
+                    "Do not use overall tear-out dimensions as a substitute for liner measurements."
+                  ]
+                },
+                {
+                  title: "If the tub is being removed",
+                  bullets: [
+                    "Measure the overall existing tub area.",
+                    "Capture front to back, side to side, and floor to top of tub.",
+                    "Do not try to identify the exact liner mold.",
+                    "Use notes to explain what material is being removed.",
+                    "If the existing unit being removed is a shower, use the molded base / flat floor diagram for the outside overall measurements."
+                  ]
+                }
+              ],
+              warnings: [
+                "A common new-rep mistake is measuring a tear-out like a liner, or measuring a liner like a tear-out. Stop and ask: is the existing tub staying?"
+              ]
+            },
+            {
+              title: "Lesson 4: Wall, Door, and Base Measuring",
+              intro: "This lesson teaches the three measurements reps most often rush after the tub: wall material, door opening, and shower base footprint.",
+              subsections: [
+                {
+                  title: "Wet-area wall measuring",
+                  bullets: [
+                    "Use the wall bubbles to capture the actual coverage area for the one-piece, heat-bent acrylic wall system.",
+                    "Measure outside floor-to-ceiling heights, wing-wall front-to-back lengths, back-wall base-to-ceiling heights, and back-wall side-to-side width.",
+                    "Add the wall total as the cumulative material coverage around the wet area.",
+                    "Check the wall matrix after measuring so the selected material can actually cover the space.",
+                    "Do not call the Bath Fitter wall system wall panels."
+                  ]
+                },
+                {
+                  title: "Door opening measuring",
+                  bullets: [
+                    "Measure available height from the surface the door sits on up to the ceiling, soffit, header, tile line, or other barrier.",
+                    "Measure width at top, middle, and bottom.",
+                    "Measure the finished usable opening, not just the rough visual space.",
+                    "Note out-of-plumb walls, trim, tile edges, acrylic thickness, old door residue, headers, soffits, and obstructions."
+                  ]
+                },
+                {
+                  title: "Molded base / flat floor measuring",
+                  bullets: [
+                    "For shower tear-out, use only the outside overall side-to-side and front-to-back boxes.",
+                    "For true molded base / flat floor conditions, capture exterior and interior side-to-side/front-to-back dimensions.",
+                    "Record drain location as X from back wall to drain center and Y from right-hand wall to drain center.",
+                    "Measure rail/threshold width and inside/outside rail height when the molded base / flat floor fields apply."
+                  ]
+                }
+              ],
+              checklists: [
+                "The rep can point to which wall bubbles were used.",
+                "The rep measured door width in three places.",
+                "The rep did not fill molded-base interior fields for a simple shower tear-out.",
+                "The rep checked the matrix when wall height or coverage could be close."
+              ]
+            },
+            {
+              title: "Lesson 5: Questionnaire, Photos, and Customer Agreement",
+              intro: "The questionnaire is how the rep trains the office and installer on the bathroom conditions that measurements alone cannot show.",
+              subsections: [
+                {
+                  title: "Condition scan",
+                  bullets: [
+                    "Look within about 18 inches of the wet area for heater, vanity, toilet, door trim, window, cabinet, shelving, radiator, or other obstruction.",
+                    "Identify material: cast, steel, fiberglass, Bath Fitter system, Re-Bath/acrylic system, porcelain base, tile base, unknown, or other.",
+                    "Mark drain hand: left, right, or center.",
+                    "Document floor level, mobile home status, access issues, window in wet area, number of bathrooms, and any unusual construction."
+                  ]
+                },
+                {
+                  title: "Photos and access",
+                  bullets: [
+                    "Photograph plumbing access if present, but do not open or unscrew the access panel.",
+                    "If drain access is visible, inspect it and photograph it.",
+                    "Photograph conditions that explain a price, exception, access concern, repair, or customer agreement.",
+                    "Write notes that make the photo meaningful."
+                  ]
+                },
+                {
+                  title: "Place to bend",
+                  bullets: [
+                    "Confirm where the one-piece wall material can be laid out, cut, heated, bent, and carried into the bathroom.",
+                    "Possible locations include garage, basement, driveway, porch, or a large open room.",
+                    "If there is no usable place to bend, note it clearly before leaving."
+                  ]
+                }
+              ],
+              warnings: [
+                "A complete measurement sheet is not just dimensions. It is dimensions plus install conditions, access, photos, and customer expectations."
+              ]
+            },
+            {
+              title: "Module Check: Measurement Readiness",
+              intro: "Use this as a quick coaching sign-off before a rep measures without help.",
+              checklists: [
+                "Rep can explain liner vs tear-out measuring without looking at notes.",
+                "Rep can set the tub reference tape and orient the tub tool correctly.",
+                "Rep can explain what A-H and R are measuring.",
+                "Rep can identify when 30 inches is used instead of 36 inches and knows to note it.",
+                "Rep can measure wall, door, and shower tear-out fields without mixing diagrams.",
+                "Rep completes the questionnaire and takes useful photos.",
+                "Rep knows when to write a special note instead of relying on a checkbox."
+              ]
+            }
+          ].filter(Boolean)
+        },
+        "Understanding the Bath Fitter Estimate / Contract": {
+          intro: "A paperwork course that teaches reps how to turn the measured job into clean EOIs, correct discounts, correct deposits, and installer-ready scope.",
+          sections: [
+            {
+              title: "Lesson 1: Split the Job Before You Price It",
+              intro: "This is the mental model that prevents most contract mistakes.",
+              paragraphs: [
+                "A customer may see one bathroom project. The paperwork may need several EOIs. Teach reps to split the job by scope and rule set before they start writing totals."
+              ],
+              subsections: [
+                {
+                  title: "Ask these questions in order",
+                  bullets: [
+                    "What is the core Bath Fitter wet-area system?",
+                    "Is there a door that needs its own EOI?",
+                    "Is there wainscoting outside the wet area?",
+                    "Is there extra labor, demolition, plumbing, or construction outside standard scope?",
+                    "Is there a permit or plumbing fee that must be paid separately?",
+                    "Does any item have a different discount, deposit, financing, or approval rule?"
+                  ]
+                },
+                {
+                  title: "What good looks like",
+                  bullets: [
+                    "Each EOI has a clear purpose.",
+                    "Items are not placed wherever there is blank space.",
+                    "Discounts only apply where allowed.",
+                    "The installer can understand the scope without guessing.",
+                    "The office can process the job without reworking the paperwork."
+                  ]
+                }
+              ],
+              warnings: [
+                "If the rep cannot explain why an item belongs on a specific EOI, pause before writing it."
+              ]
+            },
+            {
+              title: "Lesson 2: Walk the BF System EOI Top to Bottom",
+              intro: "Train reps to move through the BF System EOI in order so sections are not skipped or misused.",
+              subsections: [
+                {
+                  title: "Customer information",
+                  bullets: [
+                    "Every EOI gets full customer information.",
+                    "Secondary EOIs still need the full header.",
+                    "Do not treat the second or third page as an attachment with missing customer details."
+                  ]
+                },
+                {
+                  title: "Tub section",
+                  bullets: [
+                    "Use this section only for bathtub-related Bath Fitter system items.",
+                    "Left/right hand identifies tub hand.",
+                    "Type is used for Empress, Empress XL, or Garden when applicable.",
+                    "Color must be written clearly and should match the unit unless the customer intentionally chooses otherwise.",
+                    "Slip resistant coating is optional, costs more, requires more cleaning, and must be discussed carefully.",
+                    "Formed front is an added charge unless pricing explicitly includes it.",
+                    "End cap and end finishing piece are different items and must be charged correctly."
+                  ]
+                },
+                {
+                  title: "Shower base section",
+                  bullets: [
+                    "Use this section for shower base jobs, not tub jobs.",
+                    "Write base color, style, and drain hand.",
+                    "For curved or neo-angle, write the base type in the blank space and check freestanding base.",
+                    "Seats must be identified by type, color, and finish where applicable."
+                  ]
+                },
+                {
+                  title: "Wall and window section",
+                  bullets: [
+                    "Use this section for wet-area wall material, wall finish upgrades, wall prep, wall repair, extensions, extra pieces, and window trim.",
+                    "Write wall height destination next to color every time wall material is sold.",
+                    "Base wall price starts from the Torino wall price in the selected size.",
+                    "Tile-pattern walls require wall finish upgrade.",
+                    "Wall prep is charged when wall material is written.",
+                    "Major tile removal or new sheetrock moves to Labor EOI."
+                  ]
+                },
+                {
+                  title: "BF System EOI door section",
+                  bullets: [
+                    "Do not write the actual Bath Fitter door here.",
+                    "Use this section only for curtain/shower rod and remove/dispose existing shower door charge.",
+                    "Bath Fitter does not remove/reinstall customer doors or install customer-supplied doors."
+                  ]
+                }
+              ]
+            },
+            {
+              title: "Lesson 3: Write Accessories So Someone Else Can Order Them",
+              intro: "Accessory writing is training in clarity: name, finish, size, quantity, and charge.",
+              bullets: [
+                "Valve accessories need name, finish, and charge.",
+                "Valve model needs trim style, finish, and charge.",
+                "Soap dishes are on-wall accessories, not corner caddies.",
+                "Corner caddies should use SCC, DCC, or TCC language with color, quantity, and charge.",
+                "Grab bars need style or texture, finish/color, size, quantity, and charge.",
+                "Towel bars need collection name, color, quantity, and charge."
+              ],
+              checklists: [
+                "Could the office order the accessory from what the rep wrote?",
+                "Could the installer understand where it goes?",
+                "Could the customer understand what they bought?",
+                "Did the rep avoid guessing a price that is not listed?"
+              ]
+            },
+            {
+              title: "Lesson 4: Bottom Math, Deposits, and Signatures",
+              intro: "The bottom of the EOI is where good pricing work becomes a usable contract.",
+              subsections: [
+                {
+                  title: "Bottom math",
+                  bullets: [
+                    "Subtotal is all pieces on that EOI before discount.",
+                    "Promo/discount line includes the promo name and subtraction amount when allowed.",
+                    "Total is after discount.",
+                    "Deposit is normally 50%.",
+                    "Finance jobs may use 30% deposit.",
+                    "Balance due at completion is the remaining amount."
+                  ]
+                },
+                {
+                  title: "Financing notation",
+                  bullets: [
+                    "Write the financing plan code under the balance due line.",
+                    "Clearly note the job is financed so the installer/admin does not expect a check or card at completion."
+                  ]
+                },
+                {
+                  title: "Signatures and special items",
+                  bullets: [
+                    "Salesperson signs and dates every EOI.",
+                    "Customer signs every sold EOI.",
+                    "Deposit information includes amount received and card/check details.",
+                    "Special Items should match the measurement sheet and customer agreement.",
+                    "If Special Items is used, the customer initials or signs that box."
+                  ]
+                }
+              ]
+            },
+            {
+              title: "Module Check: Contract Readiness",
+              intro: "Use this before a rep writes live paperwork on their own.",
+              checklists: [
+                "Rep can split a job into BF System, Door, Wainscoting, Labor, and Permit EOIs.",
+                "Rep can explain why a door does not belong on the BF System EOI.",
+                "Rep can identify when wall prep applies.",
+                "Rep can explain wall repair versus Labor EOI.",
+                "Rep can write bottom math, financing notation, signatures, and Special Items correctly.",
+                "Rep knows when to stop and call Erin."
+              ]
+            }
+          ]
+        },
+        "Door EOI Module": {
+          intro: "A focused door course that trains reps to separate door scope, protect custom door expectations, and avoid discount mistakes.",
+          sections: [
+            {
+              title: "Lesson 1: Separate the Door",
+              intro: "Every sold door gets its own Door EOI.",
+              bullets: [
+                "Do not write the sold Bath Fitter door into the BF System EOI.",
+                "The BF System EOI may include curtain/shower rod and existing door removal only.",
+                "The Door EOI has its own customer information, subtotal, total, deposit, balance, signatures, and special items.",
+                "Door discounts require Erin approval."
+              ],
+              warnings: [
+                "The most important door habit is separation. Door price, discount approval, and paperwork live on the Door EOI."
+              ]
+            },
+            {
+              title: "Lesson 2: Custom Door Expectation Setting",
+              intro: "Custom doors are less about selling glass and more about preventing bad expectations.",
+              paragraphs: [
+                "The opening can change after the Bath Fitter system is installed. That is why custom door pricing and timing must be handled carefully."
+              ],
+              bullets: [
+                "Custom doors go through Arizona Glass.",
+                "Call Erin before quoting custom door pricing.",
+                "Explain that final ordering happens at installation when the finished opening can be measured accurately.",
+                "Use Special Items wording and get customer initials."
+              ],
+              checklists: [
+                "Customer understands custom door is ordered at installation.",
+                "Customer understands install timing may be 3-6 weeks after the Bath Fitter system.",
+                "Special Items box is initialed."
+              ]
+            }
+          ]
+        },
+        "Permit / Plumbing Fee EOI Module": {
+          intro: "A payment-handling course for permit and plumbing fee items that cannot be treated like the rest of the job.",
+          sections: [
+            {
+              title: "Lesson: Keep Permit Money Clean",
+              intro: "The rep should learn the payment reason, not just memorize the rule.",
+              paragraphs: [
+                "Permit and plumbing fee EOIs are separated because they have different payment, discount, and financing behavior. Keeping them separate prevents the customer, office, and installer from having different expectations."
+              ],
+              bullets: [
+                "Write applicable charges on a separate Permit / Plumbing Fee EOI.",
+                "Use Plumb / Permit / Fee wording.",
+                "For Albany and Schenectady, write T->S Plumbing on the second free-space line when local code requires it.",
+                "Permit fees are due at signing.",
+                "Permit fees are not financed.",
+                "Permit fees are not discounted.",
+                "Deposit equals total.",
+                "Balance due at completion is $0."
+              ],
+              checklists: [
+                "Rep can explain why permit money is separate.",
+                "Rep can write the bottom math with full deposit and zero balance.",
+                "Rep knows not to roll permit fees into financed balances."
+              ]
+            }
+          ]
+        },
+        "Wainscoting EOI Module": {
+          intro: "A scope-separation course that teaches reps to keep outside-wet-area wall material out of the BF wet-area wall package.",
+          sections: [
+            {
+              title: "Lesson 1: Separate Wet Area From Wainscoting",
+              intro: "Wet-area walls and wainscoting are different scopes, different measuring behavior, and different EOI behavior.",
+              bullets: [
+                "Wet-area walls are inside the tub/shower area.",
+                "Wainscoting is outside the wet area in the rest of the bathroom.",
+                "Wet-area walls belong on the BF System EOI.",
+                "Wainscoting belongs on its own Wainscoting EOI when applicable.",
+                "Wall prep applies to wainscoting because it is written in the wall section.",
+                "Charge wall prep once per every three walls covered in wainscoting."
+              ],
+              warnings: [
+                "Do not count wainscoting inside the BF wet-area wall total."
+              ]
+            },
+            {
+              title: "Lesson 2: Measure and Write Wainscoting",
+              intro: "Teach reps to diagram the bathroom, not guess sheet quantity.",
+              bullets: [
+                "Draw the bathroom shape on the back of the measurement sheet.",
+                "Mark which walls receive wainscoting.",
+                "Write wall lengths, openings, returns, vanities, toilets, doors, and unusual breaks.",
+                "Confirm material height, length, sheet availability, and total coverage in the matrix.",
+                "Approved styles are Traditional beadboard, 6x6 Palermo, 2x6 brick/subway tile Savona, and Torino flat smooth plain white only.",
+                "Traditional beadboard is the only style that can use partial sheet quantities.",
+                "Write Waines - Board, Waines - Palermo, Waines - Savona, or Waines - Torino on the Wall Finish Upgrade line."
+              ]
+            },
+            {
+              title: "Lesson 3: Discount and Install Expectations",
+              intro: "Wainscoting needs its own customer expectation because it can change job timing.",
+              bullets: [
+                "Wainscoting has its own discount cap unless Erin approves otherwise.",
+                "Accessories attached directly to wainscoting can be included on the Wainscoting EOI.",
+                "BF system plus wainscoting may require about 1.5 to 2 full days depending on complexity.",
+                "Do not promise a simple one-day install if the scope suggests otherwise."
+              ]
+            }
+          ]
+        },
+        "Labor EOI Module": {
+          intro: "A judgment course that teaches reps to identify when work has left standard Bath Fitter scope.",
+          sections: [
+            {
+              title: "Lesson 1: Recognize Labor Scope",
+              intro: "Labor EOI training is about judgment, not just a list of items.",
+              paragraphs: [
+                "Ask whether the work is normal Bath Fitter product installation or extra construction, plumbing, demolition, or preparation. If it is extra work, it usually needs Labor EOI handling."
+              ],
+              subsections: [
+                {
+                  title: "Common Labor EOI triggers",
+                  bullets: [
+                    "Relocate drain or plumbing.",
+                    "Remove tile walls or mud walls.",
+                    "New sheetrock / re-rock.",
+                    "Build wall, remove wall, remove header, framing, or drop ceiling work.",
+                    "Subfloor replacement.",
+                    "Jackhammer work.",
+                    "Vanity or toilet removal/reinstall/install.",
+                    "Move shower head, move overflow, cap old shower head, or other plumbing labor."
+                  ]
+                },
+                {
+                  title: "What does not automatically need Labor EOI",
+                  bullets: [
+                    "Standard BF wall system work written in Wall and Window.",
+                    "Wainscoting written on its own Wainscoting EOI.",
+                    "Remove/dispose existing shower door written on the BF System EOI.",
+                    "Standard remove/dispose of normal systems when it belongs on the BF System EOI."
+                  ]
+                }
+              ],
+              warnings: [
+                "Labor is never discounted."
+              ]
+            },
+            {
+              title: "Lesson 2: Write Labor So It Can Be Installed",
+              intro: "A Labor EOI should describe the work clearly enough that nobody has to guess later.",
+              bullets: [
+                "Write LABOR in the top-left area.",
+                "Use free-space lines for the labor service.",
+                "Use clear wording like Relocate drain, Remove tile walls + new sheetrock, Remove vanity and reinstall vanity, or Subfloor replacement.",
+                "Use shaded open areas if the free-space lines are not enough.",
+                "Use Special Items when access, sequence, customer prep, or unusual conditions need more explanation.",
+                "If Special Items is used, get customer signature or initials.",
+                "Use current price list pricing.",
+                "If the item is not listed or the situation is outside normal scope, call Erin before presenting a price."
+              ]
+            },
+            {
+              title: "Module Check: Labor Readiness",
+              intro: "Use this to coach whether the rep can make Labor EOI decisions in the field.",
+              checklists: [
+                "Rep can explain why labor is separate.",
+                "Rep can identify at least five labor triggers.",
+                "Rep can identify work that does not automatically need Labor EOI.",
+                "Rep can write a clear labor description.",
+                "Rep knows labor is not discounted.",
+                "Rep knows when to call Erin before quoting."
+              ]
+            }
+          ]
+        }
+      };
+
+      TRAINING_MODULES.forEach((module) => {
+        const coachingModule = coachingModules[module.title];
+        if (!coachingModule) {
+          if (module.title === "Practice Scenarios") {
+            module.intro = "Use these only after reps complete the training path. Have the rep explain the route, EOI split, measurements, charges, and mistakes to avoid before revealing the expected answer.";
+          }
+          return;
+        }
+
+        module.intro = coachingModule.intro;
+        module.sections = coachingModule.sections;
       });
     }
 
