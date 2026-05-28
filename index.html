@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.37</title>
+  <title>Bath Fitter Sales Tool 3.38</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1253,7 +1253,7 @@
 
     .measuring-guide-card {
       display: grid;
-      gap: 1rem;
+      gap: 0.85rem;
       padding: 1rem;
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
@@ -1280,22 +1280,6 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
-    }
-
-    .measuring-guide-frame-wrap {
-      min-height: 68vh;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      background: #eef1ee;
-    }
-
-    .measuring-guide-frame {
-      display: block;
-      width: 100%;
-      height: 68vh;
-      border: 0;
-      background: #fff;
     }
 
     .training-module,
@@ -1583,6 +1567,19 @@
       line-height: 1.65;
     }
 
+    .release-pill {
+      width: fit-content;
+      padding: 0.42rem 0.72rem;
+      border: 1px solid rgba(184, 144, 82, 0.35);
+      border-radius: 999px;
+      background: rgba(184, 144, 82, 0.12);
+      color: #6d552e;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
     .hero-badges {
       display: flex;
       flex-wrap: wrap;
@@ -1659,6 +1656,43 @@
       font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .release-note {
+      display: grid;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid rgba(10, 108, 104, 0.16);
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(6, 133, 126, 0.08), rgba(255, 255, 255, 0.95));
+    }
+
+    .release-note strong {
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.06rem;
+    }
+
+    .release-note p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .app-footer {
+      display: grid;
+      gap: 0.35rem;
+      padding: 0 0.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .app-footer strong {
+      color: var(--accent-dark);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
@@ -2062,14 +2096,6 @@
         padding: 0.85rem;
       }
 
-      .measuring-guide-frame-wrap {
-        min-height: 72vh;
-      }
-
-      .measuring-guide-frame {
-        height: 72vh;
-      }
-
       .output-panel-body,
       .training-module-body,
       .training-section-body {
@@ -2137,7 +2163,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=337"></script>
+  <script src="price-list-data.js?v=338"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2152,17 +2178,18 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.37</p>
+          <p class="eyebrow">Bath Fitter sales team resource | 3.38</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.37</h1>
+          <h1>Bath Fitter Sales Team Toolkit</h1>
           <p class="hero-copy">
-            Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
+            A polished in-home resource for pricing math, exact quote building, product lookup, measuring guidance, training, financing, and commission review.
           </p>
+          <span class="release-pill">Approved sales team resource</span>
           <div class="hero-badges" aria-label="Core tools">
             <a class="hero-badge" href="#calculatorTool" data-open-tool="calculatorTool">Calculator</a>
             <a class="hero-badge" href="#pricingGuide" data-open-tool="pricingGuide">Pricing Guide</a>
-            <a class="hero-badge" href="#roughEstimator" data-open-tool="roughEstimator">Rough Estimate Generator</a>
-            <a class="hero-badge" href="#trainingResources" data-open-tool="trainingResources">Training Resources</a>
+            <a class="hero-badge" href="#roughEstimator" data-open-tool="roughEstimator">Quote Builder</a>
+            <a class="hero-badge" href="#trainingResources" data-open-tool="trainingResources">Training + Measuring Guide</a>
           </div>
         </div>
       </div>
@@ -2173,6 +2200,10 @@
         <div class="panel-heading">
           <h2>Sales Toolkit</h2>
           <p>Choose the workflow you need in the field.</p>
+        </div>
+        <div class="release-note">
+          <strong>Built for day-to-day sales use.</strong>
+          <p>Use the calculator for final EOI math, the pricing guide for quick lookup, the quote builder for condition-based line building, and Training Resources for SOPs plus the measuring guide PDF.</p>
         </div>
         <div class="landing-grid">
           <a class="landing-card" href="#calculatorTool" data-open-tool="calculatorTool">
@@ -2189,14 +2220,14 @@
           </a>
           <a class="landing-card" href="#roughEstimator" data-open-tool="roughEstimator">
             <span>03</span>
-            <strong>Rough Estimate Generator</strong>
+            <strong>Quote Builder</strong>
             <p>Build exact rep-only estimates with condition logic, bucket routing, and calculator handoff.</p>
-            <small>Open estimator</small>
+            <small>Open builder</small>
           </a>
           <a class="landing-card" href="#trainingResources" data-open-tool="trainingResources">
             <span>04</span>
             <strong>Training Resources</strong>
-            <p>Work through in-depth rep training modules with lessons, examples, mistakes to avoid, and paperwork checkpoints.</p>
+            <p>Work through rep training modules, paperwork rules, practice scenarios, and the direct measuring guide PDF.</p>
             <small>Open training</small>
           </a>
         </div>
@@ -2356,13 +2387,13 @@
           <button class="button secondary" type="button" data-open-tool="home">Back to Toolkit</button>
         </div>
         <div class="panel-heading">
-          <h2>Rough Estimate Generator</h2>
-          <p>Internal rep exact-math estimator for remote quotes, landlord calls, and fast scenario building.</p>
+          <h2>Quote Builder</h2>
+          <p>Internal exact-math builder for remote quotes, landlord calls, second-bath opportunities, and fast scenario building.</p>
         </div>
 
         <div class="rough-wizard-shell">
           <div class="rough-wizard-main">
-            <div class="rough-stepper" id="roughWizardStepper" aria-label="Rough estimator steps"></div>
+            <div class="rough-stepper" id="roughWizardStepper" aria-label="Quote builder steps"></div>
 
             <div class="rough-grid rough-grid-wizard">
               <div class="rough-step" data-rough-step-panel="1">
@@ -2857,25 +2888,22 @@
         </div>
         <div class="measuring-guide-card" id="measuringGuideDirectView">
           <div class="measuring-guide-header">
-            <h3>Direct Measuring Guide</h3>
-            <p>View the uploaded measuring help sheet inside the app. If your phone browser blocks the embedded PDF, use the full-screen or download option.</p>
+            <h3>Measuring Guide PDF</h3>
+            <p>Open the approved measuring help sheet when a rep needs the visual form reference.</p>
           </div>
           <div class="actions">
-            <a class="button primary" href="measuring-help-sheet.pdf" target="_blank" rel="noopener">Open Full Screen</a>
+            <a class="button primary" href="measuring-help-sheet.pdf" target="_blank" rel="noopener">Open Measuring Guide</a>
             <a class="button secondary" href="measuring-help-sheet.pdf" download>Download PDF</a>
-          </div>
-          <div class="measuring-guide-frame-wrap">
-            <iframe
-              class="measuring-guide-frame"
-              src="measuring-help-sheet.pdf#toolbar=1&navpanes=0&view=FitH"
-              title="Bath Fitter measuring help sheet PDF"
-              loading="lazy"
-            ></iframe>
           </div>
         </div>
         <div class="training-layout" id="trainingModules"></div>
       </div>
     </section>
+
+    <footer class="app-footer">
+      <strong>Internal Bath Fitter Sales Team Resource</strong>
+      <span>Use current branch guidance for final approvals, custom pricing, permit handling, and exceptions that require Erin or owner approval.</span>
+    </footer>
 
   </div>
 
@@ -9473,6 +9501,8 @@
         showTool(control.dataset.openTool);
       });
     });
+
+    window.addEventListener("hashchange", showInitialTool);
 
     document.getElementById("catalogCategory").addEventListener("change", refreshCatalogPicker);
     document.getElementById("catalogSearch").addEventListener("input", refreshCatalogPicker);

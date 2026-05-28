@@ -1,20 +1,22 @@
-# Bath Fitter Sales Calculator (PWA)
+# Bath Fitter Sales Team Toolkit
 
-This is a Progressive Web App version of the Bath Fitter Sales Calculator.
+Internal sales-team resource for in-home pricing, quote building, price lookup, measuring guidance, training, financing, and commission review.
 
-## How to Host
+## What Is Included
 
-1. Clone or fork this repo.
-2. Push to a GitHub repository.
-3. In repo settings, enable GitHub Pages from the `main` branch at root (`/`).
-4. Access it at: `https://yourusername.github.io/your-repo-name`
+- Calculator Tool for BF system, wainscoting, doors, labor, permit, deposit, financing, cumulative total, and commission views.
+- Pricing Guide with searchable product, accessory, labor, door, and matrix references.
+- Quote Builder for exact rep-only estimate building from existing conditions and selected scope.
+- Training Resources with linear rep training modules, practice scenarios, and the approved measuring guide PDF.
 
-## How to Install
+## Hosting
 
-On mobile or desktop, open the app in Chrome or Safari and choose "Add to Home Screen" or "Install".
+This app is designed for GitHub Pages from the repository root on the `main` branch.
 
-## Files Included
+## Install
 
-- `index.html` – Main calculator UI
-- `manifest.json` – App metadata
-- `service-worker.js` – Offline cache support
+Open the published app on a phone, tablet, or desktop browser and use `Add to Home Screen` or `Install` when available.
+
+## Notes
+
+Use current branch guidance for final approvals, custom pricing, permit handling, and exceptions that require Erin or owner approval.
