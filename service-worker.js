@@ -1,13 +1,14 @@
-const CACHE_NAME = "bf-sales-cache-v3-36";
+const CACHE_NAME = "bf-sales-cache-v3-37";
 const PRECACHE_URLS = [
   "./",
   "./index.html",
-  "./price-list-data.js?v=336",
+  "./price-list-data.js?v=337",
   "./manifest.json",
   "./service-worker.js",
   "./bath-fitter-logo.svg",
   "./bath-fitter-logo.jpg",
-  "./bath-fitter-icon.svg"
+  "./bath-fitter-icon.svg",
+  "./measuring-help-sheet.pdf"
 ];
 
 self.addEventListener("install", (event) => {

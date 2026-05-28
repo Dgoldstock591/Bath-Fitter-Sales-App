@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.36</title>
+  <title>Bath Fitter Sales Tool 3.37</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -1251,6 +1251,53 @@
       gap: 0.85rem;
     }
 
+    .measuring-guide-card {
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(135deg, rgba(13, 122, 104, 0.08), rgba(255, 255, 255, 0.96)),
+        #fff;
+      box-shadow: 0 14px 28px rgba(14, 76, 64, 0.08);
+    }
+
+    .measuring-guide-header {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .measuring-guide-header h3 {
+      margin: 0;
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      letter-spacing: -0.02em;
+    }
+
+    .measuring-guide-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .measuring-guide-frame-wrap {
+      min-height: 68vh;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #eef1ee;
+    }
+
+    .measuring-guide-frame {
+      display: block;
+      width: 100%;
+      height: 68vh;
+      border: 0;
+      background: #fff;
+    }
+
     .training-module,
     .training-section {
       border: 1px solid var(--border);
@@ -2011,6 +2058,18 @@
         overflow-x: visible;
       }
 
+      .measuring-guide-card {
+        padding: 0.85rem;
+      }
+
+      .measuring-guide-frame-wrap {
+        min-height: 72vh;
+      }
+
+      .measuring-guide-frame {
+        height: 72vh;
+      }
+
       .output-panel-body,
       .training-module-body,
       .training-section-body {
@@ -2078,7 +2137,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=336"></script>
+  <script src="price-list-data.js?v=337"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2093,9 +2152,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.36</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.37</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.36</h1>
+          <h1>Bath Fitter Sales Toolkit 3.37</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -2795,6 +2854,24 @@
         <div class="panel-heading">
           <h2>Training Resources</h2>
           <p>In-depth sales rep training curriculum for measuring, EOIs, contracts, and job-scope decisions.</p>
+        </div>
+        <div class="measuring-guide-card" id="measuringGuideDirectView">
+          <div class="measuring-guide-header">
+            <h3>Direct Measuring Guide</h3>
+            <p>View the uploaded measuring help sheet inside the app. If your phone browser blocks the embedded PDF, use the full-screen or download option.</p>
+          </div>
+          <div class="actions">
+            <a class="button primary" href="measuring-help-sheet.pdf" target="_blank" rel="noopener">Open Full Screen</a>
+            <a class="button secondary" href="measuring-help-sheet.pdf" download>Download PDF</a>
+          </div>
+          <div class="measuring-guide-frame-wrap">
+            <iframe
+              class="measuring-guide-frame"
+              src="measuring-help-sheet.pdf#toolbar=1&navpanes=0&view=FitH"
+              title="Bath Fitter measuring help sheet PDF"
+              loading="lazy"
+            ></iframe>
+          </div>
         </div>
         <div class="training-layout" id="trainingModules"></div>
       </div>
