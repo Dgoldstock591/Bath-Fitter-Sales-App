@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.31</title>
+  <title>Bath Fitter Sales Tool 3.32</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -2063,7 +2063,7 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=331"></script>
+  <script src="price-list-data.js?v=332"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2078,9 +2078,9 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales tool | 3.31</p>
+          <p class="eyebrow">Bath Fitter sales tool | 3.32</p>
           <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
-          <h1>Bath Fitter Sales Toolkit 3.31</h1>
+          <h1>Bath Fitter Sales Toolkit 3.32</h1>
           <p class="hero-copy">
             Cleaner calculator math, quicker price lookup, and a field-ready rough estimate generator built for in-home reps.
           </p>
@@ -4636,6 +4636,905 @@
       const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
       if (module) {
         module.sections.unshift(...sections);
+      }
+    });
+
+    const TUB_LINER_MEASURING_DEEP_DIVE_SECTIONS = [
+      {
+        title: "Tub Liner Measuring Master Lesson",
+        intro: "This lesson teaches the tub liner measuring process in the same order the rep should physically perform it in the bathroom.",
+        paragraphs: [
+          "Tub liner measuring is different from tear-out measuring. For a liner, the existing tub is staying, so the rep is documenting the exact mold-related shape of the tub. These measurements help identify the correct liner model/mold and prevent fitment problems.",
+          "The measuring help sheet identifies the core tub liner fields as A, B, C, D, E, F, G, H, and R. The training goal is for the rep to understand not just what number goes in each field, but why the number matters and how to take it consistently."
+        ],
+        bullets: [
+          "A: width, top center, 20 inches from drain center.",
+          "B: length, top center.",
+          "C: depth, 2 inches from drain center.",
+          "D: depth, 36 inches from drain center, using 30 inches if 36 inches is not available.",
+          "E: length, bottom center.",
+          "F: width, bottom, 2 inches from drain center.",
+          "G: width, bottom, 20 inches from drain center.",
+          "H: width, bottom, 36 inches from drain center, using 30 inches if 36 inches is not available.",
+          "R: rail width, 20 inches from drain center, using the red numbers on the tub tool."
+        ],
+        warnings: [
+          "Do not teach these as rough estimate measurements. They are exact ordering/fitment measurements and should be written to the nearest 1/16 inch."
+        ]
+      },
+      {
+        title: "Tub Liner Measuring Tools and Setup",
+        intro: "The setup controls the quality of every measurement that follows.",
+        bullets: [
+          "Tools needed: Bath Fitter tub measuring tool, two tape measures, level or straight edge, pen, and the measurement sheet.",
+          "One tape measure becomes the reference tape. The other tape or tub tool is used for actual measurements.",
+          "The level or straight edge is needed for depth measurements so the rep is measuring vertically from the standing surface to a level top reference.",
+          "Before writing any numbers, identify drain center and confirm the faucet/drain side of the tub.",
+          "Keep the measurement sheet within reach and write the number immediately after taking each measurement."
+        ],
+        warnings: [
+          "Do not rely on memory and fill in several measurements later. That is how numbers get transposed or rounded."
+        ]
+      },
+      {
+        title: "Step 1: Set the Reference Tape",
+        intro: "The reference tape creates the 2 inch, 20 inch, 36 inch, and 30 inch landmarks used throughout the tub liner measuring process.",
+        paragraphs: [
+          "Lay one tape measure flat on the standing surface of the tub. Start the tape at drain center and run it toward the back of the tub as far as possible without running the tape up the wall.",
+          "This tape is not used for a written number. It is a reference line that keeps the rep consistent when placing the tub tool or level at the correct distance from drain center."
+        ],
+        bullets: [
+          "0 inches starts at drain center.",
+          "2 inches is used for C and F.",
+          "20 inches is used for A, G, and R.",
+          "36 inches is used for D and H.",
+          "30 inches is the backup point for D and H when 36 inches is not available because of tub size or mold shape.",
+          "The reference tape must stay flat on the standing surface and must not ride up the wall or slope into the laying area."
+        ],
+        diagram: [
+          "Top view of tub standing surface",
+          "",
+          "Faucet / Drain Side",
+          "+--------------------------------------+",
+          "|                                      |",
+          "|   Drain Center                       |",
+          "|      o------ reference tape ------>  |",
+          "|      0 in  2 in     20 in    36 in   |",
+          "|                         30 in backup |",
+          "|                                      |",
+          "+--------------------------------------+",
+          "                         Back / Laying Area"
+        ].join("\n"),
+        warnings: [
+          "If the reference tape is crooked, pitched, or running up a surface, every measurement taken from that reference can be wrong."
+        ]
+      },
+      {
+        title: "Tub Tool Orientation Rule",
+        intro: "The Bath Fitter tub measuring tool must face the correct direction every time.",
+        bullets: [
+          "The side of the tub tool that contains the actual tape measure should always point toward the faucet/drain side of the tub.",
+          "This matters because the notches, shapes, wedge points, and angles of the tool are designed to sit against the tub properly in that orientation.",
+          "If the tool is turned around, the tool can sit differently and the measurement can become inaccurate.",
+          "The rep should verbally train themselves to check tool direction before every A, B, E, F, G, H, and R measurement."
+        ],
+        warnings: [
+          "Wrong tool direction is a silent error. The number may look believable but still be wrong."
+        ]
+      },
+      {
+        title: "Tub Tool Handling Rule",
+        intro: "The measuring tool is also a precision tool, so reps need to handle it correctly.",
+        bullets: [
+          "Keep the tool flat and level when measuring.",
+          "Do not let the tool ride up the side radius of the tub.",
+          "Do not let the tool climb the laying-area slope.",
+          "Do not force the tool into a position where it is not naturally seated.",
+          "When closing the tub tool after taking a measurement, put it back together properly with the stick going into the shaft."
+        ],
+        warnings: [
+          "Forcing the tool closed incorrectly can damage the tape measure inside the tool."
+        ]
+      },
+      {
+        title: "Precision and Red Number Rules",
+        intro: "This section should be taught before reps learn the individual measurements.",
+        bullets: [
+          "Measurements down to the 1/16 inch matter.",
+          "Do not round loosely to the nearest quarter inch just because it looks close.",
+          "Small differences can change which tub model/mold is selected.",
+          "The red numbers on the tub tool are only used for R, the rail measurement.",
+          "When using the red numbers for R, the red number replaces the black number above it.",
+          "Do not use the red numbers for A, B, E, F, G, or H."
+        ],
+        warnings: [
+          "If a number is hard to read, slow down and retake it. Guessing is worse than taking an extra minute."
+        ]
+      },
+      {
+        title: "Measurement A: Width, Top Center, 20 Inches From Drain Center",
+        intro: "A is the top width of the tub at the 20 inch reference point.",
+        bullets: [
+          "Find the 20 inch mark on the reference tape.",
+          "Place the Bath Fitter tub measuring tool at the 20 inch point.",
+          "Keep the tape-measure side of the tool facing the faucet/drain side.",
+          "Keep the tool flat and level across the top of the bathing area.",
+          "Measure from the inside top edge of one side of the tub to the inside top edge of the other side.",
+          "Write the measurement exactly in the A field."
+        ],
+        warnings: [
+          "Do not tilt the tool. A tilted tool can make the tub look wider or narrower than it is."
+        ]
+      },
+      {
+        title: "Measurement B: Length, Top Center",
+        intro: "B is the top length measurement and is often the measurement new reps struggle with most.",
+        bullets: [
+          "Keep the tape-measure side of the tub tool facing the faucet/drain side.",
+          "Position the tool directly below the tub spout if the spout is centered.",
+          "Measure across the top center line to the very back of the laying area of the tub.",
+          "Keep the tape measure flat and level across the entire surface.",
+          "Do not allow the tape to dip, pitch, bend, or ride up a surface.",
+          "Write the measurement exactly in the B field."
+        ],
+        warnings: [
+          "Any dip, bend, or pitch in the tape can change B by a substantial amount."
+        ]
+      },
+      {
+        title: "Measurement C: Depth, 2 Inches From Drain Center",
+        intro: "C is the tub depth near the drain area and is not taken with the tub tool.",
+        bullets: [
+          "Locate the 2 inch mark from drain center on the reference tape.",
+          "Place a level or straight edge across the top of the tub at that location.",
+          "Keep the level or straight edge flat and level.",
+          "Measure from the standing surface of the tub up to the bottom of the level or straight edge.",
+          "Write the measurement exactly in the C field."
+        ],
+        warnings: [
+          "Do not measure to a tilted straight edge. The top reference must be level."
+        ]
+      },
+      {
+        title: "Measurement D: Depth, 36 Inches From Drain Center",
+        intro: "D is the second depth measurement, normally taken at 36 inches from drain center.",
+        bullets: [
+          "Locate the 36 inch mark on the reference tape.",
+          "If 36 inches is not available because of tub size or mold shape, use the 30 inch mark instead.",
+          "Place a level or straight edge across the top of the tub at that point.",
+          "Keep the level or straight edge flat and level.",
+          "Measure from the standing surface of the tub up to the bottom of the level or straight edge.",
+          "Write the measurement exactly in the D field.",
+          "If taken at 30 inches instead of 36 inches, clearly note that on the measurement sheet."
+        ],
+        warnings: [
+          "Do not silently substitute 30 inches. The office needs to know when D was taken at the backup point."
+        ]
+      },
+      {
+        title: "Measurement E: Length, Bottom Center",
+        intro: "E is the bottom length on the standing surface, not a top-edge length.",
+        bullets: [
+          "Place the Bath Fitter tub measuring tool on the standing surface of the tub.",
+          "Keep the tool flat to the floor of the tub.",
+          "Make sure all flat surfaces on the bottom of the tool are pressed flat and level against the standing surface.",
+          "Measure from the center area of the tub toward the back of the laying area.",
+          "Write the measurement exactly in the E field."
+        ],
+        warnings: [
+          "Do not let the tool ride up the laying-area side of the tub. E must stay on the standing surface."
+        ]
+      },
+      {
+        title: "Measurement F: Width, Bottom, 2 Inches From Drain Center",
+        intro: "F is the bottom width at the 2 inch reference point.",
+        bullets: [
+          "Find the 2 inch mark on the reference tape.",
+          "Place the tub tool at that point on the standing surface.",
+          "Keep the tape-measure side facing the faucet/drain side.",
+          "Keep the tool flat to the bottom of the tub.",
+          "Do not let the tool ride up the sides.",
+          "Write the measurement exactly in the F field."
+        ]
+      },
+      {
+        title: "Measurement G: Width, Bottom, 20 Inches From Drain Center",
+        intro: "G is the bottom width at the 20 inch reference point.",
+        bullets: [
+          "Find the 20 inch mark on the reference tape.",
+          "Place the tub tool at that point on the standing surface.",
+          "Keep the tape-measure side facing the faucet/drain side.",
+          "Keep the tool flat to the bottom of the tub.",
+          "Do not let the tool climb the tub sides or laying-area slope.",
+          "Write the measurement exactly in the G field."
+        ]
+      },
+      {
+        title: "Measurement H: Width, Bottom, 36 Inches From Drain Center",
+        intro: "H is the bottom width at the 36 inch reference point, with the same 30 inch backup rule as D.",
+        bullets: [
+          "Find the 36 inch mark on the reference tape.",
+          "If 36 inches is not available, use the 30 inch mark instead.",
+          "Place the tub tool at that point on the standing surface.",
+          "Keep the tape-measure side facing the faucet/drain side.",
+          "Keep the tool flat to the bottom of the tub.",
+          "Do not let the tool ride up the sides.",
+          "Write the measurement exactly in the H field.",
+          "If taken at 30 inches instead of 36 inches, clearly note that on the measurement sheet."
+        ],
+        warnings: [
+          "The 30 inch backup is allowed, but it must be documented."
+        ]
+      },
+      {
+        title: "Measurement R: Rail Width, 20 Inches From Drain Center",
+        intro: "R measures the tub rail width and is the only tub measurement that uses the red numbers on the tool.",
+        bullets: [
+          "Go to the 20 inch mark from drain center.",
+          "Use the Bath Fitter tub tool as a clamp.",
+          "The two interior flat edges of the wedge portions should clamp against either side of the tub rail.",
+          "Make sure the tool is seated properly against the rail before reading the number.",
+          "Read the red number.",
+          "The red number replaces the black number above it.",
+          "Write the rail measurement exactly in the R field."
+        ],
+        warnings: [
+          "Do not use the black number for R when the red number applies."
+        ]
+      },
+      {
+        title: "R Exception: Rail Flare Beyond 20 Inches",
+        intro: "R is normally taken at 20 inches, but there is an important exception.",
+        bullets: [
+          "After taking the normal R measurement, check whether the tub rail flares or expands wider just beyond the 20 inch point.",
+          "If the rail becomes wider beyond 20 inches, take the R measurement at the widest point instead.",
+          "Clearly note that the R measurement was taken at the widest rail point.",
+          "This helps prevent the liner from forming a teepee effect with the skirt when installed."
+        ],
+        warnings: [
+          "A rail flare that is not documented can create fitment issues even when the 20 inch R measurement was taken correctly."
+        ]
+      },
+      {
+        title: "Tub Liner Measuring Common Mistakes",
+        intro: "Use this section for coaching and ride-along correction.",
+        bullets: [
+          "Using tear-out measurements instead of tub liner mold measurements.",
+          "Starting the reference tape somewhere other than drain center.",
+          "Running the reference tape up the wall or into the laying area.",
+          "Turning the tub tool the wrong direction.",
+          "Letting the tool tilt or ride up the tub side.",
+          "Letting B dip, bend, or pitch across the tub.",
+          "Using the tub tool for C or D instead of a level/straight edge.",
+          "Taking D or H at 30 inches without noting it.",
+          "Using red numbers for measurements other than R.",
+          "Forgetting the rail flare exception.",
+          "Rounding loosely instead of writing to the nearest 1/16 inch."
+        ]
+      },
+      {
+        title: "Tub Liner Measuring Rep Checkpoint",
+        intro: "Before leaving the bathroom, the rep should be able to answer yes to every item here.",
+        checklists: [
+          "I identified that this is a valid tub liner situation where the existing tub stays.",
+          "I started the reference tape at drain center.",
+          "The reference tape stayed flat on the standing surface.",
+          "I used 2, 20, and 36 inch reference points, with 30 inch backup only where needed.",
+          "I kept the tub tool tape-measure side facing the faucet/drain side.",
+          "I kept the tub tool flat and level.",
+          "I wrote A, B, C, D, E, F, G, H, and R to the nearest 1/16 inch.",
+          "I noted any D or H measurement taken at 30 inches.",
+          "I used red numbers only for R.",
+          "I checked for rail flare beyond 20 inches.",
+          "I noted any unusual tub shape, damage, access condition, or measurement concern."
+        ]
+      }
+    ];
+
+    {
+      const measurementModule = TRAINING_MODULES.find((item) => item.title === "Understanding Your Measurement Sheet");
+      if (measurementModule) {
+        measurementModule.sections.unshift(...TUB_LINER_MEASURING_DEEP_DIVE_SECTIONS);
+      }
+    }
+
+    const TUB_LINER_MEASURING_FULL_SOP_SECTIONS = [
+      {
+        title: "Tub Liner Measuring SOP: What This Training Covers",
+        intro: "This is the full training standard for measuring an existing bathtub for a Bath Fitter tub liner or tub-related system.",
+        paragraphs: [
+          "These measurements are not broad estimates. They are exact fitment measurements used to identify the correct tub model/mold and avoid production or installation problems.",
+          "The measuring help sheet gives the rep the field names and locations. The training module explains how to physically take each number, what tool position matters, what mistakes to avoid, and when to write extra notes."
+        ],
+        bullets: [
+          "The rep is measuring the existing tub because the tub is staying in place for a liner.",
+          "The goal is to document the shape of the tub, not just the rough opening around it.",
+          "Every measurement must be taken with the correct reference point, tool orientation, and body position.",
+          "If something about the tub shape makes the standard method impossible or questionable, the rep must note it clearly.",
+          "A completed tub liner measuring section should let the office understand exactly what was measured and whether any exception was used."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Required Tools",
+        intro: "The rep should have every tool ready before starting. Stopping halfway through increases the chance of losing reference points or writing numbers in the wrong place.",
+        bullets: [
+          "Bath Fitter tub measuring tool.",
+          "Two tape measures.",
+          "Level or straight edge.",
+          "Pen.",
+          "Measurement sheet.",
+          "A stable place to write the number immediately after each measurement."
+        ],
+        warnings: [
+          "Do not try to substitute memory for the sheet. Measure, read, write, then move to the next point."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Reference Tape Purpose",
+        intro: "The first tape measure creates the measuring map for the tub floor.",
+        paragraphs: [
+          "Before taking actual measurements, lay one tape measure on the standing surface of the tub. Start the tape measure at drain center and run it toward the back of the tub as far as possible without running the tape up the wall.",
+          "This tape measure is not used for a number that gets written down. It is only used to create reference points for the measuring diagram."
+        ],
+        bullets: [
+          "Use this reference tape to locate 2 inches from drain center.",
+          "Use this reference tape to locate 20 inches from drain center.",
+          "Use this reference tape to locate 36 inches from drain center.",
+          "Use 30 inches from drain center if 36 inches is not available.",
+          "Keep the reference tape flat on the standing surface.",
+          "Do not run the reference tape up the wall.",
+          "Do not let the reference tape bend into the laying area."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Tool Orientation",
+        intro: "Tool orientation is one of the easiest things to miss and one of the easiest ways to create a bad measurement.",
+        paragraphs: [
+          "When using the Bath Fitter tub measuring tool, the side of the tool that contains the actual tape measure should always point toward the faucet/drain side of the tub.",
+          "This matters because the notches, shapes, and angles of the tub tool are designed to sit against the tub properly in that orientation."
+        ],
+        bullets: [
+          "Before each tool measurement, identify the faucet/drain side.",
+          "Confirm the tape-measure side of the tool is facing that direction.",
+          "Set the tool flat before reading the number.",
+          "If the tool is turned the wrong way, the measurement can be inaccurate even if it looks reasonable."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Tool Handling and Closing",
+        intro: "The tub tool should be treated as a precision measuring tool.",
+        bullets: [
+          "Keep the tool flat.",
+          "Keep the tool level.",
+          "Do not let it ride up the tub side.",
+          "Do not let it ride up the laying-area side of the tub.",
+          "Do not force the tool into a position that does not match the tub surface.",
+          "When closing the tub tool after taking a measurement, put it back together properly with the stick going into the shaft."
+        ],
+        warnings: [
+          "Do not force the tool closed incorrectly because it can damage the tape measure inside the tool."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Precision Standard",
+        intro: "Tub liner measurements should be treated as precision measurements.",
+        paragraphs: [
+          "Measurements down to the 1/16 inch matter. Do not round loosely. A small difference can change which tub model or mold is selected."
+        ],
+        bullets: [
+          "Read carefully.",
+          "Write exactly.",
+          "Retake any number that feels questionable.",
+          "Note any unusual condition that could explain a measurement.",
+          "Do not average two possible readings.",
+          "Do not round to make the number look cleaner."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Red Number Rule",
+        intro: "The red numbers on the tub tool have one specific use.",
+        bullets: [
+          "The red numbers on the tub tool are only used for the R measurement.",
+          "R is the rail measurement.",
+          "When using the red numbers, the red number replaces the black number above it.",
+          "Do not use red numbers for A.",
+          "Do not use red numbers for B.",
+          "Do not use red numbers for E.",
+          "Do not use red numbers for F.",
+          "Do not use red numbers for G.",
+          "Do not use red numbers for H."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurement A Full Detail",
+        intro: "A measures the width of the tub at the top, inside the bathing area.",
+        bullets: [
+          "A is width, top center, 20 inches from drain center.",
+          "Find the 20 inch mark on the reference tape.",
+          "Place the Bath Fitter tub tool at that point.",
+          "Keep the tape-measure side of the tub tool pointing toward the faucet/drain side.",
+          "Keep the tub tool flat and level.",
+          "Measure from the inside top edge of one side of the tub to the inside top edge of the other side.",
+          "Write the measurement exactly."
+        ],
+        warnings: [
+          "Do not tilt the tub tool. The tool needs to remain flat and level."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurement B Full Detail",
+        intro: "B is the top length of the tub and is often the measurement new reps find most challenging.",
+        paragraphs: [
+          "The measurement is taken from the tub tool positioned directly below the tub spout if the spout is centered, across to the very back of the laying area of the tub."
+        ],
+        bullets: [
+          "B is length, top center.",
+          "Keep the tape-measure side of the tub tool facing the faucet/drain side.",
+          "Position the tool directly below the tub spout if the spout is centered.",
+          "Measure across to the very back of the laying area of the tub.",
+          "Keep the tape measure flat and level across the entire surface.",
+          "Do not allow the tape to dip.",
+          "Do not allow the tape to pitch.",
+          "Do not allow the tape to bend.",
+          "Do not allow the tape to ride up a surface.",
+          "Write the measurement exactly."
+        ],
+        warnings: [
+          "Any dip, bend, or pitch in the tape measure can change the measurement by a substantial amount."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurement C Full Detail",
+        intro: "C is a tub depth measurement near the drain area. The tub tool is not used.",
+        bullets: [
+          "C is depth, 2 inches from drain center.",
+          "Locate the measurement point near the drain according to the measuring guide.",
+          "Place a level or straight edge across the top of the tub.",
+          "Keep the level or straight edge flat and level.",
+          "Measure from the standing surface of the tub up to the bottom of the level or straight edge.",
+          "Write the measurement exactly."
+        ],
+        warnings: [
+          "Do not use the tub tool for C. Use the level or straight edge."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurement D Full Detail",
+        intro: "D is the second tub depth measurement, normally taken at 36 inches from drain center.",
+        bullets: [
+          "D is depth, 36 inches from drain center.",
+          "If 36 inches is not available because of the size or mold of the tub, take this measurement at 30 inches instead.",
+          "Locate the 36 inch mark on the reference tape.",
+          "If 36 inches is not available, use the 30 inch mark.",
+          "Place the level or straight edge across the top of the tub at that point.",
+          "Keep the level or straight edge flat and level.",
+          "Measure from the standing surface of the tub up to the bottom of the level or straight edge.",
+          "Write the measurement exactly.",
+          "If taken at 30 inches instead of 36 inches, clearly note that on the measurement sheet."
+        ],
+        warnings: [
+          "The 30 inch measurement is allowed only as the backup when 36 inches is not available, and it must be noted."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurement E Full Detail",
+        intro: "E is taken on the standing surface of the tub from the center of the tub toward the back of the laying area.",
+        paragraphs: [
+          "This is a bottom-floor measurement, not a top-edge measurement."
+        ],
+        bullets: [
+          "E is length, bottom center.",
+          "Place the Bath Fitter tub tool on the standing surface of the tub.",
+          "Keep the tool flat to the floor of the tub.",
+          "Make sure all flat surfaces on the bottom of the tool are pressed flat and level against the standing surface.",
+          "Measure from the center area of the tub to the back of the laying area.",
+          "Write the measurement exactly."
+        ],
+        warnings: [
+          "Do not allow the tub tool to ride up the laying-area side of the tub."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurements F, G, and H Full Detail",
+        intro: "F, G, and H are bottom-width measurements taken at three different points from drain center.",
+        paragraphs: [
+          "They are taken on the standing surface / bottom floor area of the tub."
+        ],
+        bullets: [
+          "F is width, bottom, 2 inches from drain center.",
+          "G is width, bottom, 20 inches from drain center.",
+          "H is width, bottom, 36 inches from drain center.",
+          "If 36 inches is not available for H, use 30 inches and clearly note it.",
+          "For F, find the 2 inch reference point on the reference tape.",
+          "For G, find the 20 inch reference point on the reference tape.",
+          "For H, find the 36 inch reference point or 30 inch backup on the reference tape.",
+          "Place the tub tool at the correct reference point.",
+          "Keep the tape-measure side facing the faucet/drain side.",
+          "Keep the tool flat to the bottom of the tub.",
+          "Do not let the tool ride up the sides.",
+          "Write each measurement exactly."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Measurement R Full Detail",
+        intro: "R measures the rail width of the tub and is the only measurement where the red numbers on the tub tool are used.",
+        bullets: [
+          "R is rail width, 20 inches from drain center.",
+          "Go to the 20 inch mark from drain center.",
+          "Use the Bath Fitter tub tool as a clamp.",
+          "The two interior flat edges of the wedge portions should clamp against either side of the tub rail.",
+          "Once seated properly, read the red number.",
+          "The red number replaces the black number above it.",
+          "Write the rail measurement exactly."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: R Rail Flare Exception Full Detail",
+        intro: "Normally, R is taken at 20 inches from drain center. There is one important exception.",
+        bullets: [
+          "If the tub rail flares or expands wider just beyond the 20 inch point, take the R measurement at the widest point instead.",
+          "This prevents the tub liner from forming a teepee effect with the skirt when installed.",
+          "Clearly note when the R measurement was taken at the widest point instead of the standard 20 inch point.",
+          "If unsure whether the rail flares, check just beyond 20 inches before leaving the bathroom."
+        ]
+      },
+      {
+        title: "Tub Liner SOP: Final Full Checklist",
+        intro: "This is the full checklist from the tub liner training standard.",
+        checklists: [
+          "Reference tape started at drain center.",
+          "Reference tape laid flat on standing surface and not run up the wall.",
+          "Tub tool tape-measure side faced the faucet/drain side.",
+          "Tool kept flat and level.",
+          "Measurements written to 1/16 inch.",
+          "A taken at top width at 20 inches.",
+          "B taken flat and level from spout area to back laying area.",
+          "C taken using level/straight edge.",
+          "D taken at 36 inches or 30 inches if needed and noted.",
+          "E taken on standing surface without riding up laying area.",
+          "F taken at 2 inches.",
+          "G taken at 20 inches.",
+          "H taken at 36 inches or 30 inches if needed and noted.",
+          "R taken using clamp method and red numbers.",
+          "Any rail flare beyond 20 inches checked.",
+          "Any unusual tub shape or condition noted."
+        ]
+      }
+    ];
+
+    {
+      const measurementModule = TRAINING_MODULES.find((item) => item.title === "Understanding Your Measurement Sheet");
+      if (measurementModule) {
+        measurementModule.sections.unshift(...TUB_LINER_MEASURING_FULL_SOP_SECTIONS);
+      }
+    }
+
+    const ALL_MODULES_FULL_DEPTH_EXPANSION = {
+      "Understanding Your Measurement Sheet": [
+        {
+          title: "Full Training Standard: Tub Tear-Out Measuring",
+          intro: "Use this section when the existing unit being removed is a bathtub. This is not the same as tub liner mold measuring.",
+          paragraphs: [
+            "For tear-outs, the rep measures what is being removed. The rep is not trying to identify the exact tub mold. The rep is documenting the overall space and the existing tub being torn out."
+          ],
+          bullets: [
+            "Front to back: measure the overall depth of the existing tub area from the back wall to the front/outside edge of the tub area.",
+            "Side to side: measure the overall width of the tub area from left-hand wall to right-hand wall.",
+            "Floor to top of tub: measure from the finished bathroom floor outside the tub straight up to the top of the tub rail.",
+            "Floor to top of tub is only an overall tear-out reference measurement.",
+            "Do not tie floor-to-top-of-tub measurement to molded base / flat floor logic.",
+            "If the existing unit being torn out is a shower, do not use the Tub Tear-Out section.",
+            "For a shower tear-out, use the Molded Base / Flat Floor section and only record the two outside/overall measurements: overall front to back and overall side to side.",
+            "For shower tear-out, use the outside boxes on the molded base / flat floor diagram, not the interior base boxes."
+          ]
+        },
+        {
+          title: "Full Training Standard: Wall Measuring",
+          intro: "The wall measuring section determines the amount of Bath Fitter acrylic wall material needed to cover the tub or shower area.",
+          bullets: [
+            "For standard tub/shower units, use the seven measurement bubbles above the dotted line in the center of the measurement guide.",
+            "The two outside bubbles on the far exterior are floor-to-ceiling outside measurements.",
+            "Measure outside bubbles from the finished exterior bathroom floor outside the tub/shower area up to the ceiling of the space the Bath Fitter unit will occupy.",
+            "The top-center bubbles on the wing walls are front-to-back measurements at the top of the wall.",
+            "Wing-wall top measurements show the overall length of Bath Fitter material needed from the back corner of the unit out to the exterior edge of the space being covered.",
+            "The lower bubbles near the back wall are the tub/shower base-to-ceiling measurements.",
+            "Measure lower bubbles from the surface currently in the bathroom, either existing tub or existing shower base, up to the ceiling in that area.",
+            "The center bubble is the overall back wall side-to-side measurement.",
+            "Measure the center bubble from the left side wall to the right side wall across the back wall.",
+            "Wall total is the cumulative total of all sides of the wall system.",
+            "For a standard three-wall system, wall total generally includes left side wall, back wall, and right side wall."
+          ],
+          warnings: [
+            "After wall measurements, reps must reference the wall matrix to confirm enough material is available for the measured space."
+          ]
+        },
+        {
+          title: "Full Training Standard: Door Measuring",
+          intro: "The door measuring section documents the available opening for a shower door or tub door installation.",
+          bullets: [
+            "Measure door opening height available.",
+            "Measure door opening width at the top.",
+            "Measure door opening width at the middle.",
+            "Measure door opening width at the bottom.",
+            "Available height is the vertical space from what the door will sit on up to the ceiling or upper barrier of the space being filled.",
+            "Upper barriers may include ceiling, soffit, header, dropped ceiling, tile line, finished surface, or any other barrier limiting door height.",
+            "If the existing tub/shower is staying, measure from the top of the tub rail or shower threshold up to the available upper space.",
+            "If the job is a tear-out, measure from the finished bathroom floor up to the ceiling or upper barrier.",
+            "Measure the actual finished usable opening, not just the rough visual space.",
+            "Note wall build-out, trim, tile edges, acrylic wall thickness, soffits, ceilings, headers, out-of-square walls, existing shower door tracks or residue, and obstructions."
+          ],
+          warnings: [
+            "Do not assume the new door will use the same measurements as an existing door. Existing doors may have been installed out of level, shimmed, cut around bad walls, or placed in a way that does not reflect the correct opening."
+          ]
+        },
+        {
+          title: "Full Training Standard: Molded Base / Flat Floor Measuring",
+          intro: "This section documents shower base measurements and can be used in two ways: shower tear-out measurements or existing molded base / flat floor measurements.",
+          bullets: [
+            "For a shower tear-out, only use the exterior boxes on the molded base / flat floor diagram.",
+            "For shower tear-out, measure overall side to side and overall front to back.",
+            "Overall side-to-side is measured from the left-hand wall to the right-hand wall across the shower area.",
+            "Overall front-to-back is measured from the back wall to the exterior/front edge of the base area where the threshold or rail returns down to the floor.",
+            "Do not fill out the interior base measurements for a simple shower tear-out.",
+            "Use molded base / flat floor measurements when measuring an existing molded base or flat floor condition.",
+            "Exterior side-to-side/front-to-back captures the overall base profile.",
+            "Interior side-to-side/front-to-back captures the actual inside standing area.",
+            "Use a tape measure and level/straight edge for interior measurements.",
+            "Rail/threshold width should use the clamp-foot feature of the Bath Fitter tub tool.",
+            "Drain location X equals back wall to drain center.",
+            "Drain location Y equals right-hand wall to drain center.",
+            "Rail height outside is finished bathroom floor to top surface of shower base rail.",
+            "Rail height inside is top surface of shower base rail down to the interior floor/standing area."
+          ],
+          warnings: [
+            "Molded bases are rare at Bath Fitter and have limited application availability. In many situations, the better option is to tear out the existing base and build a freestanding unit."
+          ]
+        },
+        {
+          title: "Full Training Standard: Job Condition Questionnaire",
+          intro: "The questionnaire section must be filled out in its entirety on every single job.",
+          paragraphs: [
+            "Measurements tell us the size. The questionnaire tells us the conditions. This section affects ordering, production, installation, access, customer expectations, and the installer’s ability to complete the job correctly."
+          ],
+          bullets: [
+            "Every question should be answered.",
+            "If the answer does not fit cleanly into the checkbox options, write the explanation in the notes area.",
+            "Anything near the tub/shower means anything within approximately 18 inches of the tub or shower area.",
+            "Examples near the wet area include heater, door frame, window, vanity, toilet, cabinet, trim, shelving, radiator, or obstruction.",
+            "Tub type / shower base type identifies what the existing tub or shower base is made of.",
+            "Standard material options include cast iron, steel, and fiberglass.",
+            "If not listed, write in Bath Fitter system, Re-Bath system, acrylic system, porcelain base, tile base, unknown material, or other remodel system.",
+            "Hand refers to drain location: left-hand drain, right-hand drain, or center drain.",
+            "Template used should currently be marked No because Bath Fitter does not currently take templates on Bath Fitter tub liners.",
+            "Will tub stick out ties directly to whether an end cap or end finishing piece will be needed.",
+            "Existing shower door must document whether Bath Fitter removes it or the customer removes it.",
+            "Place to bend on site must be documented because Bath Fitter wall material is laid out, cut, heat-bent, folded, carried in, and unfurled on site.",
+            "Plumbing access panel is marked yes/no and photographed if present; do not unscrew or open it.",
+            "Drain system access is marked yes/no; if visible, inspect it and photograph it.",
+            "Job floor should identify first floor, second floor, basement, third floor, high-rise unit, apartment/condo, or mobile home.",
+            "Window refers only to a window inside the tub or shower area.",
+            "Number of bathrooms uses full bathrooms as whole numbers and half bathrooms as 0.5.",
+            "For wainscoting or bead board, draw a diagram on the back of the measurement sheet showing shape, covered walls, wall lengths, openings, returns, and unusual conditions."
+          ]
+        }
+      ],
+      "Understanding the Bath Fitter Estimate / Contract": [
+        {
+          title: "Full Training Standard: General Contract Rules",
+          intro: "A Bath Fitter job may involve multiple individual EOIs. Each EOI is its own contract page with its own pricing, deposit, balance, and rules.",
+          bullets: [
+            "Possible contract pieces include Primary Bath Fitter System Contract, Door Contract, Wainscoting Contract, Labor Contract, and Permit / Plumbing Fee Contract.",
+            "The Bath Fitter system contract includes Bath Fitter portions of the tub/shower project.",
+            "Bath Fitter system items may include tub liner, shower base, wall system, window trim, ceiling material, standard Bath Fitter accessories, and standard tear-out charges for normal tub/shower units.",
+            "Standardized tear-outs may stay on the Bath Fitter system contract when removing a normal unit such as cast iron tub, steel tub, fiberglass tub/shower, or standard cast/fiberglass shower base.",
+            "A separate labor EOI is needed when the work goes beyond standard Bath Fitter scope.",
+            "Separate labor examples include relocating plumbing, relocating drains, tearing down tile walls, re-rocking/re-sheetrocking tile walls, major wall repair, additional construction work, and non-standard prep or repair work."
+          ]
+        },
+        {
+          title: "Full Training Standard: Customer Information Section",
+          intro: "The top customer information section must be filled out in its entirety on every EOI.",
+          bullets: [
+            "This applies to Bath Fitter system contract.",
+            "This applies to Door contract.",
+            "This applies to Wainscoting contract.",
+            "This applies to Labor contract.",
+            "This applies to Permit / Plumbing Fee contract.",
+            "Every individual estimate page needs full identifying information.",
+            "Include estimate date, customer name, address, contact information, and any other required header fields."
+          ]
+        },
+        {
+          title: "Full Training Standard: Tub Section",
+          intro: "The tub section is used only for bathtub-related Bath Fitter system items.",
+          bullets: [
+            "This section does not apply to shower bases; shower bases go in the shower base section.",
+            "Model / Number is for internal office use. The estimator should not write anything there.",
+            "Left / Right Hand: one hand must be selected to identify tub hand.",
+            "Type should only be filled out for specific tub types: Empress, Empress XL, or Garden.",
+            "Rail is for internal use only. The estimator does not write in this section.",
+            "Color should be written clearly.",
+            "Color should stay consistent across the entire unit unless the customer intentionally chooses different tub/base and wall colors.",
+            "Slip Resistant Coating should only be checked if discussed and the customer is 100% sure.",
+            "Slip Resistant Coating has an additional charge, must be reapplied approximately every three years, requires substantially more cleaning than standard honeycomb, and can be added later.",
+            "For formed front or non-formed front / Aristocrat front, underline the tub style name and write the corresponding first letter in the formed front line.",
+            "The formed front charge is charged in addition to the base price of the tub unless pricing explicitly says otherwise.",
+            "Tub Price is for the bathtub being installed.",
+            "Drain Kit applies to both tub drains and shower drains and should use the correct two- or three-letter metal finish designation.",
+            "End panel and end cap are different items with different charges.",
+            "The two blank lines below end panel/end cap can be used for individualized charges such as handicap threshold, extra wrapping, wrapping a return wall, or other special tub-related charges."
+          ]
+        },
+        {
+          title: "Full Training Standard: Shower Base Section",
+          intro: "The shower base section is used when the job includes a shower base rather than a bathtub.",
+          bullets: [
+            "Write selected shower base color clearly.",
+            "Slip Resistant Coating follows the same rule as the tub section.",
+            "Base Style categories include Wheelchair, Molded, Flat, and Freestanding.",
+            "For curved or neo-angle base, write the base type in the blank space to the right-hand side of color and above base style, then check freestanding base.",
+            "Drain Hand should be marked Left-hand, Right-hand, or Center drain.",
+            "Model / Side-to-Side / Front-to-Back is office use only and should not be filled out by the estimator.",
+            "If adding a seat, identify Corner Seat or Fold Down Seat.",
+            "For corner seat, underline corner seat and write the seat color.",
+            "For fold down seat, underline fold down seat and write color/metal finish using the proper designation."
+          ]
+        },
+        {
+          title: "Full Training Standard: Wall and Window Section",
+          intro: "The wall and window section is used when the job includes Bath Fitter wall material, wall finish upgrades, wall prep, wall repair, extensions, extra pieces, or window trim.",
+          bullets: [
+            "Do not call Bath Fitter walls panels.",
+            "Bath Fitter uses a one-piece, heat-bent acrylic wall system custom cut and bent to fit the exact space.",
+            "Write selected wall color clearly.",
+            "In the blank space next to color and above wall measurement size, write where the wall is going in height.",
+            "Examples include going to ceiling, following existing surround profile, going to current wall height, stopping at existing tile line, going to measured height, or extension needed to reach ceiling.",
+            "The current EOI lists only certain wall sizes, but more sizes may be available on the wall matrix.",
+            "Company pricing policy starts at a minimum wall size of 7.5 x 11 for pricing, regardless of smaller available matrix sizes.",
+            "If a needed wall size is available on the matrix but not listed as a checkbox, write it into the blank space.",
+            "All walls sold get charged a base wall price.",
+            "The base wall price is the price of a Torino wall in the selected size.",
+            "Any tile-pattern wall sold gets charged a wall finish upgrade.",
+            "Write the selected wall pattern name in the blank space to the right of the wall finish upgrade line.",
+            "Wall repair is for minor repair needed to create a smooth, solid, level surface for the wall system.",
+            "Major repair, tile wall removal, or re-sheetrocking requires a separate labor EOI.",
+            "Wall prep should be charged any time anything is written in the Wall and Window section.",
+            "Extra pieces and wall extensions are used for extensions, returns, extra bends, extra wrapping, additional wall material, or special coverage.",
+            "Window trim is required if there is a window in the wet area.",
+            "If window trim is needed, identify F-molding or bullnose."
+          ]
+        },
+        {
+          title: "Full Training Standard: Plumbing / Miscellaneous Labor / Accessories Section",
+          intro: "This section covers drain testing notes, remove/dispose charges, valve accessories, valve models, soap dishes, shelves/caddies, grab bars, and towel bars.",
+          bullets: [
+            "Relocate drain is misleading on the BF system form; drain relocation belongs on a separate Labor contract.",
+            "For tub liner or direct tub replacement, perform a drain test when applicable.",
+            "Drain test: fill water to the bottom floor of the tub, release/drain water, count down from 10, and mark slow drain Yes if it takes longer than 10 seconds.",
+            "Skip drain prep line for current use.",
+            "Remove and Dispose line charges for removing and disposing of existing unit/material.",
+            "For fiberglass tub only, underline remove/dispose fiberglass tub.",
+            "For one-piece fiberglass unit, underline remove/dispose fiberglass tub and surround wall system.",
+            "For cast iron tub with fiberglass surround, stack cast tub removal/disposal and fiberglass/surround wall system charges, then write one single combined number on one line.",
+            "Valve accessories include handhelds, slide bars, extra shower heads, and rain heads.",
+            "For valve accessories, write the accessory name in the blank space, denote metal finish, and write charge.",
+            "Valve model should include trim style name, finish, and corresponding charge.",
+            "Soap dishes are on-the-wall style accessories, not corner caddies.",
+            "Shelves refer to corner caddies, 20-inch shelves, and 25-inch shelves.",
+            "Corner caddies use SCC Single Corner Caddy, DCC Double Corner Caddy, and TCC Tower Corner Caddy.",
+            "Grab bars should identify grab, texture/style, color/metal finish, and size.",
+            "Towel bars should identify towel, collection name, color, quantity, and charge. Do not write anything in the size space for towel bars."
+          ]
+        }
+      ],
+      "Door EOI Module": [
+        {
+          title: "Full Training Standard: Door EOI Rules",
+          intro: "Every door sold receives its own separate contract / EOI.",
+          bullets: [
+            "Doors are not written into the Bath Fitter system contract.",
+            "The main BF system EOI may only include curtain rod and remove/dispose charge for an existing shower door.",
+            "Every door gets its own individual contract page.",
+            "The Door EOI has its own customer information, subtotal, total, deposit, balance, signature section, deposit information, and special items box if applicable.",
+            "Doors cannot be discounted unless specifically approved by Erin.",
+            "Do not apply standard Bath Fitter system discounts to doors.",
+            "Door ordering options are Bath Fitter doors or custom doors through Arizona Glass.",
+            "Bath Fitter door options are listed on the price list.",
+            "Any door outside Bath Fitter price list options is a custom door.",
+            "All custom door pricing must be approved through Erin before giving the customer a price.",
+            "Do not guess custom door pricing.",
+            "Do not quote a custom door without calling Erin first."
+          ]
+        },
+        {
+          title: "Full Training Standard: Custom Door Process",
+          intro: "Custom doors need accurate final measurements and are handled separately to prevent fitment problems.",
+          bullets: [
+            "The tub/shower opening can change after the Bath Fitter system is installed.",
+            "The base, one-piece wall system, trim, and finished surfaces can affect final door opening.",
+            "Ordering the custom door after installation helps prevent incorrect sizing, fitment issues, reordering, delays, customer frustration, and poor long-term door performance.",
+            "If selling a custom Arizona Glass door, the Door EOI must include a note in Special Items.",
+            "Use wording: Custom door to be ordered at time of installation and installed 3-6 weeks after Bath Fitter system installation date.",
+            "Customer initials are required in Special Items."
+          ]
+        }
+      ],
+      "Permit / Plumbing Fee EOI Module": [
+        {
+          title: "Full Training Standard: Permit / Plumbing Fee EOI",
+          intro: "The Permit / Plumbing Fee EOI is used when a job requires permitting, plumbing fees, or branch-specific code-related charges separated from the BF system contract.",
+          bullets: [
+            "Permits and plumbing fees should be written on their own separate EOI when applicable.",
+            "They should not be buried inside the Bath Fitter system contract.",
+            "Write the charge as Plumb / Permit / Fee.",
+            "This wording keeps the EOI general enough to cover permitting-related portion and related plumbing/code fee.",
+            "Some branches or municipalities may require additional plumbing-related work or fees depending on local code.",
+            "For Albany and Schenectady, New York, write T->S Plumbing on the second free-space line when required by local code.",
+            "All permit fees are due at contract signing.",
+            "Permit fees cannot be financed.",
+            "Permit fees cannot be rolled into another pricing route.",
+            "Permit fees cannot be dragged into the BF system contract.",
+            "Permit fees cannot be included as part of another EOI's financed balance.",
+            "Subtotal equals permit/plumbing fee total.",
+            "Discount is none.",
+            "Total equals subtotal.",
+            "Deposit equals total.",
+            "Balance due at completion is $0."
+          ]
+        }
+      ],
+      "Wainscoting EOI Module": [
+        {
+          title: "Full Training Standard: Wainscoting EOI",
+          intro: "Wainscoting gets its own separate EOI when the customer is purchasing Bath Fitter wall material outside the tub/shower area.",
+          bullets: [
+            "Wainscoting is outside the wet area / rest of bathroom coverage.",
+            "Wainscoting is separate from wet-area wall package.",
+            "Wainscoting has a maximum allowed discount threshold of 15% unless otherwise approved by Erin.",
+            "Do not discount wainscoting beyond 15% without approval.",
+            "Available styles: Traditional beadboard, 6x6 Palermo, 2x6 brick/subway tile Savona, and Torino flat smooth plain white only.",
+            "Traditional beadboard is the only wainscoting style that can be ordered in partial sheet quantities.",
+            "Confirm matrix availability for material height, material length, sheet availability, and total coverage needed.",
+            "Wainscoting is written in the Walls section on the Wall Finish Upgrade line.",
+            "Write Waines - Board, Waines - Palermo, Waines - Savona, or Waines - Torino.",
+            "Because wainscoting is written in the wall section, wall prep rules apply.",
+            "Charge wall prep once per every three walls covered in wainscoting.",
+            "Accessories attached directly to wainscoting can be included on the Wainscoting EOI.",
+            "If job includes both BF unit and wainscoting, installation may require about 1.5 to 2 days depending on complexity.",
+            "The Wainscoting EOI follows the same bottom paperwork rules as other EOIs."
+          ]
+        }
+      ],
+      "Labor EOI Module": [
+        {
+          title: "Full Training Standard: Labor EOI",
+          intro: "Labor EOI is used for labor, construction, plumbing, demolition, or job-prep work outside standard Bath Fitter system contract.",
+          bullets: [
+            "Labor gets its own EOI.",
+            "Do not bury extra labor inside the Bath Fitter system contract.",
+            "Use Labor EOI for relocating plumbing, relocating drains, removing tile walls, new sheetrock, removing mud walls, building walls/framing, removing headers, subfloor replacement, jackhammer work, vanity work, toilet work, moving shower heads or overflows, and other non-standard labor items.",
+            "Do not create Labor EOI for standard BF wall system work written in Wall and Window.",
+            "Do not create Labor EOI for wainscoting written on its own Wainscoting EOI.",
+            "Do not create Labor EOI for remove/dispose existing shower door written in BF system contract.",
+            "Do not create Labor EOI for standard remove/dispose current system when it belongs on BF system EOI.",
+            "Write LABOR in the top-left area of the contract.",
+            "Use the two free-space lines in the tub/tub-shower section for labor service description.",
+            "If more room is needed, use open shaded blank areas between sections.",
+            "If more explanation is needed, use Special Items and get customer signature/initials.",
+            "Labor is not discounted in any way, shape, or form.",
+            "Do not apply promo, BF system, wainscoting, door, veterans, holiday, or any other discount.",
+            "Use current price list for labor pricing.",
+            "If the labor item is not listed or outside normal scope, contact Erin before presenting the price.",
+            "Because labor is not discounted, subtotal and total usually match."
+          ]
+        }
+      ]
+    };
+
+    Object.entries(ALL_MODULES_FULL_DEPTH_EXPANSION).forEach(([moduleTitle, sections]) => {
+      const module = TRAINING_MODULES.find((item) => item.title === moduleTitle);
+      if (module) {
+        module.sections.push(...sections);
       }
     });
 
