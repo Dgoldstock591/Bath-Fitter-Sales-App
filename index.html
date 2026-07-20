@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.39</title>
+  <title>Bath Fitter Sales Tool 3.40</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -857,6 +857,60 @@
       gap: 0.75rem;
     }
 
+    .quick-filter-block {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .quick-filter-label,
+    .guide-result-status {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .quick-filter-label {
+      color: var(--accent-dark);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .guide-result-status {
+      min-height: 1.25rem;
+      font-weight: 700;
+    }
+
+    .guide-price-list {
+      display: grid;
+      gap: 0;
+      margin: 0.65rem 0 0;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .guide-price-list li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .guide-price-list span {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .guide-price-list strong {
+      color: var(--text);
+      white-space: nowrap;
+    }
+
     .guide-row,
     .rough-row {
       padding: 0.9rem;
@@ -1538,10 +1592,21 @@
       max-width: 760px;
     }
 
-    .brand-logo {
-      display: block;
+    .brand-logo-crop {
+      position: relative;
       width: min(360px, 100%);
+      aspect-ratio: 2.55 / 1;
+      overflow: hidden;
+    }
+
+    .brand-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      width: 130%;
       height: auto;
+      transform: translate(-50%, -50%);
       filter: drop-shadow(0 18px 30px rgba(6, 60, 68, 0.14));
     }
 
@@ -1606,6 +1671,45 @@
       transform: translateY(-1px);
       background: #ffffff;
       box-shadow: 0 10px 22px rgba(9, 41, 48, 0.08);
+    }
+
+    .hero-badge.active {
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+      color: #ffffff;
+      box-shadow: 0 12px 24px rgba(10, 108, 104, 0.2);
+    }
+
+    .tool-open .hero {
+      margin-bottom: 0.75rem;
+    }
+
+    .tool-open .hero-grid {
+      padding: 0.8rem 1rem;
+      border-radius: 20px;
+    }
+
+    .tool-open .hero-copy-block {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 1rem;
+      max-width: none;
+    }
+
+    .tool-open .hero-copy-block > .eyebrow,
+    .tool-open .hero-copy-block > h1,
+    .tool-open .hero-copy-block > .hero-copy,
+    .tool-open .hero-copy-block > .release-pill {
+      display: none;
+    }
+
+    .tool-open .brand-logo-crop {
+      width: 138px;
+    }
+
+    .tool-open .hero-badges {
+      justify-content: flex-end;
     }
 
     .landing-card {
@@ -1914,9 +2018,13 @@
       }
 
       .tab-list {
-        grid-template-columns: 1fr;
+        display: flex;
+        gap: 0.45rem;
+        overflow-x: auto;
         border-radius: var(--radius-md);
         padding: 0.45rem;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
       }
 
       .tab-button,
@@ -1936,6 +2044,14 @@
         text-align: center;
         overflow-wrap: anywhere;
         word-break: normal;
+      }
+
+      .tab-list .tab-button {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 150px;
+        min-height: 46px;
+        scroll-snap-align: start;
       }
 
       .choice-row {
@@ -2082,6 +2198,11 @@
         line-height: 1.5;
       }
 
+      .training-module:not([open]) .training-module-title span,
+      .training-section:not([open]) .training-section-title span {
+        display: none;
+      }
+
       .training-content ul,
       .training-checklist ul {
         padding-left: 1rem;
@@ -2114,6 +2235,59 @@
         grid-template-columns: 1fr;
       }
 
+      .rough-stepper {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+
+      .rough-stepper-button {
+        min-height: 64px;
+        padding: 0.7rem;
+      }
+
+      .rough-stepper-button strong {
+        font-size: 0.84rem;
+        line-height: 1.25;
+      }
+
+      .rough-stepper-button span {
+        display: none;
+      }
+
+      .rough-step .choice-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.45rem;
+      }
+
+      .rough-step .choice-button {
+        width: 100%;
+        min-height: 48px;
+        padding: 0.6rem 0.55rem;
+        font-size: 0.9rem;
+      }
+
+      #guideTabs,
+      #matrixTabs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.45rem;
+        max-width: 100%;
+        padding-bottom: 0.35rem;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+      }
+
+      #guideTabs .choice-button,
+      #matrixTabs .choice-button {
+        flex: 0 0 auto;
+        width: auto;
+        min-height: 44px;
+        padding: 0.65rem 0.8rem;
+        white-space: nowrap;
+        scroll-snap-align: start;
+      }
+
       .rough-wizard-nav {
         display: grid;
       }
@@ -2136,18 +2310,48 @@
         line-height: 0.95;
       }
 
-      .brand-logo {
-        width: min(230px, 100%);
+      .brand-logo-crop {
+        width: min(235px, 100%);
       }
 
       .hero-badges {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .hero-badge {
         justify-content: center;
         text-align: center;
+      }
+
+      .tool-open .hero {
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+      }
+
+      .tool-open .hero-grid {
+        padding: 0.65rem;
+        border-radius: 18px;
+      }
+
+      .tool-open .hero-copy-block {
+        grid-template-columns: 1fr;
+        gap: 0.55rem;
+      }
+
+      .tool-open .brand-logo-crop {
+        width: 118px;
+      }
+
+      .tool-open .hero-badges {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.4rem;
+      }
+
+      .tool-open .hero-badge {
+        min-height: 42px;
+        padding: 0.55rem 0.4rem;
+        font-size: 0.72rem;
       }
 
       .rough-sticky-summary {
@@ -2162,8 +2366,28 @@
         text-align: left;
       }
     }
+
+    @media (min-width: 360px) and (max-width: 699px) {
+      .input-grid,
+      .summary-strip,
+      .scenario-card .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .input-grid .input-card:last-child:nth-child(odd),
+      .scenario-card .metric.highlight {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 359px) {
+      .rough-step .choice-row,
+      .rough-stepper {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
-  <script src="price-list-data.js?v=339"></script>
+  <script src="price-list-data.js?v=340"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2178,18 +2402,20 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales team resource | 3.39</p>
-          <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
+          <p class="eyebrow">Bath Fitter sales team resource | 3.40</p>
+          <div class="brand-logo-crop">
+            <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
+          </div>
           <h1>Bath Fitter Sales Team Toolkit</h1>
           <p class="hero-copy">
-            A polished in-home resource for pricing math, exact quote building, product lookup, measuring guidance, training, financing, and commission review.
+            Pricing, quote building, product lookup, training, financing, and commission tools for in-home reps.
           </p>
           <span class="release-pill">Approved sales team resource</span>
           <div class="hero-badges" aria-label="Core tools">
             <a class="hero-badge" href="#calculatorTool" data-open-tool="calculatorTool">Calculator</a>
             <a class="hero-badge" href="#pricingGuide" data-open-tool="pricingGuide">Pricing Guide</a>
             <a class="hero-badge" href="#roughEstimator" data-open-tool="roughEstimator">Quote Builder</a>
-            <a class="hero-badge" href="#trainingResources" data-open-tool="trainingResources">Training + Measuring Guide</a>
+            <a class="hero-badge" href="#trainingResources" data-open-tool="trainingResources">Training Resources</a>
           </div>
         </div>
       </div>
@@ -2200,10 +2426,6 @@
         <div class="panel-heading">
           <h2>Sales Toolkit</h2>
           <p>Choose the workflow you need in the field.</p>
-        </div>
-        <div class="release-note">
-          <strong>Built for day-to-day sales use.</strong>
-          <p>Use the calculator for final EOI math, the pricing guide for quick lookup, the quote builder for condition-based line building, and Training Resources for SOPs plus the measuring guide PDF.</p>
         </div>
         <div class="landing-grid">
           <a class="landing-card" href="#calculatorTool" data-open-tool="calculatorTool">
@@ -2345,7 +2567,6 @@
           <p>Pick a category or search by keyword to pull up individual prices.</p>
         </div>
         <div class="pricing-guide-layout">
-          <div class="choice-row" id="guideTabs"></div>
           <div class="estimator-form-grid">
             <div class="form-field">
               <label for="guideCategory">Category</label>
@@ -2356,14 +2577,22 @@
               <input type="text" id="guideSearch" placeholder="Search rods, doors, labor, fixtures..." />
             </div>
           </div>
+          <div class="quick-filter-block">
+            <p class="quick-filter-label">Quick Categories</p>
+            <div class="choice-row" id="guideTabs"></div>
+          </div>
+          <p class="guide-result-status" id="guideResultStatus" aria-live="polite"></p>
           <div class="pricing-guide-list" id="pricingGuideList"></div>
           <div class="section-block">
             <h3>Matrix Guide</h3>
             <p>Search wall, base, and wainscoting matrix sizes without dumping the whole product guide on screen.</p>
-            <div class="choice-row" id="matrixTabs">
-              <button class="choice-button active" type="button" data-matrix-tab="wall">Wet-Area Wall Matrix</button>
-              <button class="choice-button" type="button" data-matrix-tab="base">Base Matrix</button>
-              <button class="choice-button" type="button" data-matrix-tab="wains">Wainscoting Matrix</button>
+            <div class="quick-filter-block">
+              <p class="quick-filter-label">Matrix Type</p>
+              <div class="choice-row" id="matrixTabs">
+                <button class="choice-button active" type="button" data-matrix-tab="wall">Wet-Area Wall Matrix</button>
+                <button class="choice-button" type="button" data-matrix-tab="base">Base Matrix</button>
+                <button class="choice-button" type="button" data-matrix-tab="wains">Wainscoting Matrix</button>
+              </div>
             </div>
             <div class="estimator-form-grid">
               <div class="form-field">
@@ -2375,6 +2604,7 @@
                 <input type="text" id="matrixSearch" placeholder="Search Savona, 36 x 36, flat wall, EZ roll-in..." />
               </div>
             </div>
+            <p class="guide-result-status" id="matrixResultStatus" aria-live="polite"></p>
             <div class="pricing-guide-list" id="pricingMatrixList"></div>
           </div>
         </div>
@@ -2994,7 +3224,7 @@
       expandedTrainingModules: {},
       expandedTrainingSections: {},
       activeMatrix: "wall",
-      activeMatrixGroup: "all",
+      activeMatrixGroup: "",
       selectedPricingModel: "",
       roughWizardStep: 1,
       roughAdvancedVisible: false,
@@ -6880,6 +7110,12 @@
         .replace(/^-+|-+$/g, "") || "section";
     }
 
+    function compactSearchText(value) {
+      return String(value ?? "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "");
+    }
+
     function readInputs() {
       return {
         bf: amountToCents(document.getElementById("bf").value),
@@ -6955,6 +7191,14 @@
         if (Array.isArray(parsed?.roughAddOns)) {
           state.roughAddOns = parsed.roughAddOns.map(normalizeEstimateItem).filter(Boolean);
         }
+
+        if (parsed?.expandedTrainingModules && typeof parsed.expandedTrainingModules === "object") {
+          state.expandedTrainingModules = { ...parsed.expandedTrainingModules };
+        }
+
+        if (parsed?.expandedTrainingSections && typeof parsed.expandedTrainingSections === "object") {
+          state.expandedTrainingSections = { ...parsed.expandedTrainingSections };
+        }
       } catch (error) {
         console.warn("Unable to restore saved state.", error);
       }
@@ -6968,7 +7212,9 @@
             inputs: getCurrentInputSnapshot(),
             commission: getCommissionInputSnapshot(),
             estimateItems: state.estimateItems,
-            roughAddOns: state.roughAddOns
+            roughAddOns: state.roughAddOns,
+            expandedTrainingModules: state.expandedTrainingModules,
+            expandedTrainingSections: state.expandedTrainingSections
           })
         );
       } catch (error) {
@@ -7379,7 +7625,7 @@
           "",
           cashCards,
           true,
-          true
+          false
         ) +
         sectionMarkup(
           "Veterans / Manager Special",
@@ -7580,7 +7826,7 @@
           "",
           cumulativeCards,
           true,
-          true
+          false
         ) +
         sectionMarkup(
           "Veterans / Manager Special Cumulative",
@@ -7782,8 +8028,8 @@
       }
 
       return (
-        (wainscotingCards.length ? sectionMarkup("Wainscoting EOI", "", wainscotingCards, true, true) : "") +
-        (cards.length ? sectionMarkup("Standalone Contracts", "", cards, true, !wainscotingCards.length) : "")
+        (wainscotingCards.length ? sectionMarkup("Wainscoting EOI", "", wainscotingCards, true, false) : "") +
+        (cards.length ? sectionMarkup("Standalone Contracts", "", cards, true, false) : "")
       );
     }
 
@@ -7939,6 +8185,7 @@
       const searchInput = document.getElementById("guideSearch");
       const guideList = document.getElementById("pricingGuideList");
       const guideTabs = document.getElementById("guideTabs");
+      const resultStatus = document.getElementById("guideResultStatus");
       const currentCategory = categorySelect.value || "";
       const categories = getCatalogCategories().filter((category) => category !== "all");
 
@@ -7963,6 +8210,7 @@
 
       const search = searchInput.value.trim().toLowerCase();
       if (!search && !categorySelect.value) {
+        resultStatus.textContent = "Choose a category or enter a search term.";
         guideList.innerHTML = emptyState("Choose a category tab or search a keyword to pull up prices.");
         return;
       }
@@ -7973,20 +8221,33 @@
         const searchable = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket], variantText]
           .join(" ")
           .toLowerCase();
-        return categoryMatch && (!search || searchable.includes(search));
+        const compactSearch = compactSearchText(search);
+        const matchesSearch =
+          !search ||
+          searchable.includes(search) ||
+          compactSearchText(searchable).includes(compactSearch);
+        return categoryMatch && matchesSearch;
       });
+
+      resultStatus.textContent = filteredItems.length === 1
+        ? "1 matching price-list item."
+        : `${filteredItems.length} matching price-list items.`;
 
       guideList.innerHTML = filteredItems.length
         ? filteredItems
             .map((item) => {
-              const priceText = item.variants
-                .map((variant) => `${variant.label}: ${formatCurrency(variant.price)}`)
-                .join(" | ");
               return `
                 <article class="guide-row">
                   <h4>${escapeHtml(item.label)}</h4>
                   <p>${escapeHtml(item.category)} | ${escapeHtml(BUCKET_LABELS[item.bucket])}</p>
-                  <p>${escapeHtml(priceText)}</p>
+                  <ul class="guide-price-list">
+                    ${item.variants.map((variant) => `
+                      <li>
+                        <span>${escapeHtml(variant.label)}</span>
+                        <strong>${formatCurrency(variant.price)}</strong>
+                      </li>
+                    `).join("")}
+                  </ul>
                   ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
                 </article>
               `;
@@ -7999,9 +8260,10 @@
       const matrixTabs = document.getElementById("matrixTabs");
       const matrixList = document.getElementById("pricingMatrixList");
       const groupSelect = document.getElementById("matrixGroup");
+      const resultStatus = document.getElementById("matrixResultStatus");
       const search = document.getElementById("matrixSearch").value.trim().toLowerCase();
       const rows = PRODUCT_MATRICES[state.activeMatrix] || [];
-      const groups = ["all"].concat(
+      const groups = [""].concat(
         rows.reduce((list, row) => {
           if (!list.includes(row.group)) {
             list.push(row.group);
@@ -8014,23 +8276,38 @@
         button.classList.toggle("active", button.dataset.matrixTab === state.activeMatrix);
       });
 
-      if (!groups.includes(state.activeMatrixGroup)) {
-        state.activeMatrixGroup = "all";
+      if (state.activeMatrixGroup === "all" || !groups.includes(state.activeMatrixGroup)) {
+        state.activeMatrixGroup = "";
       }
 
       groupSelect.innerHTML = groups
         .map((group) => {
-          const label = group === "all" ? "All Groups" : group;
+          const label = group === "" ? "Choose Matrix Group" : group;
           return `<option value="${escapeHtml(group)}">${escapeHtml(label)}</option>`;
         })
         .join("");
       groupSelect.value = state.activeMatrixGroup;
 
+      if (!search && !state.activeMatrixGroup) {
+        resultStatus.textContent = "Choose a matrix group or enter a search term.";
+        matrixList.innerHTML = emptyState("Choose a matrix group or search for a product or size.");
+        return;
+      }
+
       const filteredRows = rows.filter((row) => {
         const haystack = [row.group, row.label, row.details, row.notes].join(" ").toLowerCase();
-        const matchesGroup = state.activeMatrixGroup === "all" || row.group === state.activeMatrixGroup;
-        return matchesGroup && (!search || haystack.includes(search));
+        const matchesGroup = !state.activeMatrixGroup || row.group === state.activeMatrixGroup;
+        const compactSearch = compactSearchText(search);
+        const matchesSearch =
+          !search ||
+          haystack.includes(search) ||
+          compactSearchText(haystack).includes(compactSearch);
+        return matchesGroup && matchesSearch;
       });
+
+      resultStatus.textContent = filteredRows.length === 1
+        ? "1 matching matrix row."
+        : `${filteredRows.length} matching matrix rows.`;
 
       matrixList.innerHTML = filteredRows.length
         ? filteredRows
@@ -8133,7 +8410,7 @@
     function renderTrainingSection(section, moduleKey, index) {
       const sectionKey = `${moduleKey}-${slugifyKey(section.title)}`;
       const hasStoredState = Object.prototype.hasOwnProperty.call(state.expandedTrainingSections, sectionKey);
-      const isOpen = hasStoredState ? Boolean(state.expandedTrainingSections[sectionKey]) : index === 0;
+      const isOpen = hasStoredState ? Boolean(state.expandedTrainingSections[sectionKey]) : false;
 
       return `
         <details class="training-section" data-training-section-key="${escapeHtml(sectionKey)}"${isOpen ? " open" : ""}>
@@ -8165,7 +8442,7 @@
           ${TRAINING_MODULES.map((module, index) => {
             const moduleKey = `training-${slugifyKey(module.title)}`;
             const hasStoredState = Object.prototype.hasOwnProperty.call(state.expandedTrainingModules, moduleKey);
-            const isOpen = hasStoredState ? Boolean(state.expandedTrainingModules[moduleKey]) : index === 0;
+            const isOpen = hasStoredState ? Boolean(state.expandedTrainingModules[moduleKey]) : false;
 
             return `
               <details class="training-module" data-training-module-key="${escapeHtml(moduleKey)}"${isOpen ? " open" : ""}>
@@ -9825,17 +10102,37 @@
       const tools = Array.from(document.querySelectorAll(".tool-section"));
       const showHome = !toolId || toolId === "home";
 
+      document.body.classList.toggle("tool-open", !showHome);
       home.hidden = !showHome;
       tools.forEach((tool) => {
         tool.hidden = showHome || tool.id !== toolId;
       });
+      document.querySelectorAll(".hero-badge[data-open-tool]").forEach((link) => {
+        const isActive = !showHome && link.dataset.openTool === toolId;
+        link.classList.toggle("active", isActive);
+        if (isActive) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
 
-      const nextHash = showHome ? "#home" : `#${toolId}`;
+      const nextHash = showHome ? "" : `#${toolId}`;
       if (window.location.hash !== nextHash) {
-        history.replaceState(null, "", nextHash);
+        const nextUrl = showHome
+          ? `${window.location.pathname}${window.location.search}`
+          : nextHash;
+        history.replaceState(null, "", nextUrl);
       }
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.requestAnimationFrame(() => {
+        if (showHome) {
+          window.scrollTo({ top: 0, behavior: "auto" });
+          return;
+        }
+
+        document.getElementById(toolId)?.scrollIntoView({ behavior: "auto", block: "start" });
+      });
     }
 
     function showInitialTool() {
@@ -10033,7 +10330,7 @@
     document.getElementById("guideCategory").addEventListener("change", render);
     document.getElementById("guideSearch").addEventListener("input", render);
     document.getElementById("matrixGroup").addEventListener("change", (event) => {
-      state.activeMatrixGroup = event.target.value || "all";
+      state.activeMatrixGroup = event.target.value || "";
       renderProductMatrix();
     });
     document.getElementById("matrixSearch").addEventListener("input", renderProductMatrix);
@@ -10053,7 +10350,7 @@
       }
 
       state.activeMatrix = button.dataset.matrixTab;
-      state.activeMatrixGroup = "all";
+      state.activeMatrixGroup = "";
       renderProductMatrix();
     });
     document.querySelectorAll("[data-condition-group]").forEach((group) => {
@@ -10189,11 +10486,13 @@
 
       if (sectionPanel && sectionPanel.dataset.trainingSectionKey) {
         state.expandedTrainingSections[sectionPanel.dataset.trainingSectionKey] = sectionPanel.open;
+        saveState();
         return;
       }
 
       if (modulePanel && modulePanel.dataset.trainingModuleKey) {
         state.expandedTrainingModules[modulePanel.dataset.trainingModuleKey] = modulePanel.open;
+        saveState();
       }
     }, true);
 
