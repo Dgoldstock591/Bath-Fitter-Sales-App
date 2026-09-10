@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bath Fitter Sales Tool 3.40</title>
+  <title>Bath Fitter Sales Tool 3.41</title>
   <link rel="icon" href="bath-fitter-icon.svg" type="image/svg+xml" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -2387,7 +2387,8 @@
       }
     }
   </style>
-  <script src="price-list-data.js?v=340"></script>
+  <script src="price-list-data.js?v=341"></script>
+  <script src="calculator-results.js?v=341"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -2402,7 +2403,7 @@
     <header class="hero">
       <div class="hero-grid">
         <div class="hero-copy-block">
-          <p class="eyebrow">Bath Fitter sales team resource | 3.40</p>
+          <p class="eyebrow">Bath Fitter sales team resource | 3.41</p>
           <div class="brand-logo-crop">
             <img class="brand-logo" src="bath-fitter-logo.jpg" alt="Bath Fitter" />
           </div>
@@ -2465,7 +2466,7 @@
         <div class="panel-inner">
           <div class="panel-heading">
             <h2>Job Inputs</h2>
-            <p></p>
+            <p>Enter each EOI subtotal before discounts. Results update as you type.</p>
           </div>
 
           <div class="input-grid">
@@ -2503,7 +2504,7 @@
                 <p></p>
                 <div class="estimator-form-grid">
                   <div class="form-field">
-                    <label for="commissionPaymentMethod">Final Payment Method</label>
+                    <label for="commissionPaymentMethod">Cash Deal Payment Method</label>
                     <select id="commissionPaymentMethod"></select>
                   </div>
                 </div>
@@ -3148,7 +3149,7 @@
       cash: 50,
       finance: 30
     };
-    const WAINSCOTING_MAX_DISCOUNT_PERCENT = 20;
+    const WAINSCOTING_MAX_DISCOUNT_PERCENT = 15;
     const DISCOUNT_LEVELS = [23, 22, 21, 20, 19, 18, 15, 13, 11, 10, 8];
     const FINANCE_DISCOUNT_LEVELS = [13, 15, 18];
     const FEATURED_FINANCE_PLAN_IDS = ["965", "925", "924", "922"];
@@ -6934,7 +6935,7 @@
     }
 
     function calculatePercentDeposit(cents, percent) {
-      return roundUpToIncrement(Math.ceil(clampCents(cents) * (percent / 100)));
+      return Math.min(clampCents(cents), roundUpToIncrement(Math.ceil(clampCents(cents) * (percent / 100))));
     }
 
     function calculateCashDeposit(cents) {
@@ -7270,13 +7271,7 @@
     }
 
     function buildPrimaryCashRateContext(grossCents, finalCents, discountCents) {
-      const depositCents = calculateCashDeposit(finalCents);
-      const cardCostCents = calculateSplitPaymentCost(
-        finalCents,
-        depositCents,
-        getCommissionDepositMethod(),
-        getCommissionPaymentMethod()
-      );
+      const cardCostCents = calculatePaymentCost(finalCents, getCommissionPaymentMethod());
 
       return {
         grossCents,
@@ -7324,10 +7319,9 @@
           ? roundToCents((rateTransactionCostsCents / rateGrossCents) * 100)
           : 0;
       const tier = getCommissionTier(transactionCostPercent, getCommissionSaleType().id);
-      const commissionBaseCents = clampCents(commissionable * 0.85);
 
       return {
-        commissionCents: clampCents(commissionBaseCents * (tier.rate / 100)),
+        commissionCents: commissionForNet(commissionable, tier.rate),
         commissionRate: tier.rate,
         transactionCostPercent,
         transactionCostsCents,
@@ -7336,53 +7330,6 @@
       };
     }
 
-    function featuredFinancePlanItems(balanceCents, context = {}, planIds = FEATURED_FINANCE_PLAN_IDS) {
-      return planIds.map((planId) => SYNCHRONY_PLANS.find((plan) => plan.id === planId))
-        .filter(Boolean)
-        .map((plan) => {
-          const result = calculateSynchronyPlan(balanceCents, plan);
-          const paymentLabel = plan.kind === "deferred" ? "Payoff target" : "Monthly";
-          const timeline = plan.kind === "deferred" ? `${plan.months} months` : `Est. ${result.months} months`;
-          const merchantCostCents = clampCents(balanceCents * (plan.transactionCostPct / 100));
-          const cardCostCents = calculatePaymentCost(context.depositCents || 0, context.depositMethod);
-          const tierDiscountCents = clampCents(context.tierDiscountCents ?? context.discountCents ?? 0);
-          const paymentMethodCostPercent = getMethodCostPercent(context.depositMethod);
-          const tierDiscountPercent = roundToCents(Number(context.tierDiscountPercent ?? context.discountPercent ?? 0) || 0);
-          const totalTransactionCostPercent = buildTransactionCostPercent(
-            tierDiscountPercent,
-            plan.transactionCostPct,
-            paymentMethodCostPercent
-          );
-          const commission = context.grossCents
-            ? calculateCardCommission({
-                grossCents: context.grossCents,
-                commissionableCents: context.commissionableCents,
-                discountCents: context.discountCents,
-                financeCostCents: merchantCostCents,
-                cardCostCents,
-                tierGrossCents: context.tierGrossCents,
-                tierTransactionCostsCents: clampCents(tierDiscountCents + merchantCostCents + cardCostCents),
-                tierTransactionCostPercent: totalTransactionCostPercent
-              })
-            : null;
-
-          if (commission && commission.transactionCostPercent > MAX_FINANCE_TRANSACTION_COST_PERCENT) {
-            return null;
-          }
-
-          return {
-            label: `Plan ${plan.id} - ${plan.alias}`,
-            details:
-              `${paymentLabel}: ${formatCurrency(result.payment)}/mo` +
-              ` | ${timeline}` +
-              ` | Merchant cost: ${plan.transactionCostPct.toFixed(2)}% (${formatCurrencyFromCents(merchantCostCents)})` +
-              (commission ? ` | Total cost: ${commission.transactionCostPercent.toFixed(2)}%` : ""),
-            commissionCents: commission?.commissionCents,
-            commissionRate: commission?.commissionRate
-          };
-        })
-        .filter(Boolean);
-    }
 
     function financeItemsMarkup(items, showCommission = false) {
       if (!items.length) {
@@ -7411,7 +7358,7 @@
 
     function scenarioCardMarkup(config) {
       const balanceCents = Math.max(0, config.totalCents - config.depositCents);
-      const commissionKey = [
+      const commissionKey = config.key || [
         config.title,
         config.badge || "",
         config.totalCents,
@@ -7420,10 +7367,10 @@
       ].join("|");
       const hasCommission = typeof config.commissionCents === "number" || (config.financeItems || []).some((item) => typeof item.commissionCents === "number");
       const commissionExpanded = Boolean(state.expandedCommissionCards[commissionKey]);
-      const commissionRate = config.commissionRate ? ` @ ${config.commissionRate.toFixed(2)}%` : "";
+      const commissionRate = Number.isFinite(config.commissionRate) ? ` @ ${config.commissionRate.toFixed(2)}%` : "";
 
       return `
-        <article class="scenario-card">
+        <article class="scenario-card" data-scenario-key="${escapeHtml(config.key || commissionKey)}">
           <div class="scenario-top">
             <div>
               <h4>${escapeHtml(config.title)}</h4>
@@ -7453,7 +7400,7 @@
               <span>Balance Due</span>
               <strong>${formatCurrencyFromCents(balanceCents)}</strong>
             </div>
-            ${hasCommission && commissionExpanded ? `
+            ${typeof config.commissionCents === "number" && commissionExpanded ? `
               <div class="metric">
                 <span>Commission Earned</span>
                 <strong>${formatCurrencyFromCents(config.commissionCents)}${commissionRate}</strong>
@@ -7500,538 +7447,6 @@
       return `<div class="empty-state">${escapeHtml(message)}</div>`;
     }
 
-    function buildContractTab(inputs) {
-      if (!inputs.bf) {
-        return emptyState("Enter BF total.");
-      }
-
-      const cashCards = [];
-      const cashDiscounts = DISCOUNT_LEVELS;
-      const coupon = createFlatDiscount(inputs.bf, 900);
-      const couponCommission = calculateCommissionFromRateContext(
-        buildPrimaryCashRateContext(inputs.bf, coupon.finalCents, coupon.discountCents),
-        coupon.finalCents
-      );
-      cashCards.push(
-        scenarioCardMarkup({
-          title: "Coupon Discount",
-          badge: "Flat $900 | 50% Deposit",
-          note: "",
-          subtotalCents: inputs.bf,
-          discountCents: coupon.discountCents,
-          totalCents: coupon.finalCents,
-          depositCents: calculateCashDeposit(coupon.finalCents),
-          commissionCents: couponCommission.commissionCents,
-          commissionRate: couponCommission.commissionRate
-        })
-      );
-
-      cashDiscounts.forEach((percent) => {
-        const plan = findCleanDiscount(inputs.bf, percent);
-        const commission = calculateCommissionFromRateContext(
-          buildPrimaryCashRateContext(inputs.bf, plan.finalCents, plan.discountCents),
-          plan.finalCents
-        );
-        cashCards.push(
-          scenarioCardMarkup({
-            title: percent + "% Discount",
-            badge: "Cash / Check / Charge | 50% Deposit",
-            note: "",
-            subtotalCents: inputs.bf,
-            discountCents: plan.discountCents,
-            totalCents: plan.finalCents,
-            depositCents: calculateCashDeposit(plan.finalCents),
-            commissionCents: commission.commissionCents,
-            commissionRate: commission.commissionRate
-          })
-        );
-      });
-
-      const special = findCleanDiscount(inputs.bf, 25);
-      const specialCommission = calculateCommissionFromRateContext(
-        buildPrimaryCashRateContext(inputs.bf, special.finalCents, special.discountCents),
-        special.finalCents
-      );
-      const specialCards = [
-        scenarioCardMarkup({
-          title: "25% Special Discount",
-          badge: "Veterans Deals / Managers Specials | 50% Deposit",
-          note: "",
-          subtotalCents: inputs.bf,
-          discountCents: special.discountCents,
-          totalCents: special.finalCents,
-          depositCents: calculateCashDeposit(special.finalCents),
-          commissionCents: specialCommission.commissionCents,
-          commissionRate: specialCommission.commissionRate
-        })
-      ];
-
-      const depositMethod = getCommissionDepositMethod();
-      const financingCards = FINANCE_DISCOUNT_LEVELS.map((percent) => {
-        const financeDiscount = findCleanDiscount(inputs.bf, percent);
-        const financeDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
-        const financeBalance = Math.max(0, financeDiscount.finalCents - financeDeposit);
-
-        return scenarioCardMarkup({
-          title: percent + "% Financing",
-          badge: `Finance | ${percent}% Discount | 30% Deposit`,
-          note: "",
-          subtotalCents: inputs.bf,
-          discountCents: financeDiscount.discountCents,
-          totalCents: financeDiscount.finalCents,
-          depositCents: financeDeposit,
-          financeItems: featuredFinancePlanItems(financeBalance, {
-            grossCents: inputs.bf,
-            tierGrossCents: inputs.bf,
-            commissionableCents: financeDiscount.finalCents,
-            discountCents: financeDiscount.discountCents,
-            discountPercent: percent,
-            tierDiscountPercent: percent,
-            depositCents: financeDeposit,
-            depositMethod,
-            rateBalanceCents: financeBalance
-          })
-        });
-      });
-
-      const plan960Deposit = calculateFinanceDeposit(inputs.bf);
-      const plan960Balance = Math.max(0, inputs.bf - plan960Deposit);
-      const plan960Cards = [
-        scenarioCardMarkup({
-          title: "Plan 960 - $0 Discount Financing",
-          badge: "Plan 960 | $0 Discount | 30% Deposit",
-          note: "",
-          subtotalCents: inputs.bf,
-          discountCents: 0,
-          totalCents: inputs.bf,
-          depositCents: plan960Deposit,
-          financeItems: featuredFinancePlanItems(plan960Balance, {
-            grossCents: inputs.bf,
-            tierGrossCents: inputs.bf,
-            commissionableCents: inputs.bf,
-            discountCents: 0,
-            discountPercent: 0,
-            tierDiscountPercent: 0,
-            depositCents: plan960Deposit,
-            depositMethod,
-            rateBalanceCents: plan960Balance
-          }, [PLAN_960_ID])
-        })
-      ];
-
-      return (
-        sectionMarkup(
-          "Cash / Check / Charge",
-          "",
-          cashCards,
-          true,
-          false
-        ) +
-        sectionMarkup(
-          "Veterans / Manager Special",
-          "",
-          specialCards,
-          false
-        ) +
-        sectionMarkup(
-          "Financing",
-          "",
-          financingCards
-        ) +
-        sectionMarkup(
-          "Plan 960 - $0 Discount",
-          "",
-          plan960Cards,
-          false
-        )
-      );
-    }
-
-    function buildCumulativeTab(inputs) {
-      if (!inputs.bf) {
-        return emptyState("Enter BF total.");
-      }
-
-      const nonDiscountableAddOns = inputs.doors + inputs.labor + inputs.permits;
-      const addOns = inputs.wainscoting + nonDiscountableAddOns;
-
-      const grossTotal = inputs.bf + addOns;
-      const depositMethod = getCommissionDepositMethod();
-
-      function cumulativeMathLine(bfDiscountCents, discountedBathFitterCents, wainsDiscountCents, discountedWainscotingCents, cumulativeTotalCents) {
-        const parts = [
-          "BF subtotal " + formatCurrencyFromCents(inputs.bf),
-          "- discount " + formatCurrencyFromCents(bfDiscountCents),
-          "= BF total " + formatCurrencyFromCents(discountedBathFitterCents)
-        ];
-
-        if (inputs.wainscoting) {
-          parts.push(
-            "+ Wainscoting subtotal " + formatCurrencyFromCents(inputs.wainscoting),
-            "- discount " + formatCurrencyFromCents(wainsDiscountCents),
-            "= Wainscoting total " + formatCurrencyFromCents(discountedWainscotingCents)
-          );
-        }
-
-        if (inputs.doors) {
-          parts.push("+ Doors " + formatCurrencyFromCents(inputs.doors));
-        }
-
-        if (inputs.labor) {
-          parts.push("+ Labor " + formatCurrencyFromCents(inputs.labor));
-        }
-
-        if (inputs.permits) {
-          parts.push("+ Permit " + formatCurrencyFromCents(inputs.permits));
-        }
-
-        parts.push("= Cumulative total " + formatCurrencyFromCents(cumulativeTotalCents));
-        return parts.join(" ");
-      }
-
-      function cumulativeDeposit(discountedBathFitterCents, discountedWainscotingCents, dealType) {
-        const depositCalculator = dealType === "cash" ? calculateCashDeposit : calculateFinanceDeposit;
-        return (
-          depositCalculator(discountedBathFitterCents) +
-          depositCalculator(discountedWainscotingCents) +
-          depositCalculator(inputs.doors) +
-          depositCalculator(inputs.labor) +
-          inputs.permits
-        );
-      }
-
-      const cumulativeCards = DISCOUNT_LEVELS.map((percent) => {
-        const discount = findCleanDiscount(inputs.bf, percent);
-        const wainsDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
-        const total = discount.finalCents + wainsDiscount.finalCents + nonDiscountableAddOns;
-        const totalDiscount = discount.discountCents + wainsDiscount.discountCents;
-        const primaryRateContext = buildPrimaryCashRateContext(inputs.bf, discount.finalCents, discount.discountCents);
-        const commission = calculateCommissionFromRateContext(
-          {
-            ...primaryRateContext,
-            grossCents: grossTotal
-          },
-          discount.finalCents + wainsDiscount.finalCents + inputs.doors + inputs.labor
-        );
-
-        return scenarioCardMarkup({
-          title: percent + "% Discount on Bath Fitter" + (inputs.wainscoting && percent > WAINSCOTING_MAX_DISCOUNT_PERCENT ? " / Wains 20% Cap" : ""),
-          badge: "Cash / Check / Charge | 50% Deposit",
-          note: "",
-          subtotalCents: grossTotal,
-          discountCents: totalDiscount,
-          totalCents: total,
-          depositCents: cumulativeDeposit(discount.finalCents, wainsDiscount.finalCents, "cash"),
-          mathLine: cumulativeMathLine(discount.discountCents, discount.finalCents, wainsDiscount.discountCents, wainsDiscount.finalCents, total),
-          commissionCents: commission.commissionCents,
-          commissionRate: commission.commissionRate
-        });
-      });
-
-      const special = findCleanDiscount(inputs.bf, 25);
-      const specialWains = findWainscotingDiscount(inputs.wainscoting, 25);
-      const specialTotal = special.finalCents + specialWains.finalCents + nonDiscountableAddOns;
-      const specialDiscount = special.discountCents + specialWains.discountCents;
-      const specialDeposit = cumulativeDeposit(special.finalCents, specialWains.finalCents, "cash");
-      const specialPrimaryRateContext = buildPrimaryCashRateContext(inputs.bf, special.finalCents, special.discountCents);
-      const specialCommission = calculateCommissionFromRateContext(
-        {
-          ...specialPrimaryRateContext,
-          grossCents: grossTotal
-        },
-        special.finalCents + specialWains.finalCents + inputs.doors + inputs.labor
-      );
-
-      const specialCards = [
-        scenarioCardMarkup({
-          title: "25% Special Discount",
-          badge: inputs.wainscoting ? "Veterans Deals / Managers Specials | Wains 20% Cap | 50% Deposit" : "Veterans Deals / Managers Specials | 50% Deposit",
-          note: "",
-          subtotalCents: grossTotal,
-          discountCents: specialDiscount,
-          totalCents: specialTotal,
-          depositCents: specialDeposit,
-          mathLine: cumulativeMathLine(special.discountCents, special.finalCents, specialWains.discountCents, specialWains.finalCents, specialTotal),
-          commissionCents: specialCommission.commissionCents,
-          commissionRate: specialCommission.commissionRate
-        })
-      ];
-
-      const financingCards = FINANCE_DISCOUNT_LEVELS.map((percent) => {
-        const financeDiscount = findCleanDiscount(inputs.bf, percent);
-        const financeWains = findWainscotingDiscount(inputs.wainscoting, percent);
-        const financeTotal = financeDiscount.finalCents + financeWains.finalCents + nonDiscountableAddOns;
-        const financeDiscountTotal = financeDiscount.discountCents + financeWains.discountCents;
-        const financeDeposit = cumulativeDeposit(financeDiscount.finalCents, financeWains.finalCents, "finance");
-        const financeBalance = Math.max(0, financeTotal - financeDeposit);
-        const bfDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
-        const bfBalance = Math.max(0, financeDiscount.finalCents - bfDeposit);
-
-        return scenarioCardMarkup({
-          title: percent + "% Financing",
-          badge: `Cumulative Finance | ${percent}% Discount | 30% Deposit`,
-          note: "",
-          subtotalCents: grossTotal,
-          discountCents: financeDiscountTotal,
-          totalCents: financeTotal,
-          depositCents: financeDeposit,
-          mathLine: cumulativeMathLine(financeDiscount.discountCents, financeDiscount.finalCents, financeWains.discountCents, financeWains.finalCents, financeTotal),
-          financeItems: featuredFinancePlanItems(financeBalance, {
-            grossCents: grossTotal,
-            tierGrossCents: inputs.bf,
-            commissionableCents: financeDiscount.finalCents + financeWains.finalCents + inputs.doors + inputs.labor,
-            discountCents: financeDiscountTotal,
-            tierDiscountCents: financeDiscount.discountCents,
-            discountPercent: percent,
-            tierDiscountPercent: percent,
-            depositCents: bfDeposit,
-            depositMethod,
-            rateBalanceCents: bfBalance
-          })
-        });
-      });
-
-      const plan960Total = inputs.bf + inputs.wainscoting + nonDiscountableAddOns;
-      const plan960Deposit = cumulativeDeposit(inputs.bf, inputs.wainscoting, "finance");
-      const plan960Balance = Math.max(0, plan960Total - plan960Deposit);
-      const plan960BfDeposit = calculateFinanceDeposit(inputs.bf);
-      const plan960BfBalance = Math.max(0, inputs.bf - plan960BfDeposit);
-      const plan960Cards = [
-        scenarioCardMarkup({
-          title: "Plan 960 - $0 Discount Financing",
-          badge: "Plan 960 | $0 Discount | 30% Deposit",
-          note: "",
-          subtotalCents: grossTotal,
-          discountCents: 0,
-          totalCents: plan960Total,
-          depositCents: plan960Deposit,
-          mathLine: cumulativeMathLine(0, inputs.bf, 0, inputs.wainscoting, plan960Total),
-          financeItems: featuredFinancePlanItems(plan960Balance, {
-            grossCents: grossTotal,
-            tierGrossCents: inputs.bf,
-            commissionableCents: inputs.bf + inputs.wainscoting + inputs.doors + inputs.labor,
-            discountCents: 0,
-            discountPercent: 0,
-            tierDiscountPercent: 0,
-            depositCents: plan960BfDeposit,
-            depositMethod,
-            rateBalanceCents: plan960BfBalance
-          }, [PLAN_960_ID])
-        })
-      ];
-
-      return (
-        sectionMarkup(
-          "Cash / Check / Charge Cumulative",
-          "",
-          cumulativeCards,
-          true,
-          false
-        ) +
-        sectionMarkup(
-          "Veterans / Manager Special Cumulative",
-          "",
-          specialCards,
-          false
-        ) +
-        sectionMarkup(
-          "Financing Cumulative",
-          "",
-          financingCards
-        ) +
-        sectionMarkup(
-          "Plan 960 - $0 Discount Cumulative",
-          "",
-          plan960Cards,
-          false
-        )
-      );
-    }
-
-    function buildOtherContractsTab(inputs) {
-      const cards = [];
-      const wainscotingCards = [];
-      const depositMethod = getCommissionDepositMethod();
-
-      if (inputs.wainscoting) {
-        const noDiscountContext = inputs.bf
-          ? buildPrimaryCashRateContext(inputs.bf, inputs.bf, 0)
-          : buildPrimaryCashRateContext(inputs.wainscoting, inputs.wainscoting, 0);
-        const noDiscountCommission = calculateCommissionFromRateContext(noDiscountContext, inputs.wainscoting);
-        wainscotingCards.push(
-          scenarioCardMarkup({
-            title: "Wainscoting EOI - No Discount",
-            badge: "Separate EOI | 50% Deposit",
-            note: "",
-            subtotalCents: inputs.wainscoting,
-            discountCents: 0,
-            totalCents: inputs.wainscoting,
-            depositCents: calculateCashDeposit(inputs.wainscoting),
-            commissionCents: noDiscountCommission.commissionCents,
-            commissionRate: noDiscountCommission.commissionRate
-          })
-        );
-
-        DISCOUNT_LEVELS.forEach((percent) => {
-          const wainsDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
-          const effectivePercent = getWainscotingDiscountPercent(percent);
-          const rateContext = inputs.bf
-            ? buildPrimaryCashRateContext(inputs.bf, findCleanDiscount(inputs.bf, percent).finalCents, findCleanDiscount(inputs.bf, percent).discountCents)
-            : buildPrimaryCashRateContext(inputs.wainscoting, wainsDiscount.finalCents, wainsDiscount.discountCents);
-          const commission = calculateCommissionFromRateContext(rateContext, wainsDiscount.finalCents);
-          wainscotingCards.push(
-            scenarioCardMarkup({
-              title: `${percent}% BF Discount / ${effectivePercent}% Wains Discount`,
-              badge: effectivePercent < percent ? "Wains capped at 20% | 50% Deposit" : "Wains matches BF discount | 50% Deposit",
-              note: "",
-              subtotalCents: inputs.wainscoting,
-              discountCents: wainsDiscount.discountCents,
-              totalCents: wainsDiscount.finalCents,
-              depositCents: calculateCashDeposit(wainsDiscount.finalCents),
-              mathLine:
-                "Wainscoting subtotal " +
-                formatCurrencyFromCents(inputs.wainscoting) +
-                " - discount " +
-                formatCurrencyFromCents(wainsDiscount.discountCents) +
-                " = Wainscoting total " +
-                formatCurrencyFromCents(wainsDiscount.finalCents),
-              commissionCents: commission.commissionCents,
-              commissionRate: commission.commissionRate
-            })
-          );
-        });
-
-        const specialWainsDiscount = findWainscotingDiscount(inputs.wainscoting, 25);
-        const specialWainsRateContext = inputs.bf
-          ? buildPrimaryCashRateContext(inputs.bf, findCleanDiscount(inputs.bf, 25).finalCents, findCleanDiscount(inputs.bf, 25).discountCents)
-          : buildPrimaryCashRateContext(inputs.wainscoting, specialWainsDiscount.finalCents, specialWainsDiscount.discountCents);
-        const specialWainsCommission = calculateCommissionFromRateContext(
-          specialWainsRateContext,
-          specialWainsDiscount.finalCents
-        );
-        wainscotingCards.push(
-          scenarioCardMarkup({
-            title: "25% BF Special / 20% Wains Discount",
-            badge: "Veterans Deals / Managers Specials | Wains capped at 20% | 50% Deposit",
-            note: "",
-            subtotalCents: inputs.wainscoting,
-            discountCents: specialWainsDiscount.discountCents,
-            totalCents: specialWainsDiscount.finalCents,
-            depositCents: calculateCashDeposit(specialWainsDiscount.finalCents),
-            mathLine:
-              "Wainscoting subtotal " +
-              formatCurrencyFromCents(inputs.wainscoting) +
-              " - discount " +
-              formatCurrencyFromCents(specialWainsDiscount.discountCents) +
-              " = Wainscoting total " +
-              formatCurrencyFromCents(specialWainsDiscount.finalCents),
-            commissionCents: specialWainsCommission.commissionCents,
-            commissionRate: specialWainsCommission.commissionRate
-          })
-        );
-
-        FINANCE_DISCOUNT_LEVELS.forEach((percent) => {
-          const financeDiscount = findWainscotingDiscount(inputs.wainscoting, percent);
-          const financeDeposit = calculateFinanceDeposit(financeDiscount.finalCents);
-          const financeBalance = Math.max(0, financeDiscount.finalCents - financeDeposit);
-          wainscotingCards.push(
-            scenarioCardMarkup({
-              title: `${percent}% Wains Financing`,
-              badge: `Finance | ${percent}% Discount | 30% Deposit`,
-              note: "",
-              subtotalCents: inputs.wainscoting,
-              discountCents: financeDiscount.discountCents,
-              totalCents: financeDiscount.finalCents,
-              depositCents: financeDeposit,
-              mathLine:
-                "Wainscoting subtotal " +
-                formatCurrencyFromCents(inputs.wainscoting) +
-                " - discount " +
-                formatCurrencyFromCents(financeDiscount.discountCents) +
-                " = Wainscoting total " +
-                formatCurrencyFromCents(financeDiscount.finalCents),
-              financeItems: featuredFinancePlanItems(financeBalance, {
-                grossCents: inputs.bf || inputs.wainscoting,
-                tierGrossCents: inputs.bf || inputs.wainscoting,
-                commissionableCents: financeDiscount.finalCents,
-                discountCents: financeDiscount.discountCents,
-                tierDiscountCents: financeDiscount.discountCents,
-                discountPercent: percent,
-                tierDiscountPercent: percent,
-                depositCents: financeDeposit,
-                depositMethod,
-                rateBalanceCents: financeBalance
-              })
-            })
-          );
-        });
-      }
-
-      if (inputs.doors) {
-        const doorsCommission = calculateCommissionFromRateContext(
-          buildPrimaryCashRateContext(inputs.doors, inputs.doors, 0),
-          inputs.doors
-        );
-        cards.push(
-          scenarioCardMarkup({
-            title: "Doors Contract",
-            badge: "Cash / Check / Charge | 50% Deposit",
-            note: "",
-            subtotalCents: inputs.doors,
-            discountCents: 0,
-            totalCents: inputs.doors,
-            depositCents: calculateCashDeposit(inputs.doors),
-            commissionCents: doorsCommission.commissionCents,
-            commissionRate: doorsCommission.commissionRate
-          })
-        );
-      }
-
-      if (inputs.labor) {
-        const laborCommission = calculateCommissionFromRateContext(
-          buildPrimaryCashRateContext(inputs.labor, inputs.labor, 0),
-          inputs.labor
-        );
-        cards.push(
-          scenarioCardMarkup({
-            title: "Labor Contract",
-            badge: "Cash / Check / Charge | 50% Deposit",
-            note: "",
-            subtotalCents: inputs.labor,
-            discountCents: 0,
-            totalCents: inputs.labor,
-            depositCents: calculateCashDeposit(inputs.labor),
-            commissionCents: laborCommission.commissionCents,
-            commissionRate: laborCommission.commissionRate
-          })
-        );
-      }
-
-      if (inputs.permits) {
-        cards.push(
-          scenarioCardMarkup({
-            title: "Permit Contract",
-            badge: "Paid in Full",
-            note: "",
-            subtotalCents: inputs.permits,
-            discountCents: 0,
-            totalCents: inputs.permits,
-            depositCents: inputs.permits,
-            commissionCents: 0,
-            commissionRate: 0
-          })
-        );
-      }
-
-      if (!cards.length && !wainscotingCards.length) {
-        return emptyState("Enter wainscoting, doors, labor, or permit totals.");
-      }
-
-      return (
-        (wainscotingCards.length ? sectionMarkup("Wainscoting EOI", "", wainscotingCards, true, false) : "") +
-        (cards.length ? sectionMarkup("Standalone Contracts", "", cards, true, false) : "")
-      );
-    }
 
     function getEstimateTotals() {
       return state.estimateItems.reduce(
@@ -8822,7 +8237,7 @@
         case "bf-system":
           return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
         case "concrete-tile-base":
-          return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base", "molded-base"]);
+          return new Set([...shared, "shower-base", "freestanding-base", "neo-curved-base", ...(roughChecked("roughConcreteBeveled") ? ["molded-base"] : [])]);
         default:
           return new Set([...shared, "tub-to-tub", "tub-replacement", "tub-to-shower", "shower-base", "freestanding-base", "neo-curved-base"]);
       }
@@ -8873,7 +8288,7 @@
         case "wains-only":
           return [];
         default:
-          return ROUGH_CUSTOM_PRIMARY_IDS;
+          return ROUGH_CUSTOM_PRIMARY_IDS.filter(id => id !== "threshold-base-6" && (id !== "tub-liner" || ["cast-tub", "steel-tub"].includes(roughState.existingFixture)));
       }
     }
 
@@ -8993,7 +8408,8 @@
         !raw.removeHeader &&
         !raw.coverWindow &&
         raw.primaryProduct === "threshold-base-6";
-      const includeWetWalls = routeSupportsWetWallsToggle(raw.route)
+      const customRequiresWalls = raw.route === "custom" && raw.primaryProduct && raw.primaryProduct !== "tub-liner";
+      const includeWetWalls = customRequiresWalls ? true : routeSupportsWetWallsToggle(raw.route)
         ? raw.includeWetWalls
         : raw.route === "wains-only"
           ? false
@@ -9010,6 +8426,7 @@
       const valveEnabled = showWetAreaScope && raw.valveEnabled;
       const removeMainFixture =
         raw.route !== "tub-liner" &&
+        raw.route !== "molded-base" &&
         raw.route !== "wains-only" &&
         (raw.route !== "custom" ? primaryProductIds.length > 0 : Boolean(raw.primaryProduct && raw.primaryProduct !== "tub-liner"));
       const wallPrepNeeded =
@@ -9349,7 +8766,7 @@
           variantId: getPreferredAcrylicVariantId(snapshot.wallProduct, snapshot.acrylicColor)
         });
 
-        if (snapshot.wallPattern) {
+        if (snapshot.wallPattern && snapshot.wallPattern !== "Torino") {
           addRoughCatalogLine(items, ROUGH_ITEM_IDS.tilePattern, "product", {
             labelSuffix: snapshot.wallPattern
           });
@@ -9545,6 +8962,9 @@
       ]);
       setSelectFromItems("roughCeilingProduct", ROUGH_CEILING_IDS, true, "No ceiling panel");
       setSelectFromItems("roughValveProduct", ROUGH_VALVE_IDS, true, "No valve");
+      if (roughChecked("roughValveEnabled") && !roughValue("roughValveProduct") && roughState.route !== "wains-only") {
+        document.getElementById("roughValveProduct").value = ROUGH_VALVE_IDS.find(id => getCatalogItemById(id)) || "";
+      }
       setSelectFromItems("roughHandheldProduct", ROUGH_HANDHELD_IDS, true, "No handheld / diverter");
       setSelectFromItems("roughRodProduct", ROUGH_ROD_IDS, true, "No rod");
       setVariantSelectFromItem("roughDoorVariant", roughValue("roughDoorProduct"), false);
@@ -9560,6 +8980,10 @@
       setSelectFromItems("roughWallProduct", wallSizeIds, true, "No walls", [], (item) => getWallSizeLabel(item));
 
       let snapshot = getRoughEngineState();
+      if (roughState.route === "custom" && snapshot.primaryProduct && snapshot.primaryProduct !== "tub-liner") {
+        includeWetWallsInput.checked = true;
+        includeWetWallsField.hidden = true;
+      }
       const wallSelect = document.getElementById("roughWallProduct");
       if (snapshot.includeWetWalls && !wallSelect.value) {
         wallSelect.value =
@@ -9900,7 +9324,7 @@
         const haystack = [item.label, item.category, item.description, BUCKET_LABELS[item.bucket], variantText]
           .join(" ")
           .toLowerCase();
-        const matchesSearch = !search || haystack.includes(search);
+        const matchesSearch = !search || haystack.includes(search) || compactSearchText(haystack).includes(compactSearchText(search));
         return matchesCategory && matchesSearch;
       });
     }
@@ -10074,6 +9498,8 @@
 
       state.estimateMessage = "Totals loaded into pricing.";
       render();
+      showTool("calculatorTool");
+      setActiveTab("panelCumulative");
       document.getElementById("bf").focus();
     }
 
@@ -10142,16 +9568,6 @@
     }
 
     function chooseDefaultTab(inputs) {
-      const hasAddOns = Boolean(inputs.wainscoting || inputs.doors || inputs.labor || inputs.permits);
-
-      if (inputs.bf) {
-        return "panelCumulative";
-      }
-
-      if (hasAddOns) {
-        return "panelOther";
-      }
-
       return "panelCumulative";
     }
 
@@ -10195,11 +9611,12 @@
 
           const options = cards
             .map((card, index) => {
-              const id = `${panel.id}-pricing-model-${index}`;
+              const id = `${panel.id}-pricing-model-${card.dataset.scenarioKey || index}`;
               card.id = id;
               const title = card.querySelector("h4")?.textContent?.trim() || "Pricing model";
               const badge = card.querySelector(".badge")?.textContent?.trim() || "";
-              const label = badge ? `${title} | ${badge}` : title;
+              const contract = panel.id === "panelOther" ? card.closest(".output-panel")?.querySelector("h3")?.textContent.trim() : "";
+              const label = [contract, title, badge].filter(Boolean).join(" | ");
               return `<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`;
             })
             .join("");

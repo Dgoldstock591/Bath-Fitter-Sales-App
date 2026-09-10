@@ -1,0 +1,13 @@
+{
+  "name": "bath-fitter-sales-toolkit",
+  "version": "3.41.0",
+  "private": true,
+  "scripts": {
+    "test": "node tests/calculator-audit.cjs",
+    "test:browser": "node tests/browser-audit.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "30.0.1",
+    "playwright": "1.63.0"
+  }
+}

@@ -20,3 +20,11 @@ Open the published app on a phone, tablet, or desktop browser and use `Add to Ho
 ## Notes
 
 Use current branch guidance for final approvals, custom pricing, permit handling, and exceptions that require Erin or owner approval.
+
+## Verification
+
+Run `npm ci`, then `npm test` for calculation, cross-tab reconciliation, catalog, and quote-rule regression checks. Run `npm run test:browser` with Google Chrome installed for interactive checks at phone, tablet, and desktop sizes. Tests use an isolated browser profile and a temporary local server.
+
+`calculator-results.js` builds the shared scenarios displayed by all calculator tabs. Wainscoting is capped at 15%; permits are paid in full and excluded from financing and commission. Commissions are rounded per EOI, then summed for the cumulative display.
+
+Financing commission tiers and the 26% plan filter follow the owner's specified sum of the BF discount percentage, plan transaction percentage, and deposit-method percentage. Cash deals use actual discounted BF pricing and the cash deal payment method. The commission agreement's prose describes dollar-weighted transaction costs, while its example and the owner's instructions use added percentages for financing; the explicit owner instruction is retained.
